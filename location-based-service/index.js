@@ -3,7 +3,7 @@ const express = require('express');
 const xmlparser = require('express-xml-bodyparser');
 // Setup
 const app = express();
-const port = 5000;
+const port = process.env.PORT_NUMBER;
 
 app.use(xmlparser());
 

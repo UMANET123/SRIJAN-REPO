@@ -10,6 +10,8 @@ COPY . ./
 
 ENV NODE_ENV=development
 
+ENV PORT_NUMBER=5000
+
 RUN npm install
 
 EXPOSE 5000
