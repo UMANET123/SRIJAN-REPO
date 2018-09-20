@@ -8,7 +8,7 @@ VOLUME [ "/usr/src/app" ]
 
 COPY . ./
 
-ENV NODE_ENV=development
+ENV NODE_ENV=dev
 
 ENV PORT_NUMBER=5000
 
@@ -16,5 +16,5 @@ RUN npm install
 
 EXPOSE 5000
 
-CMD ["node", "./index.js"]
+CMD ["npx","nodemon", "./index.js"]
 
