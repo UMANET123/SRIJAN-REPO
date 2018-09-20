@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="LocationManagementProxyService" targetNamespace="http://www.globe.com/warcraft/wsdl/locationmgt/" xmlns:ns1="http://www.globe.com/warcraft/wsdl/header/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.globe.com/warcraft/wsdl/locationmgt/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/">
+  <wsdl:types>
+<xs:schema xmlns:tns="http://www.globe.com/warcraft/wsdl/locationmgt/" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://www.globe.com/warcraft/wsdl/locationmgt/">
+  <xs:element name="GetLocationByMSISDNResponse" type="tns:GetLocationByMSISDNResponse"/>
+  <xs:complexType name="GetLocationByMSISDN">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CSP_Txid" nillable="true">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+            <xs:minLength value="0"/>
+            <xs:whiteSpace value="collapse"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CP_Id" nillable="true">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+            <xs:minLength value="0"/>
+            <xs:whiteSpace value="collapse"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CP_UserId" nillable="true">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+            <xs:minLength value="0"/>
+            <xs:whiteSpace value="collapse"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="CP_Password" nillable="true">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+            <xs:minLength value="0"/>
+            <xs:whiteSpace value="collapse"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ServiceId" nillable="true">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+            <xs:minLength value="0"/>
+            <xs:whiteSpace value="collapse"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element minOccurs="0" name="ProductId" nillable="true">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="255"/>
+            <xs:minLength value="0"/>
+            <xs:whiteSpace value="collapse"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="MSISDN">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:maxLength value="12"/>
+            <xs:minLength value="1"/>
+            <xs:whiteSpace value="collapse"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetLocationByMSISDNResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="GetLocationByMSISDNResult" type="tns:GetLocationByMSISDNResult"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="GetLocationByMSISDNResult">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="MSISDN" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="Latitude" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="Longitude" nillable="true" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GetLocationByMSISDN" nillable="true" type="tns:GetLocationByMSISDN"/>
+</xs:schema>
+<xs:schema xmlns="http://www.globe.com/warcraft/wsdl/header/" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://www.globe.com/warcraft/wsdl/header/">
+  <xs:complexType final="extension restriction" name="WarcraftHeader">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="EsbMessageID" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="EsbRequestDateTime" nillable="true" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="EsbResponseDateTime" nillable="true" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="EsbIMLNumber" nillable="true" type="xs:string"/>
+      <xs:element minOccurs="0" name="EsbOperationName" nillable="true" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="WarcraftHeader" nillable="true" type="WarcraftHeader"/>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="GetLocationByMSISDNResponse">
+    <wsdl:part name="result" element="tns:GetLocationByMSISDNResponse">
+    </wsdl:part>
+    <wsdl:part name="WarcraftHeader" element="ns1:WarcraftHeader">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetLocationByMSISDN">
+    <wsdl:part name="parameters" element="tns:GetLocationByMSISDN">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="LocationManagementProxyService">
+    <wsdl:operation name="GetLocationByMSISDN">
+      <wsdl:input name="GetLocationByMSISDN" message="tns:GetLocationByMSISDN">
+    </wsdl:input>
+      <wsdl:output name="GetLocationByMSISDNResponse" message="tns:GetLocationByMSISDNResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="LocationManagementProxyServiceSoapBinding" type="tns:LocationManagementProxyService">
+    <soap12:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetLocationByMSISDN">
+      <soap12:operation soapAction="GetLocationByMSISDN" style="document"/>
+      <wsdl:input name="GetLocationByMSISDN">
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetLocationByMSISDNResponse">
+        <soap12:header message="tns:GetLocationByMSISDNResponse" part="WarcraftHeader" use="literal">
+        </soap12:header>
+        <soap12:body parts="result" use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="LocationManagementProxyService">
+    <wsdl:port name="LocationManagementProxyServicePort" binding="tns:LocationManagementProxyServiceSoapBinding">
+      <soap12:address location="http://10.245.89.253/locationManagement/monetization"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
