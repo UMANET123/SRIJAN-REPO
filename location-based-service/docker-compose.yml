@@ -10,7 +10,7 @@ services:
     depends_on:
       - node1
     ports:
-      - "8080:80"
+      - "80:80"
     networks:
       - app-network
     
@@ -22,7 +22,7 @@ services:
     volumes:
       - .:/usr/src/app
     ports:
-      - "3000"
+      - "5000"
     environment:
       - INSTANCE=node1
     networks:

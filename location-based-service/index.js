@@ -10,8 +10,10 @@ app.use(xmlparser());
 
 // Logger
 if (process.env.NODE_ENV == 'prod') {
+    console.log('I Am in Prod');
     app.use(morgan('common')); // Add Logic to maintain a logfile in the prod server
 } else {
+    console.log('I Am in Dev');
     app.use(morgan('dev'));
 }
 
