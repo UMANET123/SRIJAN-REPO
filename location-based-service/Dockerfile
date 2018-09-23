@@ -16,5 +16,6 @@ RUN npm install
 
 EXPOSE 5000
 
-CMD ["npx","nodemon", "./index.js"]
+CMD ["npx","pm2-runtime","index.js"]
+# CMD ["npx" ,"pm2", "list"]
 

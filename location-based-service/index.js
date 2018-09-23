@@ -10,10 +10,8 @@ app.use(xmlparser());
 
 // Logger
 if (process.env.NODE_ENV == 'prod') {
-    console.log('I Am in Prod');
     app.use(morgan('common')); // Add Logic to maintain a logfile in the prod server
 } else {
-    console.log('I Am in Dev');
     app.use(morgan('dev'));
 }
 
@@ -98,7 +96,9 @@ app.post('/', (req, res, next) => {
 });
 
 app.listen(port, () => {
-    console.log(`Broadcasting on Port : ${port}`);
+    console.log("Starting Location Based Service");
+    console.log(`Environment : ${process.env.NODE_ENV}`);
+    console.log(`Port : ${port}`);
 });
 
 module.exports = app;
