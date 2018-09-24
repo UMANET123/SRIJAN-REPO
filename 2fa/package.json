@@ -1,0 +1,14 @@
+{
+  "name": "2fa",
+  "version": "1.0.0",
+  "description": "Two Factor Auth Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "speakeasy": "^2.0.0"
+  }
+}
