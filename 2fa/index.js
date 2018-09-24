@@ -71,7 +71,7 @@ app.post('/generate', (req, res) => {
     let otp = optlib.totp.generate(secret + msisdn, {
         step: 1,
         epoch: Math.floor(new Date() / 1000)
-    })
+    });
     res.send({
         otp: otp,
         msisdn: msisdn
@@ -99,7 +99,7 @@ app.post('/verify', (req, res) => {
     let verify = optlib.totp.verify({
         token: otp,
         secret: secret + msisdn
-    })
+    });
     if (verify) {
         res.send({
             opt: otp,
@@ -124,4 +124,4 @@ app.listen(PORT_NUMBER, () => {
 /**
  * Exporting app for use in test
  */
-module.exports = app
+module.exports = app;
