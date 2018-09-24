@@ -6,12 +6,12 @@
  * 
  */
 
- /**
-  * Dependencies : 
-  * 1. Express
-  * 2. Body Parser
-  * 3. OPTLIB ( Library to Generate OTP's )
-  */
+/**
+ * Dependencies : 
+ * 1. Express
+ * 2. Body Parser
+ * 3. OPTLIB ( Library to Generate OTP's )
+ */
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -23,8 +23,17 @@ const app = express();
  */
 app.use(bodyParser.json());
 
-app.use((req, res, next)=>{
-    // Logic to check for Philippines Number
+/**
+ * Middleware to check if the number belongs to the Philippines 0r not
+ * 
+ * Return 400 if number does not belong to the Philippines along with Error message
+ */
+app.use((req, res, next) => {
+    if (!(/^639[0-9]{9}$/.test(req.body.msisdn))) {
+        return res.status(400).send({
+            error: "MSISDN Invalid, does not belong to the Philippines"
+        });
+    }
     next();
 })
 
