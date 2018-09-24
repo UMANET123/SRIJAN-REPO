@@ -111,3 +111,8 @@ app.listen(PORT_NUMBER, () => {
     console.log(`PORT : ${PORT_NUMBER}`);
     console.log(`ENV : ${NODE_ENV}`);
 });
+
+/**
+ * Exporting app for use in test
+ */
+module.exports = app
