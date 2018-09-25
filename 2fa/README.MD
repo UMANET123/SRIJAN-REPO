@@ -35,22 +35,22 @@ POST /generate
 Request
 ```json
 {
-    msisdn : '639234567891', // Mobile number
+    "msisdn" : "639234567891", // Mobile number
 }
 ```
 
 Response 200
 ```json
 {
-    msisdn : '639234567891', // Mobile Number
-    otp: '1234' // OTP generated
+    "msisdn" : "639234567891", // Mobile Number
+    "otp": "1234" // OTP generated
 }
 ```
 
 Response 400
 ```json
 {
-    error: "MSISDN Invalid, does not belong to the Philippines"
+    "error": "MSISDN Invalid, does not belong to the Philippines"
 }
 ```
 
@@ -66,23 +66,23 @@ URL
 Request
 ```json
 {
-    msisdn: '639234567891', // Mobile Number
-    otp: '1234' // OTP to verify
+    "msisdn": "639234567891", // Mobile Number
+    "otp": "1234" // OTP to verify
 }
 ```
 
 Response 200
 ```json
 {
-    msisdn: '639234567891' // Mobile Number
-    otp: '1234', // OTP that was verified
-    verified: true // Verification status
+    "msisdn": "639234567891", // Mobile Number
+    "otp": "1234", // OTP that was verified
+    "verified": true // Verification status
 }
 ```
 Response 400
 ```json
 {
-    error: "The OTP has expired, please request for a new one"
+    "error": "The OTP has expired, please request for a new one"
 }
 ```
 
