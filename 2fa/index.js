@@ -31,6 +31,16 @@ app.use(bodyParser.json());
  * Return 400 if number does not belong to the Philippines along with Error message
  * Return 400 if number is not present
  */
+
+app.use((req, res, next) => {
+    if (req.method != "POST") {
+        return res.status(405).send({
+            error: "Method not allowed"
+        })
+    }
+    next();
+})
+
 app.use((req, res, next) => {
     if (!req.body.address) {
         return res.status(400).send({
@@ -46,6 +56,8 @@ app.use((req, res, next) => {
     next();
 })
 
+
+
 /**
  * PORT_NUMBER = Broadcast Port number picked up from ENV variables
  * NODE_ENV = Node Environment picked up from ENV Variables
@@ -56,7 +68,6 @@ const NODE_ENV = process.env.NODE_ENV || 'dev';
 /**
  * Generates a secret for OTPLIB
  */
-console.log()
 const secret = otplib.authenticator.generateSecret();
 /**
  * Handler to Generate an OTP from a mobile number
@@ -122,12 +133,12 @@ app.post('/verify', (req, res) => {
         });
     }
     if (otp.length != 6) {
-        res.status(400).send({
+        return res.status(400).send({
             error: "OTP length Mismatch"
         });
     }
-    if (isNaN(Int(otp.length))) {
-        res.status(400).send({
+    if (!/^\d+$/.test(otp)) {
+        return res.status(400).send({
             error: "OTP should be numbers only"
         });
     }
@@ -136,11 +147,11 @@ app.post('/verify', (req, res) => {
         secret: secret + address,
     });
     if (verify) {
-        res.send({
+        return res.send({
             status: "success"
         });
     } else {
-        res.send({
+        return res.send({
             status: "failed"
         });
     }
