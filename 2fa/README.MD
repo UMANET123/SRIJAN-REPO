@@ -36,6 +36,7 @@ Request
 ```javascript
 {
     "address" : "639234567891", // Mobile number
+    "email": "testemail@testemail.com" // This is Temp, email will be fetched from ESB and then sent to it
 }
 ```
 
