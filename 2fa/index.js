@@ -29,9 +29,9 @@ app.use(bodyParser.json());
  * Return 400 if number does not belong to the Philippines along with Error message
  */
 app.use((req, res, next) => {
-    if (!(/^639[0-9]{9}$/.test(req.body.msisdn))) {
+    if (!(/^639[0-9]{9}$/.test(req.body.address))) {
         return res.status(400).send({
-            error: "MSISDN Invalid, does not belong to the Philippines"
+            error: "address Invalid, does not belong to the Philippines"
         });
     }
     next();
@@ -54,27 +54,28 @@ const secret = optlib.authenticator.generateSecret();
  * Handler to Generate an OTP from a mobile number
  * 
  * Required params :
- * msisdn = Mobile number
+ * address = Mobile number
  * 
  * Returns : 
  * otp = One Time Password Generate
- * msisdn = Mobile number for which the password was generated
+ * address = Mobile number for which the password was generated
  * 
- * The msisdn is appended to the secret while supplying it the generate fuction
+ * The address is appended to the secret while supplying it the generate fuction
  * which generates the OTP
  * 
  * NOTE:
  * Every OTP generated has a lifespan of 30 seconds
  */
 app.post('/generate', (req, res) => {
-    let msisdn = req.body.msisdn;
-    let otp = optlib.totp.generate(secret + msisdn, {
+    let address = req.body.address;
+    let email = req.body.email;
+    let otp = optlib.totp.generate(secret + address, {
         step: 1,
         epoch: Math.floor(new Date() / 1000)
     });
     res.send({
         otp: otp,
-        msisdn: msisdn
+        address: address
     });
 });
 
@@ -82,28 +83,28 @@ app.post('/generate', (req, res) => {
  * Handler to Verify The Generated OTP
  * 
  * Required Params : 
- * msisdn = Mobile Number
+ * address = Mobile Number
  * otp = One Time Password for verification
  * 
  * Return :
  *  If the OTP is valid :
- *      {opt: "12345", msisdn: "6931234567", accepted: true}
+ *      {opt: "12345", address: "6931234567", accepted: true}
  *  
  * If the OTP is Invalid :
  *      {error: "The OTP has expired, please request for a new one"}
  * 
  */
 app.post('/verify', (req, res) => {
-    let msisdn = req.body.msisdn;
+    let address = req.body.address;
     let otp = req.query.otp;
     let verify = optlib.totp.verify({
         token: otp,
-        secret: secret + msisdn
+        secret: secret + address
     });
     if (verify) {
         res.send({
             opt: otp,
-            msisdn: msisdn,
+            address: address,
             accepted: verify
         });
     } else {
