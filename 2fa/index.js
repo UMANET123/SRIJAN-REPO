@@ -50,8 +50,8 @@ app.use((req, res, next) => {
  * PORT_NUMBER = Broadcast Port number picked up from ENV variables
  * NODE_ENV = Node Environment picked up from ENV Variables
  */
-const PORT_NUMBER = process.env.PORT_NUMBER;
-const NODE_ENV = process.env.NODE_ENV;
+const PORT_NUMBER = process.env.PORT_NUMBER || 5000;
+const NODE_ENV = process.env.NODE_ENV || 'dev';
 
 /**
  * Generates a secret for OTPLIB
