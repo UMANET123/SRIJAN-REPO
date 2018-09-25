@@ -33,14 +33,14 @@ POST /generate
 ```
 
 Request
-```json
+```javascript
 {
     "address" : "639234567891", // Mobile number
 }
 ```
 
 Response 200
-```json
+```javascript
 {
     "address" : "639234567891", // Mobile Number
     "otp": "1234" // OTP generated
@@ -48,7 +48,7 @@ Response 200
 ```
 
 Response 400
-```json
+```javascript
 {
     "error": "Mobile Number Invalid, does not belong to the Philippines"
 }
@@ -64,7 +64,7 @@ URL
 ```
 
 Request
-```json
+```javascript
 {
     "address": "639234567891", // Mobile Number
     "otp": "1234" // OTP to verify
@@ -72,7 +72,7 @@ Request
 ```
 
 Response 200
-```json
+```javascript
 {
     "address": "639234567891", // Mobile Number
     "otp": "1234", // OTP that was verified
@@ -80,7 +80,7 @@ Response 200
 }
 ```
 Response 400
-```json
+```javascript
 {
     "error": "The OTP has expired, please request for a new one"
 }
