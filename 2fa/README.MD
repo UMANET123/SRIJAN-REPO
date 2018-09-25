@@ -60,7 +60,7 @@ Verifies an OTP which was generated from the step above
 
 URL
 ```http
-    POST /verify
+POST /verify
 ```
 
 Request
