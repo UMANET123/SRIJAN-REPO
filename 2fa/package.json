@@ -4,7 +4,7 @@
   "description": "Two Factor Auth Service",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "OTP_TIMER=1 OTP_STEP=10 npx mocha --recursive --timeout 70000  tests/unit-tests/"
   },
   "author": "",
   "license": "ISC",

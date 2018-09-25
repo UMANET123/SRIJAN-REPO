@@ -1,0 +1,110 @@
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const app = require('../../../index');
+
+chai.use(chaiHttp);
+
+const endpoints = {
+    generate: '/generate',
+    verify: '/verify'
+}
+
+describe("Test to Verify Generated OTP and OTP Alive Time for Two Factor Authentication", () => {
+    describe('Test Validating a generated OTP', () => {
+        let address = '639234567891'
+        let otpFromGenerate = "";
+
+        it('Should Generate a Valid OTP and return status 201', () => {
+            chai.request(app)
+                .post(endpoints.generate)
+                .type('application/json')
+                .send(JSON.stringify({
+                    address: address
+                }))
+                .end((err, res) => {
+                    otpFromGenerate = res.body.otp;
+                    chai.expect(res).to.have.status(201)
+                })
+        })
+
+        it('Should Verify Generated OTP and return status 200', () => {
+            chai.request(app)
+                .post(endpoints.verify)
+                .type('application/json')
+                .send(JSON.stringify({
+                    address: address,
+                    otp: otpFromGenerate
+                }))
+                .end((err, res) => {
+                    chai.expect(res).to.have.status(200)
+                })
+        })
+
+        it('Should Verify Generated OTP and return a success message', () => {
+            chai.request(app)
+                .post(endpoints.verify)
+                .type('application/json')
+                .send(JSON.stringify({
+                    address: address,
+                    otp: otpFromGenerate
+                }))
+                .end((err, res) => {
+                    chai.expect(res.body.status).to.equal('success');
+                })
+        })
+
+    })
+
+    describe('Test Invalidating a generated OTP', () => {
+        let address = '639234567891'
+        let otpFromGenerate = "";
+
+        beforeEach((done) => {
+            console.log("Waiting for 30s ( So the token invalidates )")
+            setTimeout(() => {
+                done();
+            }, 30000)
+        })
+
+        it('Should Generate a Valid OTP and return status 201', () => {
+            chai.request(app)
+                .post(endpoints.generate)
+                .type('application/json')
+                .send(JSON.stringify({
+                    address: address
+                }))
+                .end((err, res) => {
+                    otpFromGenerate = res.body.otp;
+                    chai.expect(res).to.have.status(201)
+                })
+        })
+
+        it('Should invalidate generated OTP and return status 200 with failure message', () => {
+            chai.request(app)
+                .post(endpoints.verify)
+                .type('application/json')
+                .send(JSON.stringify({
+                    address: address,
+                    otp: otpFromGenerate
+                }))
+                .end((err, res) => {
+                    chai.expect(res).to.have.status(200)
+                    chai.expect(res.body.status).to.equal('failed');
+                })
+        })
+
+        // it('Should Verify Generated OTP and return a success message', () => {
+        //     chai.request(app)
+        //         .post(endpoints.verify)
+        //         .type('application/json')
+        //         .send(JSON.stringify({
+        //             address: address,
+        //             otp: otpFromGenerate
+        //         }))
+        //         .end((err, res) => {
+        //             chai.expect(res.body.status).to.equal('success');
+        //         })
+        // })
+
+    })
+})

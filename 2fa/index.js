@@ -61,10 +61,13 @@ app.use((req, res, next) => {
 /**
  * PORT_NUMBER = Broadcast Port number picked up from ENV variables
  * NODE_ENV = Node Environment picked up from ENV Variables
+ * OTP_TIMER = OTP Alive time, set in minutes default is 5 minutes
+ * OTP_STEP = OTP_STEP x OTP_TIMER = Alive time, hence default is 60 seconds
  */
 const PORT_NUMBER = process.env.PORT_NUMBER || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'dev';
-
+const OTP_TIMER = process.env.OTP_TIMER || 5
+const OTP_STEP = parseInt(process.env.OTP_STEP) || 60
 /**
  * Generates a secret for OTPLIB
  */
@@ -91,8 +94,8 @@ app.post('/generate', (req, res) => {
     let address = req.body.address;
     let email = req.body.email;
     otplib.totp.options = {
-        step: 60,
-        window: 5
+        step: OTP_STEP,
+        window: OTP_TIMER
     }
     let otp = otplib.totp.generate(secret + address);
     res.status(201).send({
@@ -176,6 +179,7 @@ app.listen(PORT_NUMBER, () => {
     console.log("Started 2FA Server");
     console.log(`PORT : ${PORT_NUMBER}`);
     console.log(`ENV : ${NODE_ENV}`);
+    console.log(`OTP ALIVE TIME : ${OTP_TIMER}m`);
 });
 
 /**
