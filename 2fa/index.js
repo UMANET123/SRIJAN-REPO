@@ -32,7 +32,7 @@ app.use(bodyParser.json());
  * Return 400 if number is not present
  */
 app.use((req, res, next) => {
-    if(!req.body.address){
+    if (!req.body.address) {
         return res.status(400).send({
             error: "Address Not present"
         })
@@ -79,7 +79,10 @@ const secret = otplib.authenticator.generateSecret();
 app.post('/generate', (req, res) => {
     let address = req.body.address;
     let email = req.body.email;
-    otplib.totp.options = {step:60, window:5}
+    otplib.totp.options = {
+        step: 60,
+        window: 5
+    }
     let otp = otplib.totp.generate(secret + address);
     res.status(201).send({
         otp: otp,
@@ -113,17 +116,17 @@ app.post('/generate', (req, res) => {
 app.post('/verify', (req, res) => {
     let address = req.body.address;
     let otp = req.body.otp;
-    if(!otp){
+    if (!otp) {
         return res.status(400).send({
             error: "OTP is not present"
         });
     }
-    if(otp.length != 6){
+    if (otp.length != 6) {
         res.status(400).send({
             error: "OTP length Mismatch"
         });
     }
-    if(isNaN(Int(otp.length))){
+    if (isNaN(Int(otp.length))) {
         res.status(400).send({
             error: "OTP should be numbers only"
         });
@@ -143,6 +146,19 @@ app.post('/verify', (req, res) => {
     }
 
 });
+
+/**
+ * Custom Error Handler for 500 Response
+ * 
+ * Returns : 
+ *      {error: "Internal Server Error"}
+ */
+app.use(function (err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send({
+        error: "Internal Server Error"
+    });
+})
 
 
 app.listen(PORT_NUMBER, () => {
