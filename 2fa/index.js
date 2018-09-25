@@ -96,7 +96,7 @@ app.post('/generate', (req, res) => {
  */
 app.post('/verify', (req, res) => {
     let address = req.body.address;
-    let otp = req.query.otp;
+    let otp = req.body.otp;
     let verify = optlib.totp.verify({
         token: otp,
         secret: secret + address
