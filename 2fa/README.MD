@@ -75,15 +75,34 @@ Request
 Response 200
 ```javascript
 {
-    "address": "639234567891", // Mobile Number
-    "otp": "1234", // OTP that was verified
-    "verified": true // Verification status
+    "status": "success"
 }
 ```
-Response 400
+Response 200 ( OTP Expired or Wrong OTP )
 ```javascript
 {
-    "error": "The OTP has expired, please request for a new one"
+    "status": "OTP invalid"
+}
+```
+
+Reponse 400 ( OTP Length Mismatch )
+```javascript
+{
+    "error": "OTP length Mismatch"
+}
+```
+
+Response 400 ( OTP Not present )
+```javascript
+{
+    "error": "OTP is not present"
+}
+```
+
+Response 400 ( OTP should be numbers only )
+```javascript
+{
+    "error": "OTP should be numbers only"
 }
 ```
 

@@ -10,12 +10,13 @@
  * Dependencies : 
  * 1. Express
  * 2. Body Parser
- * 3. OPTLIB ( Library to Generate OTP's )
+ * 3. otplib ( Library to Generate OTP's )
  */
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const optlib = require('otplib');
+const otplib = require('otplib');
+const otpcore = require('otplib/core');
 const app = express();
 
 /**
@@ -25,15 +26,23 @@ app.use(bodyParser.json());
 
 /**
  * Middleware to check if the number belongs to the Philippines 0r not
+ * Also check if the Number(address) is present or not
  * 
  * Return 400 if number does not belong to the Philippines along with Error message
+ * Return 400 if number is not present
  */
 app.use((req, res, next) => {
+    if(!req.body.address){
+        return res.status(400).send({
+            error: "Address Not present"
+        })
+    }
     if (!(/^639[0-9]{9}$/.test(req.body.address))) {
         return res.status(400).send({
-            error: "address Invalid, does not belong to the Philippines"
+            error: "Address Invalid, does not belong to the Philippines"
         });
     }
+
     next();
 })
 
@@ -47,9 +56,8 @@ const NODE_ENV = process.env.NODE_ENV;
 /**
  * Generates a secret for OTPLIB
  */
-const secret = optlib.authenticator.generateSecret();
-
-
+console.log()
+const secret = otplib.authenticator.generateSecret();
 /**
  * Handler to Generate an OTP from a mobile number
  * 
@@ -64,16 +72,16 @@ const secret = optlib.authenticator.generateSecret();
  * which generates the OTP
  * 
  * NOTE:
- * Every OTP generated has a lifespan of 30 seconds
+ * Every OTP generated has a lifespan of 300 seconds
+ * 
+ * To Calculate the OTP time step x window = expirationTime (seconds)
  */
 app.post('/generate', (req, res) => {
     let address = req.body.address;
     let email = req.body.email;
-    let otp = optlib.totp.generate(secret + address, {
-        step: 1,
-        epoch: Math.floor(new Date() / 1000)
-    });
-    res.send({
+    otplib.totp.options = {step:60, window:5}
+    let otp = otplib.totp.generate(secret + address);
+    res.status(201).send({
         otp: otp,
         address: address
     });
@@ -93,23 +101,44 @@ app.post('/generate', (req, res) => {
  * If the OTP is Invalid :
  *      {error: "The OTP has expired, please request for a new one"}
  * 
+ * If the OTP is not present : 
+ *      {error: "OTP is not present"}
+ * 
+ * If the OTP is not a number :
+ *      {error: "OTP should be numbers only"}
+ * 
+ * If the OTP length is not 6 : 
+ *      {error: "OTP length Mismatch"}
  */
 app.post('/verify', (req, res) => {
     let address = req.body.address;
     let otp = req.body.otp;
-    let verify = optlib.totp.verify({
+    if(!otp){
+        return res.status(400).send({
+            error: "OTP is not present"
+        });
+    }
+    if(otp.length != 6){
+        res.status(400).send({
+            error: "OTP length Mismatch"
+        });
+    }
+    if(isNaN(Int(otp.length))){
+        res.status(400).send({
+            error: "OTP should be numbers only"
+        });
+    }
+    let verify = otplib.totp.verify({
         token: otp,
-        secret: secret + address
+        secret: secret + address,
     });
     if (verify) {
         res.send({
-            opt: otp,
-            address: address,
-            accepted: verify
+            status: "success"
         });
     } else {
-        res.status(400).send({
-            error: "The OTP has expired, please request for a new one"
+        res.send({
+            status: "failed"
         });
     }
 
