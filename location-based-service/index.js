@@ -37,7 +37,7 @@ app.use(xmlparser());
  */
 if (process.env.NODE_ENV == 'prod') {
     app.use(morgan('common'));
-} else {
+} else if (process.env.NODE_ENV == 'dev') {
     app.use(morgan('dev'));
 }
 
@@ -49,7 +49,7 @@ if (process.env.NODE_ENV == 'prod') {
  */
 app.use((req, res, next) => {
     if (req.method != "POST") {
-        return res.status(405).send();
+        return res.status(405).send("Method Not Allowed");
     }
     next();
 })
@@ -61,7 +61,7 @@ app.use((req, res, next) => {
  */
 app.use((req, res, next) => {
     if (Object.keys(req.body).length == 0 && req.method == "POST") {
-        return res.status(400).send();
+        return res.status(400).send("SOAP contract not present");
     }
     next();
 })

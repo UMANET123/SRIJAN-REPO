@@ -6,10 +6,10 @@ chai.use(chaiHttp);
 
 let endpoint = '/'
 
-describe('Location Based Service', () => {
+describe('Testing Location Based Service', () => {
 
-    describe('HTTP Method Test', () => {
-        it('GET Should Return 405 ', (done) => {
+    describe('Testing HTTP Method for Location Based Service', () => {
+        it('Should return 405 for GET request', (done) => {
             chai.request(app)
                 .get(endpoint)
                 .end((err, res) => {
@@ -18,7 +18,7 @@ describe('Location Based Service', () => {
                 })
         })
 
-        it('PUT Should Return 405', (done) => {
+        it('Should return 405 for PUT request', (done) => {
             chai.request(app)
                 .put(endpoint)
                 .end((err, res) => {
@@ -27,7 +27,16 @@ describe('Location Based Service', () => {
                 })
         })
 
-        it('Delete Should Return 405', (done) => {
+        it('Should return 405 for PATCH request', (done) => {
+            chai.request(app)
+                .patch(endpoint)
+                .end((err, res) => {
+                    chai.expect(res).to.have.status(405)
+                    done();
+                })
+        })
+
+        it('Should return 405 for DELETE request', (done) => {
             chai.request(app)
                 .delete(endpoint)
                 .end((err, res) => {
@@ -36,7 +45,7 @@ describe('Location Based Service', () => {
                 })
         })
 
-        it('POST Should Return 200', (done) => {
+        it('Should return 200 for POST request', (done) => {
             let request = `<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:loc="http://www.globe.com/warcraft/wsdl/locationmgt/">
             <soap:Header/>
             <soap:Body>
@@ -69,9 +78,9 @@ describe('Location Based Service', () => {
         })
     })
 
-    describe('Validation Tests', () => {
-        describe('Soap Contract', () => {
-            it('Missing', (done) => {
+    describe('Validation Tests for Location Based Service', () => {
+        describe('Validating presence of SOAP Contract for Location Based Service', () => {
+            it('Should return 400 for missing SOAP Contract', (done) => {
                 chai.request(app)
                     .post(endpoint)
                     .type("application/xml")
@@ -81,7 +90,7 @@ describe('Location Based Service', () => {
                     })
             });
 
-            it('Present', (done) => {
+            it('Should return 200 for present SOAP Contract', (done) => {
                 let request = `<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:loc="http://www.globe.com/warcraft/wsdl/locationmgt/">
             <soap:Header/>
             <soap:Body>
@@ -114,8 +123,8 @@ describe('Location Based Service', () => {
             })
         })
 
-        describe('MSISDN', () => {
-            it('Not Philippines number', (done) => {
+        describe('Validating MSISDN (Mobile Number) for Location Based Service', () => {
+            it('Should return 400 if MSISDN does not belong to the Philippines', (done) => {
                 let request = `<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:loc="http://www.globe.com/warcraft/wsdl/locationmgt/">
             <soap:Header/>
             <soap:Body>
@@ -146,7 +155,7 @@ describe('Location Based Service', () => {
                     })
             })
 
-            it('philippines Number', (done) => {
+            it('Should return 200 if MSISDN (Mobile Number) belongs to the Philippines', (done) => {
                 let request = `<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:loc="http://www.globe.com/warcraft/wsdl/locationmgt/">
                 <soap:Header/>
                 <soap:Body>
