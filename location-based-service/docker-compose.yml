@@ -10,7 +10,7 @@ services:
     depends_on:
       - node1
     ports:
-      - "80:80"
+      - "5000:5000"
     networks:
       - app-network
     

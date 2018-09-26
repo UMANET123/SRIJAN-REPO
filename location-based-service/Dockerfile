@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:10
 
 LABEL maintainer="Srijan Tech" 
 
@@ -8,14 +8,10 @@ VOLUME [ "/usr/src/app" ]
 
 COPY . ./
 
-ENV NODE_ENV=dev
-
 ENV PORT_NUMBER=5000
-
-RUN npm install
 
 EXPOSE 5000
 
-CMD ["npx","pm2-runtime","index.js"]
-# CMD ["npx" ,"pm2", "list"]
+RUN npm install && npm install pm2 -g
+CMD chmod +x run.sh && ./run.sh
 

@@ -2,8 +2,5 @@ version: '2'
 
 services:
   node1:
-    build:
-      context: .
-      dockerfile: Dockerfile-production
     environment:
       - NODE_ENV=prod

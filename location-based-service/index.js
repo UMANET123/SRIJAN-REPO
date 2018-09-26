@@ -18,7 +18,7 @@ const xmlparser = require('express-xml-bodyparser');
 const morgan = require('morgan');
 
 const app = express();
-const port = process.env.PORT_NUMBER;
+const port = process.env.PORT_NUMBER || 5000;
 
 /**
  * Middleware Xmlparser to parse XML into JSON
