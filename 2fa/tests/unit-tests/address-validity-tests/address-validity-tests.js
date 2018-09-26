@@ -22,7 +22,7 @@ describe('Testing Address ( Mobile Number ) Validity for Two Factor Authenticati
                 .send(data)
                 .end((err, res) => {
 
-                    chai.expect(res.body.address).to.equal(JSON.parse(data).address)
+                    chai.expect(res).to.have.status(201)
                 })
         })
 
