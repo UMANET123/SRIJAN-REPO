@@ -74,7 +74,7 @@ app.use((req, res, next) => {
  * 
  * returns 400 in case the Number (msisdn) is not valid
  */
-app.post('/', (req, res, next) => {
+app.post('/locationManagement/monetization', (req, res, next) => {
     const body = req.body;
     const {
         "soap:envelope": {

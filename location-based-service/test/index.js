@@ -4,7 +4,7 @@ var chaiHttp = require('chai-http');
 
 chai.use(chaiHttp);
 
-let endpoint = '/'
+let endpoint = '/locationManagement/monetization'
 
 describe('Testing Location Based Service', () => {
 
