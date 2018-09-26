@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+  nginx:
+    build:
+      context: .docker/
+      dockerfile: Dockerfile
+    links:
+      - node1:node1
+    depends_on:
+      - node1
+    ports:
+      - "3000:3000"
+    networks:
+      - 2fa-network
+    
+  node1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000"
+    environment:
+      - INSTANCE=node1
+    networks:
+      - 2fa-network
+
+networks:
+  2fa-network:
+    driver: bridge

@@ -80,7 +80,7 @@ app.use((req, res, next) => {
  * OTP_TIMER = OTP Alive time, set in minutes default is 5 minutes
  * OTP_STEP = OTP_STEP x OTP_TIMER = Alive time, hence default is 60 seconds
  */
-const PORT_NUMBER = process.env.PORT_NUMBER || 5000;
+const PORT_NUMBER = process.env.PORT_NUMBER || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'dev';
 const OTP_TIMER = process.env.OTP_TIMER || 5
 const OTP_STEP = parseInt(process.env.OTP_STEP) || 60
