@@ -13,11 +13,9 @@
  * 2. Xmlparser
  * 3. Morgan
  */
-
 const express = require('express');
 const xmlparser = require('express-xml-bodyparser');
 const morgan = require('morgan');
-
 
 const app = express();
 const port = process.env.PORT_NUMBER;
@@ -40,7 +38,6 @@ if (process.env.NODE_ENV == 'prod') {
 } else if (process.env.NODE_ENV == 'dev') {
     app.use(morgan('dev'));
 }
-
 
 /**
  * Middleware to check that only POST requests are allowed
@@ -78,7 +75,6 @@ app.use((req, res, next) => {
  * returns 400 in case the Number (msisdn) is not valid
  */
 app.post('/', (req, res, next) => {
-
     const body = req.body;
     const {
         "soap:envelope": {
@@ -95,7 +91,6 @@ app.post('/', (req, res, next) => {
      * 
      * Returns 400 if it fails, else continues
      */
-
     if (!(/^639[0-9]{9}$/.test(msisdn))) {
         return res.status(400).send({
             error: "MSISDN Invalid, does not belong to the Philippines"
