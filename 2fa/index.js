@@ -19,14 +19,18 @@ const otplib = require('otplib');
 const nodemailer = require('nodemailer');
 const app = express();
 
-
+/**
+ * Mailer SMTP Setup
+ * 
+ * This creates a transporter instance to save all the email server configs
+ */
 var transporter = nodemailer.createTransport({
-    host: 'smtp.zoho.com',
-    port: 465,
+    host: 'smtp.zoho.com', // Pick host from the environment
+    port: 465, // pick port from the environment
     secure: true, // use SSL
     auth: {
-        user: 'valindo.godinho@zoho.com',
-        pass: 'p.hf2!P3yQfp7nX'
+        user: 'valindo.godinho@zoho.com', // pick email from the environment
+        pass: 'p.hf2!P3yQfp7nX' // pick password from the environment
     }
 });
 
@@ -111,6 +115,14 @@ app.post('/generate', (req, res) => {
     }
     let otp = otplib.totp.generate(secret + address);
     if (email) {
+        /**
+         * Block to send email if email address is present
+         * 
+         * mailOptions stores the template of the email along with sender and reciever information
+         * 
+         * transporter.sendMail(mailOptions, callback) send's the email and waits to recieve a
+         * confirmation message
+         */
         var mailOptions = {
             from: '<valindo.godinho@zoho.com>', // sender address (who sends)
             to: `${email}`, // list of receivers (who receives)

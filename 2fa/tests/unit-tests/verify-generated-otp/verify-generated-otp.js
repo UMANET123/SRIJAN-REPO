@@ -1,6 +1,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const app = require('../../../index');
+const sinon = require ('sinon');
 
 chai.use(chaiHttp);
 
@@ -58,14 +59,7 @@ describe("Test to Verify Generated OTP and OTP Alive Time for Two Factor Authent
     describe('Test Invalidating a generated OTP', () => {
         let address = '639234567891'
         let otpFromGenerate = "";
-
-        beforeEach((done) => {
-            console.log("Waiting for 30s ( So the token invalidates )")
-            setTimeout(() => {
-                done();
-            }, 30000)
-        })
-
+        let clock = sinon.useFakeTimers(Date.now());
         it('Should Generate a Valid OTP and return status 201', () => {
             chai.request(app)
                 .post(endpoints.generate)
@@ -80,6 +74,7 @@ describe("Test to Verify Generated OTP and OTP Alive Time for Two Factor Authent
         })
 
         it('Should invalidate generated OTP and return status 200 with failure message', () => {
+            clock.tick(40000);
             chai.request(app)
                 .post(endpoints.verify)
                 .type('application/json')
