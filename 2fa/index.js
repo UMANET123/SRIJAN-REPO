@@ -16,8 +16,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const otplib = require('otplib');
-const otpcore = require('otplib/core');
+const nodemailer = require('nodemailer');
 const app = express();
+
+
+var transporter = nodemailer.createTransport({
+    host: 'smtp.zoho.com',
+    port: 465,
+    secure: true, // use SSL
+    auth: {
+        user: 'valindo.godinho@zoho.com',
+        pass: 'p.hf2!P3yQfp7nX'
+    }
+});
+
 
 /**
  * Middleware to parse response body into JSON
@@ -98,6 +110,22 @@ app.post('/generate', (req, res) => {
         window: OTP_TIMER
     }
     let otp = otplib.totp.generate(secret + address);
+    if (email) {
+        var mailOptions = {
+            from: '<valindo.godinho@zoho.com>', // sender address (who sends)
+            to: `${email}`, // list of receivers (who receives)
+            subject: 'OTP', // Subject line
+            text: `${otp}`, // plaintext body
+            html: `<h3>${otp}</h3><p>is the OTP for the number ${address}</p><br/><p>This OTP is valid only for ${OTP_TIMER} mins` // html body
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                return console.log(error);
+            }
+            console.log('Message sent: ' + info.response);
+        });
+    }
     res.status(201).send({
         otp: otp,
         address: address
