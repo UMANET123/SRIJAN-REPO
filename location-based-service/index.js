@@ -12,6 +12,7 @@
  * 1. Express
  * 2. Xmlparser
  * 3. Morgan
+ * path and fs are part of node core
  */
 const express = require('express');
 const xmlparser = require('express-xml-bodyparser');
@@ -20,6 +21,13 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
+
+/**
+ * NODE_ENV = Current working environment, picked up from the environment variables
+ *              else defaults to dev
+ * port = Picked up from the environment file else defaults to 5000
+ */
+const NODE_ENV = process.env.NODE_ENV || 'dev';
 const port = process.env.PORT_NUMBER || 5000;
 
 /**
@@ -30,24 +38,29 @@ const port = process.env.PORT_NUMBER || 5000;
 app.use(xmlparser());
 
 
+
+/**
+ * This blocks the application from creating logs directory during test
+ */
+if (NODE_ENV != 'test') {
+    var logDirectory = path.join('/var/log/', 'location-based-service');
+    fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+}
+
 /**
  * This set's the level of logging based on the environment
  * 
  * Production = morgan('common') , Less Verbose ( Uses Apache Style Logs <DATE> Log Details)
  * Development = morgan('dev') More Verbose
  */
-
-var logDirectory = path.join('/var/log/', 'location-based-service');
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
-
-if (process.env.NODE_ENV == 'prod') {
+if (NODE_ENV == 'prod') {
     var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'production.log'), {
         flags: 'a'
     })
     app.use(morgan('common', {
         stream: accessLogStream
     }));
-} else if (process.env.NODE_ENV == 'dev') {
+} else if (NODE_ENV == 'dev') {
     var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'development.log'), {
         flags: 'a'
     })
