@@ -3,14 +3,19 @@
  * 
  * This service generates an OTP based on the user's mobile number
  * Only Mobile Number's from the Philippines will be accepted
+ * An Email will be sent to the respective user with the generate OTP for verification
  * 
  */
 
 /**
  * Dependencies : 
  * 1. Express
- * 2. Body Parser
+ * 2. Body Parser ( Library to Parse Body )
  * 3. otplib ( Library to Generate OTP's )
+ * 4. nodemailer ( Library to Send Emails )
+ * 5. morgan ( Library to Manage Logs )
+ * 
+ * Rest of the libs are fs and path which are node core modules
  */
 
 const express = require('express');
@@ -27,15 +32,37 @@ const app = express();
  * NODE_ENV = Node Environment picked up from ENV Variables
  * OTP_TIMER = OTP Alive time, set in minutes default is 5 minutes
  * OTP_STEP = OTP_STEP x OTP_TIMER = Alive time, hence default is 60 seconds
+ * EMAIL_USERNAME = Email ID from which the email is to be sent from
+ * EMAIL_PASSWORD = Email Password of the email from which the email is sent
  */
 const PORT_NUMBER = process.env.PORT_NUMBER || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'dev';
 const OTP_TIMER = process.env.OTP_TIMER || 5
 const OTP_STEP = parseInt(process.env.OTP_STEP) || 60
+const EMAIL_USERNAME = process.env.EMAIL_USERNAME;
+const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
+const EMAIL_HOST = process.env.EMAIL_HOST;
+const EMAIL_PORT = process.env.EMAIL_PORT;
 
-var logDirectory = path.join('/var/log/', '2fa');
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+/**
+ * This block creates a directory in the container which saves the logs
+ * This is ignored during tests
+ */
+if (NODE_ENV != 'test') {
+    var logDirectory = path.join('/var/log/', '2fa');
+    fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+}
 
+/**
+ * This Block sets the level of logging for different environments
+ * 
+ * The Two Environments here, develop and production will have different log files generated
+ * based on the environment
+ * 
+ * production = morgan('common') this generates apache style logs and is less verbose
+ * development = morgan('dev') this generates much more verbose logs
+ * 
+ */
 if (NODE_ENV == 'prod') {
     var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'production.log'), {
         flags: 'a'
@@ -43,7 +70,7 @@ if (NODE_ENV == 'prod') {
     app.use(morgan('common', {
         stream: accessLogStream
     }));
-} else {
+} else if (NODE_ENV == 'dev') {
     var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'development.log'), {
         flags: 'a'
     })
@@ -56,14 +83,16 @@ if (NODE_ENV == 'prod') {
  * Mailer SMTP Setup
  * 
  * This creates a transporter instance to save all the email server configs
+ * The EMAIL_USERNAME, EMAIL_PASSWORD, EMAIL_HOST, EMAIL_PORT 
+ * are variables picked up from the Environment
  */
 var transporter = nodemailer.createTransport({
-    host: 'smtp.zoho.com', // Pick host from the environment
-    port: 465, // pick port from the environment
+    host: EMAIL_HOST,
+    port: EMAIL_PORT,
     secure: true, // use SSL
     auth: {
-        user: 'valindo.godinho@zoho.com', // pick email from the environment
-        pass: 'p.hf2!P3yQfp7nX' // pick password from the environment
+        user: EMAIL_USERNAME,
+        pass: EMAIL_PASSWORD
     }
 });
 
@@ -74,11 +103,9 @@ var transporter = nodemailer.createTransport({
 app.use(bodyParser.json());
 
 /**
- * Middleware to check if the number belongs to the Philippines 0r not
- * Also check if the Number(address) is present or not
+ * Middleware to check if the methods are only POST
  * 
- * Return 400 if number does not belong to the Philippines along with Error message
- * Return 400 if number is not present
+ * Will return status 405 if the request is anything but POST
  */
 
 app.use((req, res, next) => {
@@ -90,6 +117,13 @@ app.use((req, res, next) => {
     next();
 })
 
+/**
+ * Middleware to check if the number belongs to the Philippines or not
+ * Also check if the Number(address) is present or not
+ * 
+ * Return 400 if number does not belong to the Philippines along with Error message
+ * Return 400 if number is not present
+ */
 app.use((req, res, next) => {
     if (!req.body.address) {
         return res.status(400).send({
@@ -105,18 +139,19 @@ app.use((req, res, next) => {
     next();
 })
 
-
-
-
 /**
- * Generates a secret for OTPLIB
+ * Generates a secret for the OTP
  */
 const secret = otplib.authenticator.generateSecret();
+
 /**
  * Handler to Generate an OTP from a mobile number
  * 
  * Required params :
  * address = Mobile number
+ * 
+ * Optional params :
+ * email= Emaill address to send the OTP to
  * 
  * Returns : 
  * otp = One Time Password Generate
@@ -127,6 +162,7 @@ const secret = otplib.authenticator.generateSecret();
  * 
  * NOTE:
  * Every OTP generated has a lifespan of 300 seconds
+ * If email is provided, the email with the OTP will be send to the email address provided
  * 
  * To Calculate the OTP time step x window = expirationTime (seconds)
  */
@@ -163,7 +199,8 @@ app.post('/generate', (req, res) => {
         });
     }
     res.status(201).send({
-        status: "OPT created"
+        otp: otp,
+        address: address
     });
 });
 
@@ -174,13 +211,14 @@ app.post('/generate', (req, res) => {
  * address = Mobile Number
  * otp = One Time Password for verification
  * 
- * Return :
+ * Returns with status 200 :
  *  If the OTP is valid :
- *      {opt: "12345", address: "6931234567", accepted: true}
+ *      {status: "success"}
  *  
  * If the OTP is Invalid :
- *      {error: "The OTP has expired, please request for a new one"}
+ *      {status: "failed"}
  * 
+ * Returns with status 400 :
  * If the OTP is not present : 
  *      {error: "OTP is not present"}
  * 
@@ -193,21 +231,25 @@ app.post('/generate', (req, res) => {
 app.post('/verify', (req, res) => {
     let address = req.body.address;
     let otp = req.body.otp;
+
     if (!otp) {
         return res.status(400).send({
             error: "OTP is not present"
         });
     }
+
     if (otp.length != 6) {
         return res.status(400).send({
             error: "OTP length Mismatch"
         });
     }
+
     if (!/^\d+$/.test(otp)) {
         return res.status(400).send({
             error: "OTP should be numbers only"
         });
     }
+
     let verify = otplib.totp.verify({
         token: otp,
         secret: secret + address,
