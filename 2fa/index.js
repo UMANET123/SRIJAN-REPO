@@ -139,7 +139,8 @@ app.post('/generate', (req, res) => {
         });
     }
     res.status(201).send({
-        status: "OPT created"
+        otp: otp,
+        address: address
     });
 });
 
