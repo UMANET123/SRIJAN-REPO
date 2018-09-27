@@ -17,7 +17,40 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const otplib = require('otplib');
 const nodemailer = require('nodemailer');
+const morgan = require('morgan');
+const path = require('path');
+const fs = require('fs');
 const app = express();
+
+/**
+ * PORT_NUMBER = Broadcast Port number picked up from ENV variables
+ * NODE_ENV = Node Environment picked up from ENV Variables
+ * OTP_TIMER = OTP Alive time, set in minutes default is 5 minutes
+ * OTP_STEP = OTP_STEP x OTP_TIMER = Alive time, hence default is 60 seconds
+ */
+const PORT_NUMBER = process.env.PORT_NUMBER || 3000;
+const NODE_ENV = process.env.NODE_ENV || 'dev';
+const OTP_TIMER = process.env.OTP_TIMER || 5
+const OTP_STEP = parseInt(process.env.OTP_STEP) || 60
+
+var logDirectory = path.join('/var/log/', '2fa');
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+
+if (NODE_ENV == 'prod') {
+    var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'production.log'), {
+        flags: 'a'
+    })
+    app.use(morgan('common', {
+        stream: accessLogStream
+    }));
+} else {
+    var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'development.log'), {
+        flags: 'a'
+    })
+    app.use(morgan('dev', {
+        stream: accessLogStream
+    }));
+}
 
 /**
  * Mailer SMTP Setup
@@ -74,16 +107,7 @@ app.use((req, res, next) => {
 
 
 
-/**
- * PORT_NUMBER = Broadcast Port number picked up from ENV variables
- * NODE_ENV = Node Environment picked up from ENV Variables
- * OTP_TIMER = OTP Alive time, set in minutes default is 5 minutes
- * OTP_STEP = OTP_STEP x OTP_TIMER = Alive time, hence default is 60 seconds
- */
-const PORT_NUMBER = process.env.PORT_NUMBER || 3000;
-const NODE_ENV = process.env.NODE_ENV || 'dev';
-const OTP_TIMER = process.env.OTP_TIMER || 5
-const OTP_STEP = parseInt(process.env.OTP_STEP) || 60
+
 /**
  * Generates a secret for OTPLIB
  */
