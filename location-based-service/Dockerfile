@@ -6,6 +6,8 @@ WORKDIR /usr/src/app
 
 VOLUME [ "/usr/src/app" ]
 
+VOLUME [ "/var/log/" ]
+
 COPY . ./
 
 ENV PORT_NUMBER=5000

@@ -16,6 +16,8 @@
 const express = require('express');
 const xmlparser = require('express-xml-bodyparser');
 const morgan = require('morgan');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const port = process.env.PORT_NUMBER || 5000;
@@ -27,16 +29,23 @@ const port = process.env.PORT_NUMBER || 5000;
  */
 app.use(xmlparser());
 
+
 /**
  * This set's the level of logging based on the environment
  * 
  * Production = morgan('common') , Less Verbose ( Uses Apache Style Logs <DATE> Log Details)
  * Development = morgan('dev') More Verbose
  */
+
+ var logDirectory = path.join('/var/log/', 'location-based-service');
+ fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+ var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'access.log'), { flags: 'a' })
+
+ console.log(logDirectory);
 if (process.env.NODE_ENV == 'prod') {
     app.use(morgan('common'));
 } else if (process.env.NODE_ENV == 'dev') {
-    app.use(morgan('dev'));
+    app.use(morgan('dev', {stream:accessLogStream}));
 }
 
 /**
