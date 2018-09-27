@@ -37,15 +37,23 @@ app.use(xmlparser());
  * Development = morgan('dev') More Verbose
  */
 
- var logDirectory = path.join('/var/log/', 'location-based-service');
- fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
- var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'access.log'), { flags: 'a' })
+var logDirectory = path.join('/var/log/', 'location-based-service');
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
 
- console.log(logDirectory);
 if (process.env.NODE_ENV == 'prod') {
-    app.use(morgan('common'));
+    var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'production.log'), {
+        flags: 'a'
+    })
+    app.use(morgan('common', {
+        stream: accessLogStream
+    }));
 } else if (process.env.NODE_ENV == 'dev') {
-    app.use(morgan('dev', {stream:accessLogStream}));
+    var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'development.log'), {
+        flags: 'a'
+    })
+    app.use(morgan('dev', {
+        stream: accessLogStream
+    }));
 }
 
 /**
