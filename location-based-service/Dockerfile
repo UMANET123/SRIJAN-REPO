@@ -1,0 +1,17 @@
+FROM node:10
+
+LABEL maintainer="Srijan Tech" 
+
+WORKDIR /usr/src/app
+
+VOLUME [ "/usr/src/app" ]
+
+COPY . ./
+
+ENV PORT_NUMBER=5000
+
+EXPOSE 5000
+
+RUN npm install && npm install pm2 -g
+CMD chmod +x run.sh && ./run.sh
+
