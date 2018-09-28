@@ -25,7 +25,9 @@ const nodemailer = require('nodemailer');
 const morgan = require('morgan');
 const path = require('path');
 const fs = require('fs');
+const qrcode = require('qrcode');
 const app = express();
+
 
 /**
  * PORT_NUMBER = Broadcast Port number picked up from ENV variables
@@ -265,6 +267,66 @@ app.post('/verify', (req, res) => {
     }
 
 });
+
+
+app.post('/generate/hotp', (req, res) => {
+
+    let address = req.body.address;
+    let addressSecret = otplib.authenticator.encode(`${address}`)
+    let email = req.body.email;
+    let otpurl = otplib.authenticator.keyuri(address, '2fa', addressSecret)
+    console.log(otpurl);
+    let base64 = qrcode.toDataURL(otpurl, (error, base64) => {
+        if (error) {
+            return error
+        } else {
+            let preview = `<p><img src="${base64}"/></p>`
+            res.writeHead(200, {
+                'Content-Type': 'html',
+            });
+            return res.end(preview);
+        }
+    });
+})
+
+app.post('/verify/hotp', (req, res) => {
+    let address = req.body.address;
+    let addressSecret = otplib.authenticator.encode(`${address}`)
+    let otp = req.body.otp;
+
+    if (!otp) {
+        return res.status(400).send({
+            error: "OTP is not present"
+        });
+    }
+
+    if (otp.length != 6) {
+        return res.status(400).send({
+            error: "OTP length Mismatch"
+        });
+    }
+
+    if (!/^\d+$/.test(otp)) {
+        return res.status(400).send({
+            error: "OTP should be numbers only"
+        });
+    }
+
+    let verify = otplib.authenticator.verify({
+        token: otp,
+        secret: addressSecret,
+    });
+    if (verify) {
+        return res.send({
+            status: "success"
+        });
+    } else {
+        return res.send({
+            status: "failed"
+        });
+    }
+
+})
 
 /**
  * Custom Error Handler for 500 Response
