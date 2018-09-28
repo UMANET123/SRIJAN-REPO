@@ -186,7 +186,7 @@ app.post('/generate', (req, res) => {
          * confirmation message
          */
         var mailOptions = {
-            from: '<valindo.godinho@zoho.com>', // sender address (who sends)
+            from: 'GLOBE OTP <valindo.godinho@zoho.com>', // sender address (who sends)
             to: `${email}`, // list of receivers (who receives)
             subject: 'OTP', // Subject line
             text: `${otp}`, // plaintext body
