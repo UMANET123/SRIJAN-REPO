@@ -57,41 +57,45 @@
     </section> -->
     <section id="login" class="h-100 container-fluid d-flex justify-content-center align-items-center">
         <div class="container d-flex justify-content-center">
-            <div class="card shadow-lg bg-white w-50">
-                <img class="card-img-top w-75 m-auto" src="/images/globeLogo.png" atl="Globe Logo">
-                <div class="card-body text-center">
-                    <form method="post">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroupPrepend2"><i class="material-icons">email</i></i></span>
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-4 col-lg-4 col-sm-8">
+                    <div class="card shadow-lg bg-white m-auto">
+                        <img class="card-img-top w-75 m-auto" src="/images/globeLogo.png" atl="Globe Logo">
+                        <div class="card-body text-center">
+                            <form method="post">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroupPrepend2"><i class="material-icons">email</i></i></span>
+                                        </div>
+                                        <input type="text" class="form-control form-control-lg" aria-describedby="inputGroupPrepend2"
+                                            name="email" placeholder="Email">
+                                    </div>
                                 </div>
-                                <input type="text" class="form-control form-control-lg" aria-describedby="inputGroupPrepend2"
-                                    name="email" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <!-- <label>Password</label>
-                            <input type="password" class="form-control" name="password" placeholder="Password"> -->
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="inputGroupPrepend1"><i class="material-icons">vpn_key</i></i></span>
+                                <div class="form-group">
+                                    <!-- <label>Password</label>
+                                    <input type="password" class="form-control" name="password" placeholder="Password"> -->
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="inputGroupPrepend1"><i class="material-icons">vpn_key</i></i></span>
+                                        </div>
+                                        <input type="password" class="form-control form-control-lg" aria-describedby="inputGroupPrepend1"
+                                            name="password" placeholder="Password">
+                                    </div>
                                 </div>
-                                <input type="password" class="form-control form-control-lg" aria-describedby="inputGroupPrepend1"
-                                    name="password" placeholder="Password">
-                            </div>
-                        </div>
 
-                        <button type="submit" class="btn btn-primary btn-lg btn-block mt-5">Login</button>
-                    </form>
-                    <div class="card-footer bg-white mt-3">
-                        <p>Need an account? <a href="/signup">Signup</a></p>
-                        <% if (typeof result !== 'undefined') { %>
-                        <div class="alert alert-danger" role="alert">
-                            <a href="#" class="close" data-dismiss="alert">&times;</a>
-                            <%= result %>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block mt-5">Login</button>
+                            </form>
+                            <div class="card-footer bg-white mt-3">
+                                <p>Need an account? <a href="/signup">Signup</a></p>
+                                <% if (typeof result !== 'undefined') { %>
+                                <div class="alert alert-danger" role="alert">
+                                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                                    <%= result %>
+                                </div>
+                                <% } %>
+                            </div>
                         </div>
-                        <% } %>
                     </div>
                 </div>
             </div>
