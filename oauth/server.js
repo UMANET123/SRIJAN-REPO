@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use("/oauth/v2", express.static(path.join(__dirname, "public")));
 app.set("view engine", "ejs");
 
 // This function is used to check the existence of the user attribute from the
@@ -49,11 +49,11 @@ function restrict(req, res, next) {
   }
 }
 
-app.get("/login", require("./routes/login").get);
+app.get("/oauth/v2/login", require("./routes/login").get);
 
 // app.post("/login", require("./routes/login").post);
 
-app.get("/consent", restrict, require("./routes/consent").get);
+app.get("/oauth/v2/consent", restrict, require("./routes/consent").get);
 
 // app.post("/consent", restrict, require("./routes/consent").post);
 

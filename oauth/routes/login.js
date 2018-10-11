@@ -17,7 +17,7 @@ exports.get = function(req, res) {
     ? "Login failed. Please check your email/password and try again"
     : undefined;
   var basePath = utils.getBasePath(req);
-
+  console.log(basePath);
   res.render("login", {
     result: result,
     basePath: basePath,
