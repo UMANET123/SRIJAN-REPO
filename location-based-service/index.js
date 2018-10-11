@@ -152,9 +152,9 @@ app.post('/locationManagement/monetization', (req, res, next) => {
                                 <!--Optional:-->
                                 <MSISDN>${msisdn}</MSISDN>
                                 <!--Optional:-->
-                                <Latitude>1234567890</Latitude>
+                                <Latitude>14.5995</Latitude>
                                 <!--Optional:-->
-                                <Longitude>1234567890</Longitude>
+                                <Longitude>120.9842</Longitude>
                             </GetLocationByMSISDNResult>
                         </loc:GetLocationByMSISDNResponse>
                     </soap:Body>
