@@ -53,7 +53,8 @@ app.get("/oauth/v2/login", require("./routes/login").get);
 
 // app.post("/login", require("./routes/login").post);
 
-app.get("/oauth/v2/consent", restrict, require("./routes/consent").get);
+// app.get("/oauth/v2/consent", restrict, require("./routes/consent").get);
+app.get("/oauth/v2/consent", require("./routes/consent").get);
 
 // app.post("/consent", restrict, require("./routes/consent").post);
 
