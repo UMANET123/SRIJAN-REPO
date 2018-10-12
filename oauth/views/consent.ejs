@@ -79,9 +79,7 @@
                     <ul class="list-group list-group-flush text-left">
                         <% for (var i = 0; i < data.scope.length; i++) { %>
                         <li class="list-group-item">
-                            <i class="material-icons">
-                                language
-                            </i>
+                            <input class="form-check-input" type="checkbox" value="<%= data.scope[i] %>" id="<%= data.scope[i] %>" checked="true">
                             <span class="consent-text">
                                 <%= data.scope[i] %>
                             </span>
@@ -89,7 +87,7 @@
                         <% } %>
                     </ul>
 
-                    <form method="post" class="mt-4">
+                    <form method="post" class="mt-4" id="form">
                         <input type="hidden" id="decision" name="decision" />
                         <input id="allow" type="submit" value="Allow" tabindex="2" onclick="return submitDecision(true);"
                             class="btn btn-success btn-lg mr-1">
@@ -103,7 +101,14 @@
     </section>
     <script type="text/javascript">
         function submitDecision(decision) {
-            document.getElementById("decision").value = decision;
+            // document.getElementById("decision").value = decision;
+            var decision = document.getElementById("decision")
+            var items = $("input[type='checkbox']:checked");
+            var checkedArray = []
+            for (var i = 0; i < items.length; i++) {
+                checkedArray.push(items[i].value);
+            }
+            decision.value = checkedArray;
             document.getElementById(decision).parentNode.submit();
             return false;
         }
