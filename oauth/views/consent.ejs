@@ -40,10 +40,10 @@
                                 <%= data.appName %> is requesting access to the following services:</p>
 
                             <ul style="list-style: none;">
-                                <% for (var i = 0; i < data.appProducts.length; i++) { %>
+                                <% for (var i = 0; i < data.scope.length; i++) { %>
                                 <li class=" lead">
                                     <i class="fas fa-globe"></i>
-                                    <%= data.appProducts[i] %>
+                                    <%= data.scope[i] %>
                                 </li>
                                 <% } %>
                             </ul>
@@ -77,7 +77,7 @@
 
 
                     <ul class="list-group list-group-flush text-left">
-                        <% for (var i = 0; i < data.appProducts.length; i++) { %>
+                        <% for (var i = 0; i < data.scope.length; i++) { %>
                         <li class="list-group-item">
                             <i class="material-icons">
                                 language
