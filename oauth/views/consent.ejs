@@ -111,10 +111,11 @@
                     checkedArray.push(items[i].value);
                 }
                 decision.value = checkedArray;
-                document.getElementById(decision).parentNode.submit();
+
             } else {
                 decision.value = [];
             }
+            document.getElementById(decision).parentNode.submit();
             return false;
         }
     </script>
