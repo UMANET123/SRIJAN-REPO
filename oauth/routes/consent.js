@@ -7,8 +7,7 @@ exports.get = function(req, res) {
     scope: req.query.scope.split(","),
     state: req.query.state,
     redirect_uri: req.query.redirect_uri,
-    appName: req.query.appName,
-    appProducts: req.query.appProducts
+    app: req.query.app
   };
 
   var basePath = utils.getBasePath(req);
