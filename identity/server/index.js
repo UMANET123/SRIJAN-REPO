@@ -76,12 +76,10 @@ app.post("/login", (req, res) => {
         mockData[i].password,
         (err, isValid) => {
           if (isValid) {
-            console.log("Successfully Logged in");
             return res.status(200).send({
               message: "Successfully Logged in"
             });
           } else {
-            console.log("Invalid Password");
             return res.status(401).send({
               message: "Incorrect password or email"
             });
@@ -92,7 +90,6 @@ app.post("/login", (req, res) => {
   }
 
   if (!isPresent) {
-    console.log("Invalid Password and Email");
     return res.status(401).send({
       message: "Incorrect password or email"
     });
