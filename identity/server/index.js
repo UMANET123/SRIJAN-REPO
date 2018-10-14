@@ -34,7 +34,8 @@ bcrypt.hash("baconpancakes", saltRounds, (err, hash) => {
     address: "Norzagaray, Bulacan, Philippines",
     msisdn: "639234567891",
     email: "globe@globe.com",
-    password: hash
+    password: hash,
+    emailVerify: true
   });
 });
 
@@ -84,12 +85,13 @@ app.post("/login", (req, res) => {
   for (i = 0; i < mockData.length; i++) {
     if (mockData[i].email == req.body.email) {
       isPresent = true;
+      let emailVerify = mockData[i].emailVerify
       bcrypt.compare(
         req.body.password,
         mockData[i].password,
         (err, isValid) => {
           if (isValid) {
-            if (mockData[i].emailVerify) {
+            if (emailVerify) {
               return res.status(200).send({
                 message: "Successfully Logged in"
               });
@@ -148,7 +150,7 @@ app.post('/regenerate', (req, res) => {
   let email = req.body.email;
   crypto.randomBytes(48, function (err, buffer) {
     var token = buffer.toString('hex');
-    client.set(email, token, 'EX',1800)
+    client.set(email, token, 'EX', 1800)
     res.status(201).send({
       email: email,
       hash: token
