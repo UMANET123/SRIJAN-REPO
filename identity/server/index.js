@@ -70,7 +70,7 @@ app.post("/register", (req, res) => {
         password: hash,
         emailVerify: false
       });
-      client.set(req.body.email, token, 'EX', 180)
+      client.set(req.body.email, token, 'EX', 1800)
       res.status(201).send({
         email: req.body.email,
         hash: token
@@ -148,7 +148,7 @@ app.post('/regenerate', (req, res) => {
   let email = req.body.email;
   crypto.randomBytes(48, function (err, buffer) {
     var token = buffer.toString('hex');
-    client.set(email, token)
+    client.set(email, token, 'EX',1800)
     res.status(201).send({
       email: email,
       hash: token
