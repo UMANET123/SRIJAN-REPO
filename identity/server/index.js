@@ -9,7 +9,7 @@ const client = redis.createClient('redis://emailtokens');
 
 client.on('connect', (err) => {
   console.log("connected to Redis server");
-})
+});
 
 app.use(bodyParser.json());
 morgan.token("request-body", function (req, res) {
@@ -86,11 +86,11 @@ app.post("/login", (req, res) => {
   let password = req.body.password;
 
   mockData.map((record, index) => {
-    if(record.email == email){
+    if (record.email == email) {
       isPresent = true;
-      bcrypt.compare(password, record.password, (err, isValid)=>{
-        if(isValid){
-          if(record.emailVerify){
+      bcrypt.compare(password, record.password, (err, isValid) => {
+        if (isValid) {
+          if (record.emailVerify) {
             return res.status(200).send({
               message: "Successfully Logged in"
             });
@@ -123,22 +123,22 @@ app.post('/verify*', (req, res) => {
       if (storedHash == hash) {
         mockData = mockData.map(data => {
           if (data.email == email) {
-            data.emailVerify = true
+            data.emailVerify = true;
           }
-          return data
+          return data;
         })
         return res.status(200).send({
           message: "Verification Complete, please login to continue"
-        })
+        });
       } else {
         return res.status(400).send({
           message: "Malformed Verification"
-        })
+        });
       }
     } else {
       return res.status(400).send({
         message: "Verification Window Expired, please request for a new verification email "
-      })
+      });
     }
   })
 })
@@ -151,9 +151,9 @@ app.post('/regenerate', (req, res) => {
     res.status(201).send({
       email: email,
       hash: token
-    })
-  })
-})
+    });
+  });
+});
 
 function checkEmailAddress(email) {
   let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

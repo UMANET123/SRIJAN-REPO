@@ -1,5 +1,7 @@
 FROM mysql:5.7
 
+LABEL maintainer="Srijan Technologies"
+
 ENV MYSQL_USER=identity
 
 ENV MYSQL_PASSWORD=identity
