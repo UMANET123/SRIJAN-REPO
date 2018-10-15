@@ -71,7 +71,9 @@ app.post("/register", (req, res) => {
         password: hash,
         emailVerify: false
       });
-      client.set(req.body.email, token, 'EX', 1800)
+
+      client.set(req.body.email, token, 'EX', 1800);
+
       res.status(201).send({
         email: req.body.email,
         hash: token
@@ -118,6 +120,7 @@ app.post("/login", (req, res) => {
 app.post('/verify', (req, res) => {
   let email = req.body.email;
   let hash = req.body.hash;
+
   client.get(email, (err, storedHash) => {
     if (storedHash) {
       if (storedHash == hash) {
@@ -140,14 +143,16 @@ app.post('/verify', (req, res) => {
         message: "Verification Window Expired"
       });
     }
-  })
-})
+  });
+});
 
 app.post('/regenerate', (req, res) => {
   let email = req.body.email;
   crypto.randomBytes(48, function (err, buffer) {
     var token = buffer.toString('hex');
-    client.set(email, token, 'EX', 1800)
+
+    client.set(email, token, 'EX', 1800);
+    
     res.status(201).send({
       email: email,
       hash: token
