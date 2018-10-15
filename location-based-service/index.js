@@ -70,23 +70,16 @@ if (NODE_ENV == 'prod') {
 }
 
 /**
- * Middleware to check that only POST requests are allowed
+ * Middleware to check that only POST requests are allowed and 
+ * check the presence of the SOAP contract in the body
  * 
- * Returns status 405
+ * Returns status 405 for NOT POST requests
+ * Returns status 400 if SOAP contract is missing
  */
 app.use((req, res, next) => {
     if (req.method != "POST") {
         return res.status(405).send("Method Not Allowed");
     }
-    next();
-})
-
-/**
- * Middleware to check the presence of the SOAP contract in the body
- * 
- * Returns status 400
- */
-app.use((req, res, next) => {
     if (Object.keys(req.body).length == 0 && req.method == "POST") {
         return res.status(400).send("SOAP contract not present");
     }
