@@ -39,8 +39,8 @@ const app = express();
  */
 const PORT_NUMBER = process.env.PORT_NUMBER || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'dev';
-const OTP_TIMER = process.env.OTP_TIMER || 5
-const OTP_STEP = parseInt(process.env.OTP_STEP) || 60
+const OTP_TIMER = process.env.OTP_TIMER || 5;
+const OTP_STEP = parseInt(process.env.OTP_STEP) || 60;
 const EMAIL_USERNAME = process.env.EMAIL_USERNAME;
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 const EMAIL_HOST = process.env.EMAIL_HOST;
@@ -52,7 +52,7 @@ const EMAIL_PORT = process.env.EMAIL_PORT;
  */
 if (NODE_ENV != 'test') {
     var logDirectory = path.join('/var/log/', '2fa');
-    fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+    fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 }
 
 /**
@@ -68,14 +68,14 @@ if (NODE_ENV != 'test') {
 if (NODE_ENV == 'prod') {
     var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'production.log'), {
         flags: 'a'
-    })
+    });
     app.use(morgan('common', {
         stream: accessLogStream
     }));
 } else if (NODE_ENV == 'dev') {
     var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'development.log'), {
         flags: 'a'
-    })
+    });
     app.use(morgan('dev', {
         stream: accessLogStream
     }));
@@ -108,38 +108,33 @@ app.use(bodyParser.json());
  * Middleware to check if the methods are only POST
  * 
  * Will return status 405 if the request is anything but POST
- */
-
-app.use((req, res, next) => {
-    if (req.method != "POST") {
-        return res.status(405).send({
-            error: "Method not allowed"
-        })
-    }
-    next();
-})
-
-/**
+ * 
  * Middleware to check if the number belongs to the Philippines or not
  * Also check if the Number(address) is present or not
  * 
  * Return 400 if number does not belong to the Philippines along with Error message
  * Return 400 if number is not present
  */
+
 app.use((req, res, next) => {
+    if (req.method != "POST") {
+        return res.status(405).send({
+            error: "Method not allowed"
+        });
+    }
     if (!req.body.address) {
         return res.status(400).send({
-            error: "Address Not present"
-        })
+            error: "Address Missing"
+        });
     }
     if (!(/^639[0-9]{9}$/.test(req.body.address))) {
         return res.status(400).send({
-            error: "Address Invalid, does not belong to the Philippines"
+            error: "Address Invalid"
         });
     }
-
     next();
 })
+
 
 /**
  * Generates a secret for the OTP
@@ -174,7 +169,7 @@ app.post('/generate', (req, res) => {
     otplib.totp.options = {
         step: OTP_STEP,
         window: OTP_TIMER
-    }
+    };
     let otp = otplib.totp.generate(secret + address);
     if (email) {
         /**
@@ -207,7 +202,7 @@ app.post('/generate', (req, res) => {
 });
 
 /**
- * Handler to Verify The Generated OTP
+ * Handler to Verify The Generated TOTP
  * 
  * Required Params : 
  * address = Mobile Number
@@ -254,7 +249,7 @@ app.post('/verify', (req, res) => {
 
     let verify = otplib.totp.verify({
         token: otp,
-        secret: secret + address,
+        secret: secret + address
     });
     if (verify) {
         return res.send({
@@ -268,30 +263,58 @@ app.post('/verify', (req, res) => {
 
 });
 
-
+/**
+ * Generate HOTP handler
+ * Will return 200 with a QRcode image
+ * 
+ * Required Params :
+ * address = Mobile number
+ */
 app.post('/generate/hotp', (req, res) => {
-
     let address = req.body.address;
-    let addressSecret = otplib.authenticator.encode(`${address}`)
-    let email = req.body.email;
-    let otpurl = otplib.authenticator.keyuri(address, '2fa', addressSecret)
-    console.log(otpurl);
-    let base64 = qrcode.toDataURL(otpurl, (error, base64) => {
+    let addressSecret = otplib.authenticator.encode(`${address}`);
+    let otpurl = otplib.authenticator.keyuri(address, '2fa', addressSecret);
+    qrcode.toDataURL(otpurl, (error, base64) => {
         if (error) {
-            return error
+            return error;
         } else {
-            let preview = `<p><img src="${base64}"/></p>`
+            let preview = `<p><img src="${base64}"/></p>`;
             res.writeHead(200, {
                 'Content-Type': 'html',
             });
             return res.end(preview);
         }
     });
-})
+});
+
+/**
+ * Handler to Verify The Generated HOTP
+ * 
+ * Required Params : 
+ * address = Mobile Number
+ * otp = One Time Password for verification
+ * 
+ * Returns with status 200 :
+ *  If the OTP is valid :
+ *      {status: "success"}
+ *  
+ * If the OTP is Invalid :
+ *      {status: "failed"}
+ * 
+ * Returns with status 400 :
+ * If the OTP is not present : 
+ *      {error: "OTP is not present"}
+ * 
+ * If the OTP is not a number :
+ *      {error: "OTP should be numbers only"}
+ * 
+ * If the OTP length is not 6 : 
+ *      {error: "OTP length Mismatch"}
+ */
 
 app.post('/verify/hotp', (req, res) => {
     let address = req.body.address;
-    let addressSecret = otplib.authenticator.encode(`${address}`)
+    let addressSecret = otplib.authenticator.encode(`${address}`);
     let otp = req.body.otp;
 
     if (!otp) {
@@ -314,7 +337,7 @@ app.post('/verify/hotp', (req, res) => {
 
     let verify = otplib.authenticator.verify({
         token: otp,
-        secret: addressSecret,
+        secret: addressSecret
     });
     if (verify) {
         return res.send({
@@ -326,7 +349,7 @@ app.post('/verify/hotp', (req, res) => {
         });
     }
 
-})
+});
 
 /**
  * Custom Error Handler for 500 Response
@@ -339,7 +362,7 @@ app.use(function (err, req, res, next) {
     res.status(500).send({
         error: "Internal Server Error"
     });
-})
+});
 
 
 app.listen(PORT_NUMBER, () => {
