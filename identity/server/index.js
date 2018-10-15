@@ -3,9 +3,10 @@ const bodyParser = require("body-parser");
 const crypto = require('crypto');
 const bcrypt = require("bcrypt");
 const morgan = require("morgan");
-const app = express();
 const redis = require('redis');
+
 const client = redis.createClient('redis://emailtokens');
+const app = express();
 
 client.on('connect', (err) => {
   console.log("connected to Redis server");
@@ -23,7 +24,6 @@ app.use(
 );
 
 const saltRounds = 10;
-const emailVerifySaltRounds = 15;
 let mockData = [];
 
 bcrypt.hash("baconpancakes", saltRounds, (err, hash) => {
@@ -42,19 +42,19 @@ bcrypt.hash("baconpancakes", saltRounds, (err, hash) => {
 app.post("/register", (req, res) => {
   if (!checkEmailAddress(req.body.email)) {
     return res.status(400).send({
-      message: "Please Provide a Valid Email address"
+      message: "Invalid Email Address"
     });
   }
 
   if (!/^639[0-9]{9}$/.test(req.body.msisdn)) {
     return res.status(400).send({
-      message: "Please Provide a Valid Philippines Mobile Number"
+      message: "Invalid Mobile Number"
     });
   }
 
   if (req.body.password.length < 6) {
     return res.status(400).send({
-      message: "Please enter a password of length greater than 6"
+      message: "Invalid Password"
     });
   }
 
@@ -96,12 +96,12 @@ app.post("/login", (req, res) => {
             });
           } else {
             return res.status(401).send({
-              message: "Please Verify your email to continue, if you have not recieved a verficiation email, request for a new one"
+              message: "Please Verify your email"
             });
           }
         } else {
           return res.status(401).send({
-            message: "Incorrect password or email"
+            message: "Invalid credentials"
           });
         }
       })
@@ -110,12 +110,12 @@ app.post("/login", (req, res) => {
 
   if (!isPresent) {
     return res.status(401).send({
-      message: "Incorrect password or email"
+      message: "Invalid credentials"
     });
   }
 });
 
-app.post('/verify*', (req, res) => {
+app.post('/verify', (req, res) => {
   let email = req.body.email;
   let hash = req.body.hash;
   client.get(email, (err, storedHash) => {
@@ -128,16 +128,16 @@ app.post('/verify*', (req, res) => {
           return data;
         })
         return res.status(200).send({
-          message: "Verification Complete, please login to continue"
+          message: "Email Verification Completed"
         });
       } else {
         return res.status(400).send({
-          message: "Malformed Verification"
+          message: "Invalid Request"
         });
       }
     } else {
       return res.status(400).send({
-        message: "Verification Window Expired, please request for a new verification email "
+        message: "Verification Window Expired"
       });
     }
   })
@@ -156,8 +156,8 @@ app.post('/regenerate', (req, res) => {
 });
 
 function checkEmailAddress(email) {
-  let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
+  let pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return pattern.test(email);
 }
 
 app.listen(4000, () => {
