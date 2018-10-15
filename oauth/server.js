@@ -3,8 +3,6 @@ var bodyParser = require("body-parser");
 var path = require("path");
 var session = require("express-session");
 var cookieParser = require("cookie-parser");
-
-var utils = require("./lib/utils");
 var app = express();
 
 var sessionOptions = {
@@ -42,21 +40,17 @@ function restrict(req, res, next) {
     req.session.error = "Access denied!";
     res.redirect(
       302,
-      utils.getBasePath(req) +
+      "/oauth/v2" +
       "/login" +
       req.url.substring(req.url.indexOf("?"))
     );
   }
 }
-
+// Route to login ( Display Login page )
 app.get("/oauth/v2/login", require("./routes/login").get);
+// Route for Consent ( Display Consent Page )
+app.get("/oauth/v2/consent", restrict, require("./routes/consent").get);
 
-// app.post("/login", require("./routes/login").post);
-
-// app.get("/oauth/v2/consent", restrict, require("./routes/consent").get);
-app.get("/oauth/v2/consent", require("./routes/consent").get);
-
-// app.post("/consent", restrict, require("./routes/consent").post);
 
 app.set("port", process.env.PORT || 3000);
 app.listen(app.get("port"), function () {

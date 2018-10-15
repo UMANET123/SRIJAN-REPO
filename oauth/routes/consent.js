@@ -1,6 +1,4 @@
-var url = require("url");
-var utils = require("../lib/utils");
-
+// Handler for Consent page
 exports.get = function(req, res) {
   var data = {
     client_id: req.query.client_id,
@@ -10,33 +8,10 @@ exports.get = function(req, res) {
     app: req.query.app
   };
 
-  var basePath = utils.getBasePath(req);
+  var basePath = "/oauth/v2";
 
   res.render("consent", {
     basePath: basePath,
     data: data
   });
-};
-
-exports.post = function(req, res) {
-  var decision = req.body.decision;
-  var basePath = utils.getBasePath(req);
-
-  if (decision == "true") {
-    // Access granted
-    res.redirect(
-      url.format({
-        pathname: "/userAuthorize",
-        query: req.query
-      })
-    );
-  } else {
-    // Access Denied
-    res.redirect(
-      url.format({
-        pathname: "/login",
-        query: req.query
-      })
-    );
-  }
 };
