@@ -21,10 +21,12 @@ services:
     working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app
+      - $HOME/logs:/var/log
     ports:
       - "5000"
     environment:
       - INSTANCE=node1
+      - NODE_ENV="${NODE_ENV}"
     networks:
       - app-network
 
