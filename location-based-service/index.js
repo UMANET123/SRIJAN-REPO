@@ -12,12 +12,22 @@
  * 1. Express
  * 2. Xmlparser
  * 3. Morgan
+ * path and fs are part of node core
  */
 const express = require('express');
 const xmlparser = require('express-xml-bodyparser');
 const morgan = require('morgan');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
+
+/**
+ * NODE_ENV = Current working environment, picked up from the environment variables
+ *              else defaults to dev
+ * port = Picked up from the environment file else defaults to 5000
+ */
+const NODE_ENV = process.env.NODE_ENV || 'dev';
 const port = process.env.PORT_NUMBER || 5000;
 
 /**
@@ -27,36 +37,49 @@ const port = process.env.PORT_NUMBER || 5000;
  */
 app.use(xmlparser());
 
+
+
+/**
+ * This blocks the application from creating logs directory during test
+ */
+if (NODE_ENV != 'test') {
+    var logDirectory = path.join('/var/log/', 'location-based-service');
+    fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+}
+
 /**
  * This set's the level of logging based on the environment
  * 
  * Production = morgan('common') , Less Verbose ( Uses Apache Style Logs <DATE> Log Details)
  * Development = morgan('dev') More Verbose
  */
-if (process.env.NODE_ENV == 'prod') {
-    app.use(morgan('common'));
-} else if (process.env.NODE_ENV == 'dev') {
-    app.use(morgan('dev'));
+if (NODE_ENV == 'prod') {
+    var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'production.log'), {
+        flags: 'a'
+    })
+    app.use(morgan('common', {
+        stream: accessLogStream
+    }));
+} else if (NODE_ENV == 'dev') {
+    var accessLogStream = fs.createWriteStream(path.join(logDirectory, 'development.log'), {
+        flags: 'a'
+    })
+    app.use(morgan('dev', {
+        stream: accessLogStream
+    }));
 }
 
 /**
- * Middleware to check that only POST requests are allowed
+ * Middleware to check that only POST requests are allowed and 
+ * check the presence of the SOAP contract in the body
  * 
- * Returns status 405
+ * Returns status 405 for NOT POST requests
+ * Returns status 400 if SOAP contract is missing
  */
 app.use((req, res, next) => {
     if (req.method != "POST") {
         return res.status(405).send("Method Not Allowed");
     }
-    next();
-})
-
-/**
- * Middleware to check the presence of the SOAP contract in the body
- * 
- * Returns status 400
- */
-app.use((req, res, next) => {
     if (Object.keys(req.body).length == 0 && req.method == "POST") {
         return res.status(400).send("SOAP contract not present");
     }
@@ -122,9 +145,9 @@ app.post('/locationManagement/monetization', (req, res, next) => {
                                 <!--Optional:-->
                                 <MSISDN>${msisdn}</MSISDN>
                                 <!--Optional:-->
-                                <Latitude>1234567890</Latitude>
+                                <Latitude>14.5995</Latitude>
                                 <!--Optional:-->
-                                <Longitude>1234567890</Longitude>
+                                <Longitude>120.9842</Longitude>
                             </GetLocationByMSISDNResult>
                         </loc:GetLocationByMSISDNResponse>
                     </soap:Body>

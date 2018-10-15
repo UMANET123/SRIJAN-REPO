@@ -8,6 +8,5 @@ if [ $NODE_ENV == 'test' ]
 then
     npm test
 else
-    echo 'I am in development'
     npx nodemon index.js
 fi

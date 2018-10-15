@@ -4,7 +4,7 @@
   "description": "Location Based Service for Globe Labs",
   "main": "index.js",
   "scripts": {
-    "test": "npx mocha"
+    "test": "NODE_ENV=test npx mocha"
   },
   "author": "",
   "license": "ISC",
