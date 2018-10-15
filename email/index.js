@@ -5,7 +5,9 @@ const app = express();
 
 app.use(bodyParser.json());
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT;
+const SENDERS_EMAIL = process.env.SENDERS_EMAIL;
+const SENDERS_NAME = process.env.SENDERS_NAME;
 const EMAIL_USERNAME = process.env.EMAIL_USERNAME;
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 const EMAIL_HOST = process.env.EMAIL_HOST;
@@ -20,12 +22,13 @@ var transporter = nodemailer.createTransport({
         pass: EMAIL_PASSWORD
     }
 });
+
 app.post('/sendmail', (req, res) => {
     let email = req.body.email;
     let subject = req.body.subject;
-    let text = req.body.text
+    let text = req.body.text;
     var mailOptions = {
-        from: 'GLOBE TELECOM <valindo.godinho@zoho.com>', // sender address (who sends)
+        from: `${SENDERS_NAME} <${SENDERS_EMAIL}>`, // sender address (who sends)
         to: `${email}`, // list of receivers (who receives)
         subject: `${subject}`, // Subject line
         text: `${text}`, // plaintext body
@@ -39,10 +42,10 @@ app.post('/sendmail', (req, res) => {
         }
         res.status(200).send({
             message: info.response
-        })
+        });
     });
-})
+});
 
 app.listen(PORT, () => {
-    console.log(`App Running on PORT : ${PORT}`)
-})
+    console.log(`App Running on PORT : ${PORT}`);
+});
