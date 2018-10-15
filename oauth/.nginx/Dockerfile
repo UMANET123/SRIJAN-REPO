@@ -1,6 +1,6 @@
 FROM nginx:latest
 
-LABEL maintainer="Srijan Tech"
+LABEL maintainer="Srijan Technologies"
 
 COPY ./nginx.conf /etc/nginx/nginx.conf
 

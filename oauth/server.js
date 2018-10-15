@@ -45,7 +45,7 @@ function restrict(req, res, next) {
       req.url.substring(req.url.indexOf("?"))
     );
   }
-}
+};
 // Route to login ( Display Login page )
 app.get("/oauth/v2/login", require("./routes/login").get);
 // Route for Consent ( Display Consent Page )

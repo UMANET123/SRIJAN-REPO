@@ -1,6 +1,6 @@
 FROM node:10
 
-LABEL maintainer="Srijan Techology"
+LABEL maintainer="Srijan Technologies"
 
 WORKDIR /usr/src/install
 
