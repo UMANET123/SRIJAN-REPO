@@ -3,16 +3,16 @@ version: '2'
 services:
   nginx:
     build:
-      context: .docker/
+      context: .nginx/
       dockerfile: Dockerfile
     links:
       - node1:node1
     depends_on:
       - node1
     ports:
-      - "5000:5000"
+      - "3456:3456"
     networks:
-      - app-network
+      - email-network
     
   node1:
     build:
@@ -23,13 +23,12 @@ services:
       - .:/usr/src/app
       - $HOME/logs:/var/log
     ports:
-      - "5000"
+      - "3456"
     environment:
       - INSTANCE=node1
-      - NODE_ENV="${NODE_ENV}"
     networks:
-      - app-network
+      - email-network
 
 networks:
-  app-network:
+  email-network:
     driver: bridge

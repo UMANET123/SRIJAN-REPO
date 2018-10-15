@@ -1,19 +1,19 @@
-version: '2'
+version: "2"
 
 services:
   nginx:
     build:
-      context: .docker/
+      context: .nginx/
       dockerfile: Dockerfile
     links:
       - node1:node1
     depends_on:
       - node1
     ports:
-      - "5000:5000"
+      - "3333:3333"
     networks:
       - app-network
-    
+
   node1:
     build:
       context: .
@@ -23,10 +23,9 @@ services:
       - .:/usr/src/app
       - $HOME/logs:/var/log
     ports:
-      - "5000"
+      - "3333"
     environment:
       - INSTANCE=node1
-      - NODE_ENV="${NODE_ENV}"
     networks:
       - app-network
 

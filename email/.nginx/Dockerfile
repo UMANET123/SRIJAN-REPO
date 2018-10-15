@@ -1,3 +1,4 @@
+
 FROM nginx:latest
 
 LABEL maintainer="Srijan Technologies"
