@@ -21,6 +21,7 @@ services:
     working_dir: /usr/src/app
     volumes:
       - .:/usr/src/app
+      - $HOME/logs:/var/log
     ports:
       - "3000"
     environment:

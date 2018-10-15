@@ -4,3 +4,7 @@ services:
   node1:
     environment:
       - NODE_ENV=prod
+      - EMAIL_USERNAME=valindo.godinho@zoho.com
+      - EMAIL_PASSWORD=p.hf2!P3yQfp7nX
+      - EMAIL_HOST=smtp.zoho.com
+      - EMAIL_PORT=465
