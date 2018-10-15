@@ -82,34 +82,31 @@ app.post("/register", (req, res) => {
 
 app.post("/login", (req, res) => {
   let isPresent = false;
-  for (i = 0; i < mockData.length; i++) {
-    if (mockData[i].email == req.body.email) {
-      isPresent = true;
-      let emailVerify = mockData[i].emailVerify
-      bcrypt.compare(
-        req.body.password,
-        mockData[i].password,
-        (err, isValid) => {
-          if (isValid) {
-            if (emailVerify) {
-              return res.status(200).send({
-                message: "Successfully Logged in"
-              });
-            } else {
-              return res.status(401).send({
-                message: "Please Verify your email to continue, if you have not recieved a verficiation email, request for a new one"
-              });
-            }
+  let email = req.body.email;
+  let password = req.body.password;
 
+  mockData.map((record, index) => {
+    if(record.email == email){
+      isPresent = true;
+      bcrypt.compare(password, record.password, (err, isValid)=>{
+        if(isValid){
+          if(record.emailVerify){
+            return res.status(200).send({
+              message: "Successfully Logged in"
+            });
           } else {
             return res.status(401).send({
-              message: "Incorrect password or email"
+              message: "Please Verify your email to continue, if you have not recieved a verficiation email, request for a new one"
             });
           }
+        } else {
+          return res.status(401).send({
+            message: "Incorrect password or email"
+          });
         }
-      );
+      })
     }
-  }
+  })
 
   if (!isPresent) {
     return res.status(401).send({
