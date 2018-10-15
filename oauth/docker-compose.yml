@@ -1,0 +1,34 @@
+version: "2"
+
+services:
+  nginx:
+    build:
+      context: .nginx/
+      dockerfile: Dockerfile
+    links:
+      - node1:node1
+    depends_on:
+      - node1
+    ports:
+      - "3333:3333"
+    networks:
+      - app-network
+
+  node1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+      - $HOME/logs:/var/log
+    ports:
+      - "3333"
+    environment:
+      - INSTANCE=node1
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
