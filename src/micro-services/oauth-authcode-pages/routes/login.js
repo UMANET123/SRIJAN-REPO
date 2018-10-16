@@ -9,7 +9,7 @@ exports.get = function(req, res) {
     appProducts: req.query.appProducts
   };
 
-  var result = req.query.err
+  var result = req.query.status
     ? "Login failed. Please check your email/password and try again"
     : undefined;
   var basePath = "/oauth/v2";
