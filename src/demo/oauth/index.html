@@ -19,7 +19,8 @@
 			<div class="card-body">
 				<img class="card-img-top w-50 mb-5" src="assets/images/logo.png">
 				<h3 class="card-text mb-5">To Continue using this app , please login</h3>
-				<a href="https://globeslingshot-dev-labs.apigee.net/oauth/v2/authorize?client_id=W57Oad3NUXvAEdg0OcrAgf4p1w3heJoR&response_type=code&redirect_uri=http%3A%2F%2Fwww.google.com" target="_blank" class="btn btn-primary btn-lg">Login with Globe</a>
+				<!-- <a href="https://globeslingshot-dev-labs.apigee.net/oauth/v2/authorize?client_id=W57Oad3NUXvAEdg0OcrAgf4p1w3heJoR&response_type=code&redirect_uri=http%3A%2F%2Fwww.google.com" target="_blank" class="btn btn-primary btn-lg">Login with Globe</a> -->
+				<button onclick="doSomething()" class="btn btn-primary btn-lg">Login with Globe</button>
 			</div>
 		</div>
 	</div>
@@ -32,6 +33,12 @@
 	 crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 	 crossorigin="anonymous"></script>
+
+	<script>
+		function doSomething() {
+			window.open('https://globeslingshot-dev-labs.apigee.net/oauth/v2/authorize?client_id=W57Oad3NUXvAEdg0OcrAgf4p1w3heJoR&response_type=code&redirect_uri=http://13.232.77.36:5555','popUpWindow','height=500,width=400,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');
+		}
+	</script>
 </body>
 
 </html>
