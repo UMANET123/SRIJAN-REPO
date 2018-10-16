@@ -35,8 +35,18 @@
 	 crossorigin="anonymous"></script>
 
 	<script>
+		var win;
+
 		function doSomething() {
-			window.open('https://globeslingshot-dev-labs.apigee.net/oauth/v2/authorize?client_id=W57Oad3NUXvAEdg0OcrAgf4p1w3heJoR&response_type=code&redirect_uri=http://13.232.77.36:5555','popUpWindow','height=500,width=400,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes');
+			win = window.open(
+				'https://globeslingshot-dev-labs.apigee.net/oauth/v2/authorize?client_id=W57Oad3NUXvAEdg0OcrAgf4p1w3heJoR&response_type=code&redirect_uri=http://13.232.77.36:5555',
+				'popUpWindow',
+				'height=500,width=400,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes'
+			);
+		}
+
+		function handlePopUpResult(result) {
+			console.log(result);
 		}
 	</script>
 </body>
