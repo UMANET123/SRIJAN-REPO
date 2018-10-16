@@ -2,10 +2,10 @@
 
 if [ $NODE_ENV == "prod" ]
 then
-    echo "I am in production"
+    npm run dev
 elif [ $NODE_ENV == "dev" ]    
 then
-    echo "I am in develop"
+    npm run dev
 elif [ $NODE_ENV == "test" ]
 then
     npm run test

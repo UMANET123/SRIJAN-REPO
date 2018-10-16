@@ -41,6 +41,15 @@ bcrypt.hash("baconpancakes", saltRounds, (err, hash) => {
     email: "globe@globe.com",
     password: hash,
     emailVerify: true
+  }, {
+    firstname: "not",
+    middlename: "verified",
+    lastname: "account",
+    address: "Norzagaray, Bulacan, Philippines",
+    msisdn: "639234567891",
+    email: "notverified@globe.com",
+    password: hash,
+    emailVerify: false
   });
 });
 
@@ -100,22 +109,29 @@ app.post("/login", (req, res) => {
   let isPresent = false;
   let email = req.body.email;
   let password = req.body.password;
+
+  if (!checkEmailAddress(email)) {
+    return res.status(400).send({
+      message: "Invalid Email Address"
+    });
+  }
+
+  if (password.length < 6) {
+    return res.status(400).send({
+      message: "Invalid Password"
+    });
+  }
   mockData.map((record, index) => {
-    console.log(`RECORD EMAIL = ${record.email}`)
     if (record.email == email) {
-      console.log(record.email == email);
       isPresent = true;
       bcrypt.compare(password, record.password, (err, isValid) => {
-        console.log(`ISVALID = ${isValid}`)
         if (isValid) {
-
           if (record.emailVerify) {
-
             return res.status(200).send({
               message: "Successfully Logged in"
             });
           } else {
-            
+
             return res.status(401).send({
               message: "Please Verify your email"
             });
@@ -126,9 +142,9 @@ app.post("/login", (req, res) => {
             message: "Invalid credentials"
           });
         }
-      })
+      });
     }
-  })
+  });
 
   if (!isPresent) {
 
