@@ -24,14 +24,14 @@ var transporter = nodemailer.createTransport({
 });
 
 app.post('/sendmail', (req, res) => {
-    let email = req.body.email;
+    let to = req.body.to;
     let subject = req.body.subject;
-    let senderEmail = req.body.senderEmail || SENDERS_EMAIL;
-    let senderName = req.body.senderName || SENDERS_NAME;
+    let from = req.body.from || SENDERS_EMAIL;
+    let fromName = req.body.fromName || SENDERS_NAME;
     let body = req.body.body;
     var mailOptions = {
-        from: `${senderName} <${senderEmail}>`, // sender address (who sends)
-        to: email, // list of receivers (who receives)
+        from: `${fromName} <${from}>`, // sender address (who sends)
+        to: to, // list of receivers (who receives)
         subject: subject, // Subject line
         html: body
     };
@@ -39,7 +39,7 @@ app.post('/sendmail', (req, res) => {
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             return res.status(500).send({
-                message: 'Internal Server Error'
+                message: error
             });
         }
         res.status(200).send({
