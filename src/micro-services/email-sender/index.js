@@ -38,13 +38,13 @@ app.post('/sendmail', (req, res) => {
 
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-            return res.status(500).send({
-                message: error
-            });
+            console.error(error);
+        } else {
+            console.log(info)
         }
-        res.status(200).send({
-            message: info.response
-        });
+    });
+    res.status(202).send({
+        message: "Request Accepted"
     });
 });
 
