@@ -26,16 +26,14 @@ var transporter = nodemailer.createTransport({
 app.post('/sendmail', (req, res) => {
     let email = req.body.email;
     let subject = req.body.subject;
-    let text = req.body.text;
     let senderEmail = req.body.senderEmail || SENDERS_EMAIL;
     let senderName = req.body.senderName || SENDERS_NAME;
-    let html = req.body.html;
+    let body = req.body.html;
     var mailOptions = {
         from: `${senderName} <${senderEmail}>`, // sender address (who sends)
         to: email, // list of receivers (who receives)
         subject: subject, // Subject line
-        text: text, // plaintext body
-        html: html
+        html: body
     };
 
     transporter.sendMail(mailOptions, function (error, info) {
