@@ -8,6 +8,8 @@ const redis = require('redis');
 const client = redis.createClient('redis://emailtokens');
 const app = express();
 
+const NODE_ENV = process.env.NODE_ENV;
+
 client.on('connect', (err) => {
   console.log("connected to Redis server");
 });
@@ -17,11 +19,14 @@ morgan.token("request-body", function (req, res) {
   return JSON.stringify(req.body);
 });
 
-app.use(
-  morgan(
-    ":method :url :status :res[content-length] - :response-time ms - REQUEST :request-body"
-  )
-);
+if (NODE_ENV != 'test') {
+  app.use(
+    morgan(
+      ":method :url :status :res[content-length] - :response-time ms - REQUEST :request-body"
+    )
+  );
+}
+
 
 const saltRounds = 10;
 let mockData = [];
@@ -37,6 +42,15 @@ bcrypt.hash("baconpancakes", saltRounds, (err, hash) => {
     password: hash,
     emailVerify: true
   });
+});
+
+app.use((req, res, next) => {
+  if (req.method != "POST") {
+    return res.status(405).send({
+      error: "Method not allowed"
+    });
+  }
+  next();
 });
 
 app.post("/register", (req, res) => {
@@ -86,22 +100,28 @@ app.post("/login", (req, res) => {
   let isPresent = false;
   let email = req.body.email;
   let password = req.body.password;
-
   mockData.map((record, index) => {
+    console.log(`RECORD EMAIL = ${record.email}`)
     if (record.email == email) {
+      console.log(record.email == email);
       isPresent = true;
       bcrypt.compare(password, record.password, (err, isValid) => {
+        console.log(`ISVALID = ${isValid}`)
         if (isValid) {
+
           if (record.emailVerify) {
+
             return res.status(200).send({
               message: "Successfully Logged in"
             });
           } else {
+            
             return res.status(401).send({
               message: "Please Verify your email"
             });
           }
         } else {
+
           return res.status(401).send({
             message: "Invalid credentials"
           });
@@ -111,6 +131,7 @@ app.post("/login", (req, res) => {
   })
 
   if (!isPresent) {
+
     return res.status(401).send({
       message: "Invalid credentials"
     });
@@ -152,7 +173,7 @@ app.post('/regenerate', (req, res) => {
     var token = buffer.toString('hex');
 
     client.set(email, token, 'EX', 1800);
-    
+
     res.status(201).send({
       email: email,
       hash: token
@@ -166,5 +187,8 @@ function checkEmailAddress(email) {
 }
 
 app.listen(4000, () => {
+  console.log(`Env : ${NODE_ENV}`);
   console.log(`Port : ${4000}`);
 });
+
+module.exports = app;
