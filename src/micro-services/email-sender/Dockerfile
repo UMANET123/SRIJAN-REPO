@@ -22,4 +22,4 @@ RUN npm i -g nodemon
 
 RUN apt-get update && apt-get install build-essential
 
-CMD  npm run dev
+CMD chmod +x run.sh && ./run.sh
