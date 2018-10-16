@@ -28,7 +28,7 @@ app.post('/sendmail', (req, res) => {
     let subject = req.body.subject;
     let senderEmail = req.body.senderEmail || SENDERS_EMAIL;
     let senderName = req.body.senderName || SENDERS_NAME;
-    let body = req.body.html;
+    let body = req.body.body;
     var mailOptions = {
         from: `${senderName} <${senderEmail}>`, // sender address (who sends)
         to: email, // list of receivers (who receives)
