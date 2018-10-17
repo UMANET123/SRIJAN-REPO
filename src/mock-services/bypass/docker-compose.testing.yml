@@ -1,0 +1,9 @@
+version: "2"
+
+services:
+  bypassnode:
+    environment:
+      - NODE_ENV=test
+  nginx:
+    logging:
+      driver: none
