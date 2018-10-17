@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 
 const PORT = process.env.PORT || 5556;
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 mockAPIid = [
     "1234598329kadhfa",
