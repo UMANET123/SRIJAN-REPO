@@ -3,10 +3,10 @@ const request = require('supertest');
 
 describe('Testing Registration Functionality', () => {
     describe('Tests for HTTP Methods on the registration endpoint', () => {
-        it('Should return 405 for GET', (done) => {
+        it('Should return 404 for GET', (done) => {
             request(app)
                 .get('/register')
-                .expect(405, done);
+                .expect(404, done);
         });
 
         it('Should return 405 for PUT', (done) => {

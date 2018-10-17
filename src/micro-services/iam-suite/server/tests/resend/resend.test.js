@@ -1,35 +1,35 @@
 const app = require('../../index');
 const request = require('supertest');
 
-describe("Testing the endpoint /regenerate", () => {
-    describe('Testing HTTP methods on endpoint /regenerate', () => {
-        it('Should return 405 for GET', (done) => {
+describe("Testing the endpoint /resend", () => {
+    describe('Testing HTTP methods on endpoint /resend', () => {
+        it('Should return 404 for GET', (done) => {
             request(app)
-                .get('/regenerate')
-                .expect(405, done);
+                .get('/resend')
+                .expect(404, done);
         });
 
         it('Should return 405 for PUT', (done) => {
             request(app)
-                .put('/regenerate')
+                .put('/resend')
                 .expect(405, done);
         });
 
         it('Should return 405 for PATCH', (done) => {
             request(app)
-                .patch('/regenerate')
+                .patch('/resend')
                 .expect(405, done);
         });
 
         it('Should return 405 for DELETE', (done) => {
             request(app)
-                .delete('/regenerate')
+                .delete('/resend')
                 .expect(405, done);
         });
 
         it('Should return 201 for POST', (done) => {
             request(app)
-                .post('/regenerate')
+                .post('/resend')
                 .send({
                     email: "testuser@test.com",
                 })
@@ -37,12 +37,12 @@ describe("Testing the endpoint /regenerate", () => {
         });
     });
 
-    describe('Test for /regenerate functionality', () => {
+    describe('Test for /resend functionality', () => {
 
         it('should return status 201 for success', (done) => {
             let email = 'globe@globe.com';
             request(app)
-                .post('/regenerate')
+                .post('/resend')
                 .send({
                     email: email
                 })

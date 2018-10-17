@@ -7,10 +7,10 @@ describe("Testing Login Functionality", () => {
     let password = 'baconpancakes';
     describe("Testing HTTP methods on login endpoint", () => {
 
-        it('Should return 405 for GET', (done) => {
+        it('Should return 404 for GET', (done) => {
             request(app)
                 .get('/login')
-                .expect(405, done);
+                .expect(404, done);
         });
 
         it('Should return 405 for PUT', (done) => {
@@ -32,25 +32,29 @@ describe("Testing Login Functionality", () => {
         });
 
         it('Should return 200 for POST', (done) => {
-            request(app)
-                .post('/login')
-                .send({
-                    email: email,
-                    password: password
-                })
-                .expect(200, done);
+            setTimeout(function () {
+                request(app)
+                    .post('/login')
+                    .send({
+                        email: email,
+                        password: password
+                    })
+                    .expect(200, done);
+            }, 1000);
         });
     });
 
     describe('Test to check all the possible login flows', () => {
         it('Should return 200 for a successful login', (done) => {
-            request(app)
-                .post('/login')
-                .send({
-                    email: email,
-                    password: password
-                })
-                .expect(200, done);
+            setTimeout(function () {
+                request(app)
+                    .post('/login')
+                    .send({
+                        email: email,
+                        password: password
+                    })
+                    .expect(200, done);
+            }, 1000)
         });
 
         it('Should return 401 for incorrect email', (done) => {

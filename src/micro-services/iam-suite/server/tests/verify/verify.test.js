@@ -5,10 +5,10 @@ const client = redis.createClient('redis://emailtokens');
 
 describe('Testing Account Verification Endpoint', () => {
     describe('Testing HTTP methods for the /verify endpoint', () => {
-        it('Should return 405 for GET', (done) => {
+        it('Should return 400 for GET', (done) => {
             request(app)
-                .get('/verify')
-                .expect(405, done);
+                .get('/verify/oasdlaldjaljdlajdljaldj')
+                .expect(400, done);
         });
 
         it('Should return 405 for PUT', (done) => {
@@ -29,25 +29,21 @@ describe('Testing Account Verification Endpoint', () => {
                 .expect(405, done);
         });
 
-        it('Should return 400 for POST', (done) => {
+        it('Should return 402 for POST', (done) => {
             request(app)
                 .post('/verify')
                 .send({
                     email: "test@globe.com",
                     hash: "ajsdlajldjaljdlajd"
                 })
-                .expect(400, done);
+                .expect(404, done);
         });
     });
 
     describe('Testing hash validation for the endpoint', () => {
         it('it should return 400 for malformed hash', (done) => {
             request(app)
-                .post('/verify')
-                .send({
-                    email: "test@globe.com",
-                    hash: "ajsdlajldjaljdlajd"
-                })
+                .get('/verify/ajsdlajldjaljdlajd')
                 .expect(400, done);
         });
 
@@ -68,8 +64,7 @@ describe('Testing Account Verification Endpoint', () => {
                 .end((err, res) => {
                     verifyBody = res.body
                     request(app)
-                        .post('/verify')
-                        .send(verifyBody)
+                        .get(`/verify/${verifyBody.hash}`)
                         .expect(200, done);
                 });
         });
@@ -90,10 +85,9 @@ describe('Testing Account Verification Endpoint', () => {
                 .expect(201)
                 .end((err, res) => {
                     verifyBody = res.body
-                    client.del(verifyBody.email);
+                    client.del(verifyBody.hash);
                     request(app)
-                        .post('/verify')
-                        .send(verifyBody)
+                        .get(`/verify/${verifyBody.hash}`)
                         .expect(400, done);
                 });
         });
