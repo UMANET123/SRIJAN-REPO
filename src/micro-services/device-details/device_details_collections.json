@@ -125,6 +125,46 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get Device Details Tac not in db",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "49576bdf-8ab2-4fd1-8c2a-0dcea318481a",
+						"exec": [
+							"pm.test('Should return 400 for invalid TYPE',function(){",
+							"    pm.sendRequest('localhost:5558/details/tac/171300', function (err, res) {",
+							"        pm.expect(res).to.have.property('code', 400);",
+							"    });",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:5558/details/imei/01171300",
+					"host": [
+						"localhost"
+					],
+					"port": "5558",
+					"path": [
+						"details",
+						"imei",
+						"01171300"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

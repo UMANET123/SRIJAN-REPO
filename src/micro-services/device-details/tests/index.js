@@ -10,6 +10,14 @@ describe('Testing the device details endpoint', () => {
         }, 1000);
     });
 
+    it('Should return 404 for a valid request but not present in db', (done) => {
+        setTimeout(() => {
+            request(app)
+                .get('/details/tac/00000000')
+                .expect(200, done);
+        }, 1000);
+    });
+
     it('Should return 400 for a bad TAC in request url', (done) => {
         request(app)
             .get('/details/tac/0117130')

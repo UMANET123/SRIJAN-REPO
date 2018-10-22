@@ -5,6 +5,7 @@ const fs = require("fs");
 const app = express();
 
 const client = redis.createClient("redis://devicetac");
+
 client.on("connect", err => {
     fs.createReadStream("./imei.csv")
         .pipe(csv())
@@ -22,10 +23,12 @@ app.get("/details/:type/:id", (req, res) => {
         }
         client.get(id, (err, data) => {
             if (data) {
-                return res.send(data);
-            } else {
                 return res.send({
-                    message: 'No Data Present'
+                    device: JSON.parse(data)
+                });
+            } else {
+                return res.status(404).send({
+                    error: 'No Data Present'
                 });
             }
         });
