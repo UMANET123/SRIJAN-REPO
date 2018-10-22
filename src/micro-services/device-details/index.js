@@ -14,27 +14,27 @@ client.on("connect", err => {
 app.get("/details/:type/:id", (req, res) => {
     let type = req.params.type;
     let id = req.params.id;
-    if (id.length != 8) {
-        return res.status(400).send({
-            error: "Invalid TAC"
-        });
-    } else if (id.length == 8) {
-        if (type == "tac") {
-            client.get(id, (err, data) => {
-                if (data) {
-                    return res.send(data);
-                } else {
-                    return res.send({
-                        message: 'No Data Present'
-                    });
-                }
-            });
-        } else {
+    if (type == "tac") {
+        if (id.length != 8) {
             return res.status(400).send({
-                error: "Type not defined"
+                error: "Invalid TAC"
             });
         }
+        client.get(id, (err, data) => {
+            if (data) {
+                return res.send(data);
+            } else {
+                return res.send({
+                    message: 'No Data Present'
+                });
+            }
+        });
+    } else {
+        return res.status(400).send({
+            error: "Type not defined"
+        });
     }
+
 });
 
 app.listen(5558, () => {
