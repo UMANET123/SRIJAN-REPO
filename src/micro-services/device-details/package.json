@@ -1,0 +1,24 @@
+{
+  "name": "device-details",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "newman -e globe_development.postman_environment.json run device_details_collections.json",
+    "pretest":"node index.js &",
+    "test-mocha": "npx mocha --recursive --exit --timeout 7000  tests",
+    "dev": "nodemon -L"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "csv-parser": "^2.0.0",
+    "express": "^4.16.4",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
+    "supertest": "^3.3.0"
+  }
+}
