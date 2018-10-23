@@ -4,7 +4,7 @@
   "description": "Express App for Identity",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx mocha --recursive --timeout 7000  tests",
     "dev": "nodemon -L"
   },
   "author": "Srijan Technologies",
@@ -14,10 +14,11 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "morgan": "^1.9.1",
-    "passport": "^0.4.0",
     "redis": "^2.8.0"
   },
   "devDependencies": {
-    "nodemon": "^1.18.4"
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
+    "supertest": "^3.3.0"
   }
 }
