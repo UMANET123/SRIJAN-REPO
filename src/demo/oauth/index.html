@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	 crossorigin="anonymous">
+
+	<title>Oauth Demo</title>
+</head>
+
+<body class="h-100">
+	<div class="container h-100 d-flex justify-content-center align-items-center text-center ">
+		<div id="section-one" class="card shadow-lg p-3 mb-5 bg-white rounded">
+			<div class="card-body">
+				<img class="card-img-top w-50 mb-5" src="assets/images/logo.png">
+				<h3 class="card-text mb-5">To Continue using this app , please login</h3>
+				<button onclick="login()" class="btn btn-primary btn-lg">Login with Globe</button>
+			</div>
+		</div>
+
+		<div id="section-two" class="card shadow-lg p-3 mb-5 bg-white rounded d-none">
+			<div class="card-body">
+				<h3 class="card-text mb-5">Code</h3>
+				<pre id="code"></pre>
+				<h3 class="card-text mb-5 d-none" id="accessToken">Access Token</h3>
+				<pre id="generatedToken" class="text-left"></pre>
+				<button id="generateAccessToken" class="btn btn-success btn-lg">Generate Access Token</button>
+			</div>
+		</div>
+	</div>
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	 crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+	 crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+	 crossorigin="anonymous"></script>
+
+	<script>
+		let code;
+
+		function login() {
+			window.open(
+				'https://globeslingshot-dev-labs.apigee.net/oauth/v2/authorize?client_id=wFE8AN4nN8a6GPety5jjdJzqjUwSH8PH&response_type=code&redirect_uri=http://13.232.77.36:5555',
+				'popUpWindow',
+				'height=600,width=600,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes'
+			);
+		}
+
+		function generateCode(result) {
+			result = result.split('=');
+			code = result[result.length - 1];
+			$('#section-one').addClass('d-none');
+			$('#section-two').removeClass('d-none');
+			$('#code').append(code);
+		}
+
+		$('#generateAccessToken').click(() => {
+			var settings = {
+				"async": true,
+				"crossDomain": true,
+				"url": "https://globeslingshot-dev-labs.apigee.net/oauth/v2/token/generate",
+				"method": "POST",
+				"headers": {
+					"Content-Type": "application/x-www-form-urlencoded",
+					"Authorization": "Basic d0ZFOEFONG5OOGE2R1BldHk1ampkSnpxalV3U0g4UEg6cGZMZTVZN1d2SlFzR2Nxdg=="
+				},
+				"data": {
+					"code": code,
+					"grant_type": "authorization_code",
+					"redirect_uri": "http://13.232.77.36:5555"
+				}
+			}
+
+			$.ajax(settings).done(function (response) {
+				$('#generatedToken').append(JSON.stringify(response, null, 2));
+				$('#accessToken').removeClass('d-none');
+				$('#generateAccessToken').addClass('d-none');
+			});
+		})
+
+		if (window.location.search.indexOf('code') > -1) {
+			try {
+				window.opener.generateCode(window.location.search);
+			} catch (err) {}
+			window.close();
+		}
+	</script>
+</body>
+
+</html>
