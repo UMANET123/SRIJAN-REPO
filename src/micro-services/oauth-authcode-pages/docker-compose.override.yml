@@ -1,6 +1,0 @@
-version: "2"
-
-services:
-  node1:
-    environment: 
-      - NODE_ENV=dev
