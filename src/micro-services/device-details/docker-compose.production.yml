@@ -1,0 +1,6 @@
+version: "2"
+
+services:
+  devicedetailnode:
+    environment:
+      - NODE_ENV=prod

@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "2993de8a-39fd-4dbb-a686-b9e0b4bdf71c",
+		"name": "Globe Device Details",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Device Details Success",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "49576bdf-8ab2-4fd1-8c2a-0dcea318481a",
+						"exec": [
+							"pm.test('Should return 200 for correct reqeust',function(){",
+							"    pm.sendRequest('localhost:5558/details/tac/01171300', function (err, res) {",
+							"        pm.expect(res).to.have.property('code', 200);",
+							"        pm.expect(res).to.have.property('status', 'OK');",
+							"    });",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:5558/details/tac/01171300",
+					"host": [
+						"localhost"
+					],
+					"port": "5558",
+					"path": [
+						"details",
+						"tac",
+						"01171300"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Device Details Invalid TAC",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "49576bdf-8ab2-4fd1-8c2a-0dcea318481a",
+						"exec": [
+							"pm.test('Should return 400 for invalid TAC',function(){",
+							"    pm.sendRequest('localhost:5558/details/tac/171300', function (err, res) {",
+							"        pm.expect(res).to.have.property('code', 400);",
+							"    });",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:5558/details/tac/011713",
+					"host": [
+						"localhost"
+					],
+					"port": "5558",
+					"path": [
+						"details",
+						"tac",
+						"011713"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Device Details Invalid TYPE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "49576bdf-8ab2-4fd1-8c2a-0dcea318481a",
+						"exec": [
+							"pm.test('Should return 400 for invalid TYPE',function(){",
+							"    pm.sendRequest('localhost:5558/details/tac/171300', function (err, res) {",
+							"        pm.expect(res).to.have.property('code', 400);",
+							"    });",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:5558/details/imei/01171300",
+					"host": [
+						"localhost"
+					],
+					"port": "5558",
+					"path": [
+						"details",
+						"imei",
+						"01171300"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Device Details Tac not in db",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "49576bdf-8ab2-4fd1-8c2a-0dcea318481a",
+						"exec": [
+							"pm.test('Should return 400 for invalid TYPE',function(){",
+							"    pm.sendRequest('localhost:5558/details/tac/171300', function (err, res) {",
+							"        pm.expect(res).to.have.property('code', 400);",
+							"    });",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:5558/details/imei/01171300",
+					"host": [
+						"localhost"
+					],
+					"port": "5558",
+					"path": [
+						"details",
+						"imei",
+						"01171300"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
