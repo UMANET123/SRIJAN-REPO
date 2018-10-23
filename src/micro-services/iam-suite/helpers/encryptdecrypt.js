@@ -1,8 +1,12 @@
 const crypto = require('crypto');
+const secretGen = require('../config/secret-generator');
 let secret;
-crypto.randomBytes(48, function (err, buffer) {
-    secret = buffer.toString('hex');
-});
+setTimeout(()=>{
+    secretGen.secretGenerator((data) => {
+        secret = data;
+    })
+},500)
+
 exports.encrypt = function (text) {
     var cipher = crypto.createCipher('aes-256-cbc', secret);
     var crypted = cipher.update(text, 'utf8', 'hex');

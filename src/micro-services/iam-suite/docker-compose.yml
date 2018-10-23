@@ -1,0 +1,43 @@
+version: "2"
+
+services:
+  redis:
+    image: redis
+    container_name: identityredis
+    expose:
+      - 6379
+    networks:
+      - app-network
+  nginx:
+    build:
+      context: .nginx/
+      dockerfile: Dockerfile
+    links:
+      - identitynode:identitynode
+    depends_on:
+      - identitynode
+    ports:
+      - "4000:4000"
+    networks:
+      - app-network
+
+  identitynode:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    links:
+      - redis:redis
+    volumes:
+      - .:/usr/src/app
+      - $HOME/logs:/var/log
+    ports:
+      - "4000"
+    environment:
+      - INSTANCE=identitynode
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

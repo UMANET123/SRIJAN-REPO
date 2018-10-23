@@ -13,11 +13,18 @@ exports.get = function (req, res) {
                 user.get(email, (err, data) => {
                     if (data) {
                         data = JSON.parse(data);
-                        data.emailVerify = true;
-                        user.update(email, JSON.stringify(data))
-                        return res.status(200).send({
-                            message: "Email Verification Completed"
-                        });
+                        if (data.emailVerify) {
+                            return res.status(400).send({
+                                message: 'Email has Already been verified'
+                            })
+                        } else {
+                            data.emailVerify = true;
+                            user.update(email, JSON.stringify(data))
+                            return res.status(200).send({
+                                message: "Email Verification Completed"
+                            });
+                        }
+
                     } else {
                         return res.status(404).send({
                             message: "User does not exist"

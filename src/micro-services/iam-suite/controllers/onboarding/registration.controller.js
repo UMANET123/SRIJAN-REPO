@@ -29,7 +29,7 @@ exports.post = function (req, res) {
                 return res.status(201).send(contents);
             })
         } else {
-            return res.status(409).send({
+            return res.status(400).send({
                 message: 'Email Address already registered'
             });
         }
