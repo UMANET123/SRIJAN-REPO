@@ -65,13 +65,14 @@
 				var items = $("input[type='checkbox']:checked");
 				var checkedArray = []
 				for (var i = 0; i < items.length; i++) {
-					checkedArray.push(items[i].value);
+					checkedArray.push(items[i].value.trim());
 				}
 				decision.value = checkedArray;
 
 			} else {
 				decision.value = [];
 			}
+			console.log(checkedArray)
 			document.getElementById(decision).parentNode.submit();
 			return false;
 		}
