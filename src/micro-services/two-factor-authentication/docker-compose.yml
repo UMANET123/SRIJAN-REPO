@@ -1,6 +1,13 @@
-version: '2'
+version: "2"
 
 services:
+  redis:
+    image: redis
+    container_name: twofaredis
+    expose:
+      - 6379
+    networks:
+      - 2fa-network
   nginx:
     build:
       context: .docker/
@@ -13,7 +20,7 @@ services:
       - "3000:3000"
     networks:
       - 2fa-network
-    
+
   node1:
     build:
       context: .
@@ -22,6 +29,8 @@ services:
     volumes:
       - .:/usr/src/app
       - $HOME/logs:/var/log
+    links:
+      - redis:redis
     ports:
       - "3000"
     environment:

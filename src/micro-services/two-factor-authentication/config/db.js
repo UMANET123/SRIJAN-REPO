@@ -24,10 +24,14 @@ exports.get = function (key, done) {
     })
 }
 
-exports.set = function (key, data, opts=null) {
+exports.set = function (key, data, opts = null) {
     if (!opts) {
         state.db.set(key, data);
     } else {
         state.db.set(key, data, opts.option, opts.value);
     }
+}
+
+exports.del = function (key) {
+    state.db.del(key);
 }
