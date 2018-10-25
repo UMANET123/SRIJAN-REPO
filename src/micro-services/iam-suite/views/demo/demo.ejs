@@ -1,6 +1,92 @@
 <!doctype html>
 <html lang="en" class="h-100">
+<style>
+    .lds-roller {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+.lds-roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 32px 32px;
+}
+.lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7f8c8d;
+  margin: -3px 0 0 -3px;
+}
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+.lds-roller div:nth-child(1):after {
+  top: 50px;
+  left: 50px;
+}
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;
+}
+.lds-roller div:nth-child(2):after {
+  top: 54px;
+  left: 45px;
+}
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+.lds-roller div:nth-child(3):after {
+  top: 57px;
+  left: 39px;
+}
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+.lds-roller div:nth-child(4):after {
+  top: 58px;
+  left: 32px;
+}
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+.lds-roller div:nth-child(5):after {
+  top: 57px;
+  left: 25px;
+}
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+.lds-roller div:nth-child(6):after {
+  top: 54px;
+  left: 19px;
+}
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+.lds-roller div:nth-child(7):after {
+  top: 50px;
+  left: 14px;
+}
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.lds-roller div:nth-child(8):after {
+  top: 45px;
+  left: 10px;
+}
+@keyframes lds-roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
+</style>
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -19,7 +105,16 @@
             <div class="card-body">
                 <img class="card-img-top w-50 mb-5" src="assets/images/logo.png">
                 <h3 class="card-text mb-5">To Continue using this app , please login</h3>
-                <button onclick="login()" class="btn btn-primary btn-lg">Login with Globe</button>
+                <div class="form-group text-center">
+                    <input type="text" class="form-control text-center clientdata mb-3" id="clientId" placeholder="Enter Client Id">
+                    <input type="text" class="form-control text-center clientdata mb-3" id="clientSecret" placeholder="Enter Secret">
+                    <input type="text" class="form-control text-center mb-3" id="redirectUrl" placeholder="Redirect Url">
+                </div>
+                <button id="loginButton" onclick="login()" class="btn btn-primary btn-lg">
+                        Login with Globe
+                </button>
+                <br>
+                <div class="lds-roller d-none"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
             </div>
         </div>
 
@@ -44,10 +139,27 @@
 
     <script>
         let code;
+        let clientId;
+        let clientSecret;
+        let redirectUrl = $('#redirectUrl');
+        redirectUrl.val("http://13.232.77.36:4000");
+        $('#loginButton').prop('disabled', true);
+        $(".clientdata").on("change paste keyup", function () {
+            clientId = $('#clientId').val();
+            clientSecret = $('#clientSecret').val();
+            if (clientId.length != 0 && clientSecret.length != 0) {
+                $('#loginButton').prop('disabled', false);
+            }
+            if (clientId.length == 0 || clientSecret.length == 0) {
+                $('#loginButton').prop('disabled', true);
+            };
+        });
 
         function login() {
+            $('#loginButton').addClass('d-none');
+            $('.lds-roller').removeClass('d-none');
             window.open(
-                'https://globeslingshot-dev-labs.apigee.net/oauth/v2/authorize?client_id=wFE8AN4nN8a6GPety5jjdJzqjUwSH8PH&response_type=code&redirect_uri=http://13.232.77.36:4000',
+                `https://globeslingshot-dev-labs.apigee.net/oauth/v2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUrl.val()}`,
                 'popUpWindow',
                 'height=600,width=600,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes'
             );
@@ -60,9 +172,12 @@
             $('#section-one').addClass('d-none');
             $('#section-two').removeClass('d-none');
             $('#code').append(code);
+            $('#loginButton').removeClass('d-none');
+            $('.lds-roller').addClass('d-none');
         }
 
         $('#generateAccessToken').click(() => {
+            var string = `${clientId}:${clientSecret}`
             var settings = {
                 "async": true,
                 "crossDomain": true,
@@ -70,12 +185,12 @@
                 "method": "POST",
                 "headers": {
                     "Content-Type": "application/x-www-form-urlencoded",
-                    "Authorization": "Basic d0ZFOEFONG5OOGE2R1BldHk1ampkSnpxalV3U0g4UEg6cGZMZTVZN1d2SlFzR2Nxdg=="
+                    "Authorization": `Basic ${btoa(string)}`
                 },
                 "data": {
                     "code": code,
                     "grant_type": "authorization_code",
-                    "redirect_uri": "http://13.232.77.36:4000"
+                    "redirect_uri": `${redirectUrl.val()}`
                 }
             }
 
