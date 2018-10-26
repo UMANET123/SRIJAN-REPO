@@ -105,11 +105,11 @@
             <div class="card-body">
                 <img class="card-img-top w-50 mb-5" src="assets/images/logo.png">
                 <h3 class="card-text mb-5">To Continue using this app , please login</h3>
-                <div class="form-group text-center">
+                <!-- <div class="form-group text-center">
                     <input type="text" class="form-control text-center clientdata mb-3" id="clientId" placeholder="Enter Client Id">
                     <input type="text" class="form-control text-center clientdata mb-3" id="clientSecret" placeholder="Enter Secret">
                     <input type="text" class="form-control text-center mb-3" id="redirectUrl" placeholder="Redirect Url">
-                </div>
+                </div> -->
                 <button id="loginButton" onclick="login()" class="btn btn-primary btn-lg">
                         Login with Globe
                 </button>
@@ -139,27 +139,28 @@
 
     <script>
         let code;
-        let clientId;
-        let clientSecret;
-        let redirectUrl = $('#redirectUrl');
-        redirectUrl.val("http://13.232.77.36:4000");
-        $('#loginButton').prop('disabled', true);
-        $(".clientdata").on("change paste keyup", function () {
-            clientId = $('#clientId').val();
-            clientSecret = $('#clientSecret').val();
-            if (clientId.length != 0 && clientSecret.length != 0) {
-                $('#loginButton').prop('disabled', false);
-            }
-            if (clientId.length == 0 || clientSecret.length == 0) {
-                $('#loginButton').prop('disabled', true);
-            };
-        });
+        let clientId = "wFE8AN4nN8a6GPety5jjdJzqjUwSH8PH";
+        let clientSecret = "pfLe5Y7WvJQsGcqv";
+        let redirectUrl = "http://13.232.77.36:4000"
+        // let redirectUrl = $('#redirectUrl');
+        // redirectUrl.val("http://13.232.77.36:4000");
+        // $('#loginButton').prop('disabled', true);
+        // $(".clientdata").on("change paste keyup", function () {
+        //     clientId = $('#clientId').val();
+        //     clientSecret = $('#clientSecret').val();
+        //     if (clientId.length != 0 && clientSecret.length != 0) {
+        //         $('#loginButton').prop('disabled', false);
+        //     }
+        //     if (clientId.length == 0 || clientSecret.length == 0) {
+        //         $('#loginButton').prop('disabled', true);
+        //     };
+        // });
 
         function login() {
             $('#loginButton').addClass('d-none');
             $('.lds-roller').removeClass('d-none');
             window.open(
-                `https://globeslingshot-dev-labs.apigee.net/oauth/v2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUrl.val()}`,
+                `https://globeslingshot-dev-labs.apigee.net/oauth/v2/authorize?client_id=${clientId}&response_type=code&redirect_uri=${redirectUrl}`,
                 'popUpWindow',
                 'height=600,width=600,left=100,top=100,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no, status=yes'
             );
@@ -190,7 +191,7 @@
                 "data": {
                     "code": code,
                     "grant_type": "authorization_code",
-                    "redirect_uri": `${redirectUrl.val()}`
+                    "redirect_uri": `${redirectUrl}`
                 }
             }
 
