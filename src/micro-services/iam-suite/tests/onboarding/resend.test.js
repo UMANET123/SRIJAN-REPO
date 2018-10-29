@@ -4,9 +4,9 @@ const request = require('supertest');
 describe("Testing the endpoint /resend", () => {
 
     describe('Test for /resend functionality', () => {
-
+        let email = 'resend@globe.com';
+        let responseBody;
         it('should return status 201 for success', (done) => {
-            let email = 'resend@globe.com';
             request(app)
                 .post('/register')
                 .send({
@@ -18,6 +18,7 @@ describe("Testing the endpoint /resend", () => {
                     "email": email,
                     "password": "baconpancakes"
                 }).end((err, res) => {
+                    responseBody = res.body;
                     request(app)
                         .post('/resend')
                         .send({
@@ -27,5 +28,18 @@ describe("Testing the endpoint /resend", () => {
                 })
 
         });
+
+        it('Should return status 400 for an email that is already verified', (done) => {
+            request(app)
+                .get(`/verify/${responseBody.hash}`)
+                .end((err, res) => {
+                    request(app)
+                        .post('/resend')
+                        .send({
+                            email: email
+                        })
+                        .expect(400, done);
+                })
+        })
     });
 });

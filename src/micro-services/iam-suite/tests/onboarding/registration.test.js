@@ -63,5 +63,20 @@ describe('Testing Registration Functionality', () => {
                 })
                 .expect(201, done);
         });
+
+        it('Should return 400 if the email is already registered', (done) => {
+            request(app)
+                .post('/register')
+                .send({
+                    firstname: "firstname",
+                    middlename: "middlename",
+                    lastname: "lastname",
+                    address: "address",
+                    msisdn: "639234567891",
+                    email: "testregister1@test.com",
+                    password: "baconpancakes",
+                })
+                .expect(400, done);
+        })
     });
 });

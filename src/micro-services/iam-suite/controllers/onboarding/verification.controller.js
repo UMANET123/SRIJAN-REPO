@@ -26,7 +26,7 @@ exports.get = function (req, res) {
                         }
 
                     } else {
-                        return res.status(404).send({
+                        return res.status(400).send({
                             message: "User does not exist"
                         });
                     }
