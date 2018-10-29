@@ -17,13 +17,11 @@ exports.post = function (req, res) {
             message: "Invalid Password"
         });
     }
-    encryptedPassword = cryptr.encrypt(password);
     user.get(email, (err, data) => {
         if (!err) {
             data = JSON.parse(data);
             if (data.emailVerify) {
                 if (password == cryptr.decrypt(data.password)) {
-                    console.log("Step 2");
                     return res.status(200).send({
                         message: "Successfully Logged in"
                     });

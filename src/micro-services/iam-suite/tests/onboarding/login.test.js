@@ -3,41 +3,43 @@ const request = require('supertest');
 
 
 describe("Testing Login Functionality", () => {
-    let email = 'globe@globe.com';
-    let password = 'baconpancakes';
-
     describe('Test to check all the possible login flows', () => {
+        let email = 'globe@globe.com';
+        let password = 'baconpancakes';
         it('Should return 200 for a successful login', (done) => {
 
-            request(app)
-                .post('/register')
-                .send({
-                    "firstname": "firstnameexample",
-                    "middlename": "middlenameexample",
-                    "lastname": "lastnameexample",
-                    "address": "address example",
-                    "msisdn": "639234567891",
-                    "email": email,
-                    "password": password
-                })
-                .expect(201)
-                .end((err, response) => {
-                    request(app)
-                        .get(`/verify/${response.body.hash}`)
-                        .expect(201)
-                        .end((err, res) => {
-                            setTimeout(() => {
-                                request(app)
-                                    .post('/login')
-                                    .send({
-                                        email: email,
-                                        password: password
-                                    })
-                                    .expect(200, done);
-                            }, 500)
+            setTimeout(() => {
+                request(app)
+                    .post('/register')
+                    .send({
+                        "firstname": "firstnameexample",
+                        "middlename": "middlenameexample",
+                        "lastname": "lastnameexample",
+                        "address": "address example",
+                        "msisdn": "639234567891",
+                        "email": 'globe@globe.com',
+                        "password": 'baconpancakes'
+                    })
+                    .expect(201)
+                    .end((err, response) => {
+                        request(app)
+                            .get(`/verify/${response.body.hash}`)
+                            .expect(201)
+                            .end((err, res) => {
+                                setTimeout(() => {
+                                    request(app)
+                                        .post('/login')
+                                        .send({
+                                            email: 'globe@globe.com',
+                                            password: 'baconpancakes'
+                                        })
+                                        .expect(200, done);
+                                }, 500)
 
-                        })
-                })
+                            })
+                    })
+            }, 500)
+
 
         });
 
@@ -55,7 +57,7 @@ describe("Testing Login Functionality", () => {
             request(app)
                 .post('/login')
                 .send({
-                    email: email,
+                    email: 'globe@globe.com',
                     password: 'aconpancakes'
                 })
                 .expect(401, done());
@@ -76,7 +78,7 @@ describe("Testing Login Functionality", () => {
                 .post('/login')
                 .send({
                     email: 'notverified@globe.com',
-                    password: password
+                    password: 'baconpancakes'
                 })
                 .expect(401, done);
         });

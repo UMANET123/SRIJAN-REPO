@@ -18,7 +18,7 @@ COPY . ./
 
 EXPOSE 4000
 
-RUN npm i -g nodemon
+RUN npm i -g nodemon newman
 
 RUN apt-get update && apt-get install build-essential
 

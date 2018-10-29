@@ -1,11 +1,11 @@
 const crypto = require('crypto');
 const secretGen = require('../config/secret-generator');
 let secret;
-setTimeout(()=>{
+setTimeout(() => {
     secretGen.secretGenerator((data) => {
         secret = data;
     })
-},500)
+}, 500)
 
 exports.encrypt = function (text) {
     var cipher = crypto.createCipher('aes-256-cbc', secret);
