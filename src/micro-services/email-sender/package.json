@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx mocha --recursive --timeout 7000  tests",
     "dev": "nodemon index.js"
   },
   "author": "",
@@ -13,5 +13,9 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "nodemailer": "^4.6.8"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "supertest": "^3.3.0"
   }
 }

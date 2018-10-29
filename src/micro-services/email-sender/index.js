@@ -5,6 +5,7 @@ const app = express();
 
 app.use(bodyParser.json());
 
+const NODE_ENV = process.env.NODE_ENV;
 const PORT = process.env.PORT;
 const SENDERS_EMAIL = process.env.SENDERS_EMAIL;
 const SENDERS_NAME = process.env.SENDERS_NAME;
@@ -23,33 +24,59 @@ var transporter = nodemailer.createTransport({
     }
 });
 
-app.post('/sendmail', (req, res) => {
-    let email = req.body.email;
-    let subject = req.body.subject;
-    let text = req.body.text;
-    let senderEmail = req.body.senderEmail || SENDERS_EMAIL;
-    let senderName = req.body.senderName || SENDERS_NAME;
-    let html = req.body.html;
-    var mailOptions = {
-        from: `${senderName} <${senderEmail}>`, // sender address (who sends)
-        to: email, // list of receivers (who receives)
-        subject: subject, // Subject line
-        text: text, // plaintext body
-        html: html
-    };
 
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            return res.status(500).send({
-                message: 'Internal Server Error'
-            });
-        }
-        res.status(200).send({
-            message: info.response
+app.use((req, res, next) => {
+    if (req.method != "POST") {
+        return res.status(405).send({
+            error: "Method not allowed"
         });
+    }
+    next();
+});
+
+app.post('/sendmail', (req, res) => {
+    let to = req.body.to;
+    let subject = req.body.subject;
+    let from = req.body.from || SENDERS_EMAIL;
+    let fromName = req.body.fromName || SENDERS_NAME;
+    let body = req.body.body;
+    if (!(checkEmailAddress(to) && checkEmailAddress(from))) {
+        return res.status(400).send({
+            message: "Invalid Email Address"
+        });
+    }
+    if (body.length == 0) {
+        return res.status(400).send({
+            message: "Invalid Email body"
+        });
+    }
+    var mailOptions = {
+        from: `${fromName} <${from}>`, // sender address (who sends)
+        to: to, // list of receivers (who receives)
+        subject: subject, // Subject line
+        html: body
+    };
+    if (NODE_ENV != 'test') {
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.error(error);
+            } else {
+                console.log(info)
+            }
+        });
+    }
+    res.status(202).send({
+        message: "Request Accepted"
     });
 });
+
+function checkEmailAddress(email) {
+    let pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return pattern.test(email);
+};
 
 app.listen(PORT, () => {
     console.log(`App Running on PORT : ${PORT}`);
 });
+
+module.exports = app;

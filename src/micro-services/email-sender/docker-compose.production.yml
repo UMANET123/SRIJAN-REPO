@@ -3,7 +3,7 @@ version: '2'
 services:
   node1:
     environment:
-      - NODE_ENV=dev
+      - NODE_ENV=prod
       - SENDERS_EMAIL=valindo.godinho@zoho.com
       - SENDERS_NAME=Globe Telecom
       - EMAIL_USERNAME=valindo.godinho@zoho.com
