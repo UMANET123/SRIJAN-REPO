@@ -1,0 +1,12 @@
+version: "2"
+
+services:
+  identitynode:
+    environment:
+      - NODE_ENV=test
+  nginx:
+    logging:
+      driver: none
+  redis:
+    logging:
+      driver: none

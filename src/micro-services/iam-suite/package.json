@@ -1,0 +1,23 @@
+{
+  "name": "iam-suite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "npx mocha --recursive --exit --timeout 7000  tests",
+    "dev": "nodemon -L"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "newman": "^4.1.0",
+    "supertest": "^3.3.0"
+  }
+}

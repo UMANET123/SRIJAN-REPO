@@ -1,0 +1,92 @@
+<!doctype html>
+<html class="h-100">
+
+<head>
+	<title>Globe - Consent</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+	 crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<style>
+		body {
+      background-color:#74b9ff;
+    }
+
+    .consent-text{
+      font-size: 18px;
+      line-height: 24px;
+    }
+
+    .material-icons {
+      display: inline-flex;
+      vertical-align: top;
+    }
+    </style>
+</head>
+
+<body class="h-100">
+	<section id="consent" class="h-100 container-fluid d-flex justify-content-center align-items-center">
+		<div class="container d-flex justify-content-center">
+			<div class="row d-flex justify-content-center">
+				<div class="col-md-6 col-lg-6 col-sm-8 col-xs-8">
+					<div class="card shadow-lg bg-white ">
+						<img class="card-img-top w-75 m-auto" src="https://i.postimg.cc/8kKc2zWT/globe-Logo.png" atl="Globe Logo">
+						<div class="card-body text-center">
+							<div class="alert alert-primary" role="alert">
+								<%= data.app %> is requesting access to the following services:
+							</div>
+
+							<ul class="list-group list-group-flush text-left">
+								<% for (var i = 0; i < data.scope.length; i++) { %>
+								<li class="list-group-item">
+									<input class="form-check-input" type="checkbox" value="<%= data.scope[i] %>" id="<%= data.scope[i] %>" checked="true">
+									<span class="consent-text">
+										<%= data.scope[i] %>
+									</span>
+								</li>
+								<% } %>
+							</ul>
+
+							<form method="post" class="mt-4" id="form">
+								<input type="hidden" id="decision" name="decision" />
+								<input id="allow" type="submit" value="Allow" tabindex="2" onclick="return submitDecision(true);" class="btn btn-success btn-lg mr-1">
+								<input id="deny" type="submit" value="Deny" tabindex="1" autofocus="true" onclick="return submitDecision(false);"
+								 class="btn btn-danger  btn-lg ml-1">
+							</form>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<script type="text/javascript">
+		function submitDecision(state) {
+			var decision = document.getElementById("decision")
+			if (state) {
+				var items = $("input[type='checkbox']:checked");
+				var checkedArray = []
+				for (var i = 0; i < items.length; i++) {
+					checkedArray.push(items[i].value.trim());
+				}
+				decision.value = checkedArray;
+
+			} else {
+				decision.value = [];
+			}
+			console.log(checkedArray)
+			document.getElementById(decision).parentNode.submit();
+			return false;
+		}
+	</script>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+	 crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+	 crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+	 crossorigin="anonymous"></script>
+</body>
+
+</html>
