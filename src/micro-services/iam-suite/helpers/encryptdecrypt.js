@@ -4,7 +4,7 @@ let secret;
 setTimeout(() => {
     secretGen.secretGenerator((data) => {
         secret = data;
-    })
+    });
 }, 500)
 
 exports.encrypt = function (text) {

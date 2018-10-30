@@ -16,7 +16,7 @@ exports.get = function (req, res) {
                         if (data.emailVerify) {
                             return res.status(400).send({
                                 message: 'Email has Already been verified'
-                            })
+                            });
                         } else {
                             data.emailVerify = true;
                             user.update(email, JSON.stringify(data))
@@ -31,7 +31,7 @@ exports.get = function (req, res) {
                         });
                     }
 
-                })
+                });
             } else {
                 return res.status(400).send({
                     message: "Invalid Request"
@@ -42,5 +42,5 @@ exports.get = function (req, res) {
                 message: "Verification Window Expired"
             });
         }
-    })
+    });
 }

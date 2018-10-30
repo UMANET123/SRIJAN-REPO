@@ -21,8 +21,8 @@ exports.post = function (req, res) {
         } else {
             res.status(400).send({
                 message: 'Invalid Request'
-            })
+            });
         }
-    })
+    });
 
 }

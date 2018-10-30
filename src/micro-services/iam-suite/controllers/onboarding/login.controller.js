@@ -34,7 +34,7 @@ exports.post = function (req, res) {
         } else {
             return res.status(401).send({
                 message: "Invalid credentials"
-            })
+            });
         }
-    })
+    });
 }

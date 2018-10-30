@@ -25,7 +25,7 @@ exports.create = function (data, cb) {
     cb({
         email: user.email,
         hash: emailHash
-    })
+    });
 }
 exports.update = function (key, data) {
     db.set(key, data);

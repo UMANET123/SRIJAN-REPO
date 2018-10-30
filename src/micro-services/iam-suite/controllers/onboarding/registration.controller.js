@@ -27,13 +27,12 @@ exports.post = function (req, res) {
         if (!value) {
             user.create(req.body, (contents) => {
                 return res.status(201).send(contents);
-            })
+            });
         } else {
             return res.status(400).send({
                 message: 'Email Address already registered'
             });
         }
-    })
-
+    });
 
 }
