@@ -6,7 +6,7 @@ WORKDIR /usr/src/install
 
 COPY package.json ./
 
-RUN npm i --verbose
+RUN npm i
 
 ENV NODE_PATH=/usr/src/install/node_modules
 

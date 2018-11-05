@@ -1,12 +1,15 @@
 const express = require('express');
-const bodyParser  = require('body-parser');
+const bodyParser = require('body-parser');
 const db = require('./config/db');
 const router = require('./routes/index.router');
 const environment = require('./config/environment');
 const app = express();
 
-db.create("redis://twofaredis",(error)=>{
-    if(error){
+const httpPostOnlyMiddleware = require('./middleware/http-only-post.middleware');
+const mobileValidatorMiddleware = require('./middleware/mobile-number-validator.middleware');
+
+db.create("redis://twofaredis", (error) => {
+    if (error) {
         console.log(error);
     } else {
         console.log('Redis Server Running');
@@ -14,8 +17,10 @@ db.create("redis://twofaredis",(error)=>{
 });
 
 app.use(bodyParser.json());
-app.use('/',router)
-app.listen(environment.PORT_NUMBER,()=>{
+app.use(httpPostOnlyMiddleware);
+app.use(mobileValidatorMiddleware);
+app.use('/', router)
+app.listen(environment.PORT_NUMBER, () => {
     console.log(`App running on port ${environment.PORT_NUMBER}`);
 });
 
