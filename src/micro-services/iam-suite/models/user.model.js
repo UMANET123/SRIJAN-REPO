@@ -11,11 +11,11 @@ exports.create = function (data, cb) {
         address: data.address,
         msisdn: data.msisdn,
         email: data.email,
-        password: crypt.encrypt(data.password),
+        password: crypt.generateHash(data.password),
         emailVerify: false
     }
 
-    let emailHash = crypt.encrypt(user.email);
+    let emailHash = crypt.generateHash(user.email);
     db.set(emailHash, user.email, {
         option: 'EX',
         value: 1800

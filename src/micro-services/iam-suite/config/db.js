@@ -26,7 +26,7 @@ exports.get = function (key, done) {
 
 exports.set = function (key, data, opts=null) {
     if (!opts) {
-        state.db.set(key, data);
+        state.db.set(key, data, redis.print);
     } else {
         state.db.set(key, data, opts.option, opts.value);
     }

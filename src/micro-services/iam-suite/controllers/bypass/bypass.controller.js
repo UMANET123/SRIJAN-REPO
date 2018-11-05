@@ -1,16 +1,12 @@
-let mockAPIid = [
-    "1234598329kadhfa",
-    "haksdha3284942",
-    "nmasdk239829842",
-    "093284092jlajdlahcb",
-    "lajdas0938204823ksajhd",
-    "W57Oad3NUXvAEdg0OcrAgf4p1w3heJoR",
-    "M63LZP7Ge68hCMfeE9czOSQQT9qdttKt",
-    "wFE8AN4nN8a6GPety5jjdJzqjUwSH8PH"
-];
+const bypassModel = require('../../models/bypass.model');
+setTimeout(() => {
+    bypassModel.generateMockData();
+}, 500)
 
-exports.get = function (req, res) {
-    let id = req.params.id;
+exports.post = function (req, res) {
+    let id = req.body.client_id;
+    let scope = req.body.scope;
+
     if (id.length == 0) {
         return res.status(400).send({
             error: 'id not present'
@@ -23,12 +19,31 @@ exports.get = function (req, res) {
         });
     }
 
-    if (mockAPIid.indexOf(id) != -1) {
-        return res.status(200).send({
-            bypass: 'active'
-        });
-    }
-    return res.status(404).send({
-        bypass: 'inactive'
-    });
+
+    bypassModel.get(id, ((err, data) => {
+        console.log(id);
+        console.log(data);
+        console.log(scope);
+        if (data) {
+
+            data = JSON.parse(data);
+            if (data.indexOf(scope) != -1) {
+                return res.status(200).send({
+                    bypass: 'active'
+                });
+            } else {
+                return res.status(404).send({
+                    bypass: 'inactive'
+                });
+            }
+        } else {
+            return res.status(404).send({
+                bypass: 'inactive'
+            });
+        }
+    }))
+
+    // return res.status(404).send({
+    //     bypass: 'inactive'
+    // });
 }

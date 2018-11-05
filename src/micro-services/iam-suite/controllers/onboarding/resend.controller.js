@@ -3,7 +3,7 @@ const user = require('../../models/user.model');
 
 exports.post = function (req, res) {
     let email = req.body.email;
-    let token = cryptr.encrypt(email)
+    let token = cryptr.generateHash(email)
     user.get(email, (err, data) => {
         if (data) {
             data = JSON.parse(data);

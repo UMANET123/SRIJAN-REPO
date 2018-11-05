@@ -21,7 +21,7 @@ exports.post = function (req, res) {
         if (!err) {
             data = JSON.parse(data);
             if (data.emailVerify) {
-                if (password == cryptr.decrypt(data.password)) {
+                if (cryptr.generateHash(password) == data.password) {
                     return res.status(200).send({
                         message: "Successfully Logged in"
                     });
