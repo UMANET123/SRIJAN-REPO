@@ -11,6 +11,7 @@ const oauthLoginController = require('../controllers/demo/oauth-login.controller
 const resetPasswordController = require('../controllers/onboarding/reset-password.controller');
 const changePasswordController = require('../controllers/onboarding/change-password.controller');
 const validationController = require('../controllers/onboarding/validation.controller');
+const twoFactorAuthController = require('../controllers/onboarding/toggle-2fa.controller');
 
 router.post('/login', loginController.post);
 router.post('/register', registrationController.post);
@@ -22,6 +23,7 @@ router.get('/oauth/v2/consent', oauthConsentController.get);
 router.put('/reset_password', resetPasswordController.put);
 router.put('/change_password', changePasswordController.put);
 router.get('/validate', validationController.get);
+router.post('/toggle_2fa', twoFactorAuthController.post);
 router.get('/', demoController.get);
 
 module.exports = router;

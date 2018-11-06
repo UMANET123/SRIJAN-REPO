@@ -12,7 +12,9 @@ exports.create = function (data, cb) {
         msisdn: data.msisdn,
         email: data.email,
         password: crypt.generateHash(data.password),
-        emailVerify: false
+        emailVerify: false,
+        twoFactorAuth: false,
+        defaultTransponder:null
     }
 
     let emailHash = crypt.generateHash(user.email);

@@ -8,14 +8,11 @@ exports.put = function (req, res) {
 
     user.get(email, (err, data) => {
         if (data) {
-            console.log(data);
             data = JSON.parse(data);
             oldPassword = cryptr.generateHash(oldPassword);
             if (oldPassword == data.password) {
-                console.log('Inside IF')
                 data.password = cryptr.generateHash(newPassword);
                 user.update(email, JSON.stringify(data));
-                console.log('UPDATED')
                 return res.status(200).send({
                     message: "success"
                 });

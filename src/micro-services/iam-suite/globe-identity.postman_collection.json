@@ -159,7 +159,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"firstname\":\"firstnameexample\",\n\t\"middlename\":\"middlenameexample\",\n\t\"lastname\":\"lastnameexample\",\n\t\"address\": \"address example\",\n\t\"msisdn\": \"639234567891\",\n\t\"email\": \"globe@globe.com\",\n\t\"password\": \"baconpancakes\"\n}"
+					"raw": "{\n\t\"firstname\":\"firstnameexample\",\n\t\"middlename\":\"middlenameexample\",\n\t\"lastname\":\"lastnameexample\",\n\t\"address\": \"address example\",\n\t\"msisdn\": \"639234567891\",\n\t\"email\": \"postman@globe.com\",\n\t\"password\": \"baconpancakes\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/register",
@@ -200,7 +200,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"firstname\":\"firstnameexample\",\n\t\"middlename\":\"middlenameexample\",\n\t\"lastname\":\"lastnameexample\",\n\t\"address\": \"address example\",\n\t\"msisdn\": \"639234567891\",\n\t\"email\": \"globe@globe.com\",\n\t\"password\": \"baconpancakes\"\n}"
+					"raw": "{\n\t\"firstname\":\"firstnameexample\",\n\t\"middlename\":\"middlenameexample\",\n\t\"lastname\":\"lastnameexample\",\n\t\"address\": \"address example\",\n\t\"msisdn\": \"639234567891\",\n\t\"email\": \"postman@globe.com\",\n\t\"password\": \"baconpancakes\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/register",
@@ -247,7 +247,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"email\": \"{{verifyemail}}\"\n}"
+					"raw": "{\n    \"email\": \"postman@globe.com\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/resend",
@@ -287,7 +287,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\": \"globe@globe.com\",\n\t\"password\": \"baconpancakes\"\n}"
+					"raw": "{\n\t\"email\": \"postman@globe.com\",\n\t\"password\": \"baconpancakes\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/login",
@@ -454,7 +454,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\": \"globe@globe.com\",\n\t\"password\": \"baconpancakes\"\n}"
+					"raw": "{\n\t\"email\": \"postman@globe.com\",\n\t\"password\": \"baconpancakes\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/login",
@@ -568,20 +568,26 @@
 				}
 			],
 			"request": {
-				"method": "GET",
-				"header": [],
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": ""
+					"raw": "{\n    \"client_id\": \"M63LZP7Ge68hCMfeE9czOSQQT9qdttKt\",\n    \"scope\": \"SUBSCRIBER\"\n}"
 				},
 				"url": {
-					"raw": "{{host}}/status/wFE8AN4nN8a6GPety5jjdJzqjUwSH8PH",
+					"raw": "{{host}}/status",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
-						"status",
-						"wFE8AN4nN8a6GPety5jjdJzqjUwSH8PH"
+						"status"
 					]
 				}
 			},
@@ -620,6 +626,266 @@
 						"wFE8AN4nN8a6GPety5jjdJzqjUwS"
 					]
 				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Reset Password",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"globe@globe.com\",\n\t\"new_password\":\"valindogodinho\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/reset_password",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"reset_password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully change password",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"globe@globe.com\",\n\t\"old_password\": \"valindogodinho\",\n\t\"new_password\": \"baconpancakes\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/change_password",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"change_password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully validate user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{host}}/validate?email=globe1@globe.com",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"validate"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "globe1@globe.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Turn on 2fa",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "45f3a75f-e251-4d90-9c00-5e03f0fee235",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"postman@globe.com\",\n\t\"twoFactorAuth\":\"true\",\n\t\"transponder\":\"sms\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/toggle_2fa",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"toggle_2fa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Login With 2FA details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f83d9c8b-1f71-44ad-b7b0-bb6ceaef7190",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Should have address', function() {",
+							"    const jsonData = pm.response.json();",
+							"  pm.expect(jsonData).to.have.property('address');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"postman@globe.com\",\n\t\"password\": \"baconpancakes\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"login"
+					]
+				},
+				"description": "Post Request, should contain request\n```json\n{\n\temail: \"example@example.com\",\n\tpassword: \"password123\"\n}\n```"
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Turn off 2fa ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d73ed3a3-e2f8-4d5e-ae35-3eae9bb21f75",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"postman@globe.com\",\n\t\"twoFactorAuth\":\"false\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/toggle_2fa",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"toggle_2fa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Login Without 2FA details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f83d9c8b-1f71-44ad-b7b0-bb6ceaef7190",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Should have address', function() {",
+							"",
+							"const jsonData = pm.response.json();",
+							"  pm.expect(jsonData).to.not.have.property('address');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\": \"postman@globe.com\",\n\t\"password\": \"baconpancakes\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"login"
+					]
+				},
+				"description": "Post Request, should contain request\n```json\n{\n\temail: \"example@example.com\",\n\tpassword: \"password123\"\n}\n```"
 			},
 			"response": []
 		}

@@ -13,11 +13,6 @@ exports.post = function (req, res) {
         });
     }
 
-    if (/^\d+$/.test(id)) {
-        return res.status(400).send({
-            error: 'id invalid'
-        });
-    }
 
 
     bypassModel.get(id, ((err, data) => {
@@ -25,7 +20,6 @@ exports.post = function (req, res) {
         console.log(data);
         console.log(scope);
         if (data) {
-
             data = JSON.parse(data);
             if (data.indexOf(scope) != -1) {
                 return res.status(200).send({
