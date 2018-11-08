@@ -6,7 +6,6 @@ const environment = require('./config/environment');
 const app = express();
 
 const httpPostOnlyMiddleware = require('./middleware/http-only-post.middleware');
-const mobileValidatorMiddleware = require('./middleware/mobile-number-validator.middleware');
 
 db.create("redis://twofaredis", (error) => {
     if (error) {

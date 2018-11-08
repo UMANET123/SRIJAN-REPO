@@ -1,7 +1,7 @@
 const identity = require('../models/identity.model');
 
 module.exports = function (req, res) {
-    let address = req.body.address;
+    let address = req.body.address ? req.body.address : req.body.email;
     identity.generateHotp(address, (error, data) => {
         if (error) {
             res.status(500)
