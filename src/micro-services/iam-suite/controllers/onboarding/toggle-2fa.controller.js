@@ -2,7 +2,6 @@ const user = require('../../models/user.model');
 
 /**
  * TODO
- * - Check for valid email
  * - Check for valid transponder type 
  *      (This will be solved if some enum is in place)
  */
