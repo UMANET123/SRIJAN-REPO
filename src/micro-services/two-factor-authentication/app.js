@@ -18,7 +18,6 @@ db.create("redis://twofaredis", (error) => {
 
 app.use(bodyParser.json());
 app.use(httpPostOnlyMiddleware);
-app.use(mobileValidatorMiddleware);
 app.use('/', router)
 app.listen(environment.PORT_NUMBER, () => {
     console.log(`App running on port ${environment.PORT_NUMBER}`);
