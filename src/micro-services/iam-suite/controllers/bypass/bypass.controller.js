@@ -16,9 +16,6 @@ exports.post = function (req, res) {
 
 
     bypassModel.get(id, ((err, data) => {
-        console.log(id);
-        console.log(data);
-        console.log(scope);
         if (data) {
             data = JSON.parse(data);
             if (data.indexOf(scope) != -1) {
