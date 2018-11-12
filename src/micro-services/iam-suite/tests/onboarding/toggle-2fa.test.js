@@ -27,8 +27,8 @@ describe("Testing the Two Factor Auth Toggle", () => {
                                 .post("/toggle_2fa")
                                 .send({
                                     email: email,
-                                    twoFactorAuth: "true",
-                                    transponder: "email"
+                                    toggle_otp: "true",
+                                    transport: "email"
                                 })
                                 .expect(200)
                                 .end((err, res) => {
@@ -53,7 +53,7 @@ describe("Testing the Two Factor Auth Toggle", () => {
                 .post("/toggle_2fa")
                 .send({
                     email: email,
-                    twoFactorAuth: "false",
+                    toggle_otp: "false",
                 })
                 .expect(200)
                 .end((err, res) => {

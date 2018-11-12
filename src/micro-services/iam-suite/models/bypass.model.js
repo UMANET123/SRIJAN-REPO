@@ -38,7 +38,7 @@ exports.generateMockData = function () {
         },
         {
             client_id: "wFE8AN4nN8a6GPety5jjdJzqjUwSH8PH",
-            scopes: ["ABC", "BCD"]
+            scopes: ["LOCATION"]
         }
     ];
 

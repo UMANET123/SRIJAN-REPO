@@ -8,8 +8,8 @@ const user = require('../../models/user.model');
 
 exports.post = function (req, res) {
     let email = req.body.email;
-    let twoFactorAuth = req.body.twoFactorAuth;
-    let transponder = req.body.transponder
+    let twoFactorAuth = req.body.toggle_otp;
+    let transponder = req.body.transport
 
     user.get(email, (err, data) => {
         if (!err && data) {

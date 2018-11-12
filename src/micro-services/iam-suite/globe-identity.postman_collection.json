@@ -740,7 +740,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\":\"postman@globe.com\",\n\t\"twoFactorAuth\":\"true\",\n\t\"transponder\":\"sms\"\n}"
+					"raw": "{\n\t\"email\":\"postman@globe.com\",\n\t\"toggle_otp\":\"true\",\n\t\"transport\":\"sms\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/toggle_2fa",
@@ -828,7 +828,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"email\":\"postman@globe.com\",\n\t\"twoFactorAuth\":\"false\"\n}"
+					"raw": "{\n\t\"email\":\"postman@globe.com\",\n\t\"toggle_otp\":\"false\"\n}"
 				},
 				"url": {
 					"raw": "{{host}}/toggle_2fa",
