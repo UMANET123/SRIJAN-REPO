@@ -26,7 +26,7 @@ router.put('/change_password', changePasswordController.put);
 router.get('/verify/:hash', verificationController.get);
 router.get('/oauth/v2/login', oauthLoginController.get);
 router.get('/oauth/v2/consent', oauthConsentController.get);
-router.get('/oauth/v2/otp', otpController.get);
+router.get('/oauth/v2/verify_otp', otpController.get);
 router.get('/validate', validationController.get);
 router.get('/', demoController.get);
 

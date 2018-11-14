@@ -42,6 +42,10 @@ exports.post = function (req, res) {
                             message: "Successfully Logged in"
                         });
                     }
+                } else {
+                    return res.status(401).send({
+                        message: "Invalid credentials"
+                    });
                 }
             } else {
                 return res.status(401).send({
