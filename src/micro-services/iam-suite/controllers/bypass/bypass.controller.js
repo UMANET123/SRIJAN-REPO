@@ -1,40 +1,88 @@
-const bypassModel = require('../../models/bypass.model');
+const bypassModel = require("../../models/bypass.model");
 setTimeout(() => {
-    bypassModel.generateMockData();
-}, 500)
+  bypassModel.generateMockData();
+}, 500);
 
-exports.post = function (req, res) {
-    let id = req.body.client_id;
-    let scope = req.body.scope;
+exports.status = function(req, res) {
+  let id = req.body.client_id;
+  let scope = req.body.scope;
 
-    if (id.length == 0) {
-        return res.status(400).send({
-            error: 'id not present'
+  if (id.length == 0) {
+    return res.status(400).send({
+      error: "id not present"
+    });
+  }
+
+  bypassModel.get(id, (err, data) => {
+    if (data) {
+      data = JSON.parse(data);
+      if (data.indexOf(scope) != -1) {
+        return res.status(200).send({
+          bypass: "active"
         });
+      } else {
+        return res.status(404).send({
+          bypass: "inactive"
+        });
+      }
+    } else {
+      return res.status(404).send({
+        bypass: "inactive"
+      });
     }
+  });
 
+  // return res.status(404).send({
+  //     bypass: 'inactive'
+  // });
+};
 
+exports.add = function(req, res) {
+  const clientId = req.body.client_id;
+  const scopes = req.body.scopes;
 
-    bypassModel.get(id, ((err, data) => {
-        if (data) {
-            data = JSON.parse(data);
-            if (data.indexOf(scope) != -1) {
-                return res.status(200).send({
-                    bypass: 'active'
-                });
-            } else {
-                return res.status(404).send({
-                    bypass: 'inactive'
-                });
-            }
-        } else {
-            return res.status(404).send({
-                bypass: 'inactive'
-            });
-        }
-    }))
+  if (!clientId || !scopes) {
+    return res.status(400).send({
+      error: "client_id or scopes missing"
+    });
+  } else {
+    // Check if client_id already whitelisted
 
-    // return res.status(404).send({
-    //     bypass: 'inactive'
-    // });
-}
+    bypassModel.get(clientId, (err, data) => {
+      if (data) {
+        return res.status(400).send({
+          error: "client_id already whitelisted"
+        });
+      } else {
+        bypassModel.set(clientId, JSON.stringify(scopes));
+        return res.status(201).send({
+          message: "success"
+        });
+      }
+    });
+  }
+};
+
+exports.getAll = function(req, res) {
+  bypassModel.getAll((err, data) => {
+    if (data) {
+      return res.status(200).send(data);
+    } else {
+      return res.status(404).send({
+        error: "No data available"
+      });
+    }
+  });
+};
+
+exports.delete = function(req, res) {
+  const clientId = req.body.client_id;
+  if (!clientId) {
+    return res.status(400).send({ error: "client_id missing" });
+  } else {
+    bypassModel.remove(clientId);
+    return res.status(200).send({
+      message: "success"
+    });
+  }
+};
