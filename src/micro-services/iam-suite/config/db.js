@@ -63,3 +63,11 @@ exports.getAll = function(done) {
 exports.remove = function(key) {
   state.db.del(key);
 };
+
+exports.update = function(key, data, opts = null) {
+  if (!opts) {
+    state.db.set(key, data);
+  } else {
+    state.db.set(key, data, opts.option, opts.value);
+  }
+};
