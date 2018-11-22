@@ -86,3 +86,25 @@ exports.delete = function(req, res) {
     });
   }
 };
+
+exports.update = function(req, res) {
+  const clientId = req.body.client_id;
+  const scopes = req.body.scopes;
+
+  if (!clientId || !scopes) {
+    return res.status(400).send({ error: "client_id or scopes missing" });
+  } else {
+    // Check if client_id already whitelisted
+
+    bypassModel.get(clientId, (err, data) => {
+      if (!data) {
+        return res.status(400).send({
+          error: "client_id not whitelisted"
+        });
+      } else {
+        bypassModel.set(clientId, JSON.stringify(scopes));
+        return res.status(201).send({ message: "success" });
+      }
+    });
+  }
+};

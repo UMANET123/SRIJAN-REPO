@@ -20,6 +20,7 @@ router.post("/resend", resendController.post);
 router.post("/status", bypassController.status);
 router.post("/bypass/id", bypassController.add);
 router.get("/bypass/id", bypassController.getAll);
+router.put("/bypass/id", bypassController.update);
 router.delete("/bypass/id", bypassController.delete);
 router.post("/toggle_2fa", twoFactorAuthController.post);
 

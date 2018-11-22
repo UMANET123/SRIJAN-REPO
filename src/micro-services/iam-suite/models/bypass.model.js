@@ -15,6 +15,10 @@ const remove = function(key) {
   db.remove(key);
 };
 
+const update = function(key, data) {
+  db.set(key, data);
+};
+
 exports.generateMockData = function() {
   let mockAPIid = [
     {
@@ -61,3 +65,4 @@ exports.set = set;
 exports.get = get;
 exports.getAll = getAll;
 exports.remove = remove;
+exports.update = update;
