@@ -23,7 +23,7 @@
           </mat-error>
         </mat-form-field>
       </form>
-      <button mat-raised-button color="primary" (click)="login()" [disabled]="false">login</button>
+      <button mat-raised-button color="primary" (click)="login()" [disabled]="!loginForm.valid">login</button>
     </mat-card-content>
     <mat-card-footer class="mb-2">
       <small>Don't have an account yet? <a href="/signup">Signup</a></small>
