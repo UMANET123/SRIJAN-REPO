@@ -65,16 +65,3 @@ export class LoginComponent implements OnInit {
     );
   }
 }
-
-@Component({
-  selector: "snack-bar-component-login",
-  templateUrl: "snack-bar-component-login.html",
-  styles: [
-    `
-      .example-pizza-party {
-        color: hotpink;
-      }
-    `
-  ]
-})
-export class SnackBarLoginComponent {}
