@@ -75,7 +75,7 @@ export class SignupComponent implements OnInit {
       },(error)=>{
         this.confirm_password.setErrors(null);
         this._snackBar.open(error.error.error,'',{
-          duration: 5000;
+          duration: 5000
         })
       })
     }
