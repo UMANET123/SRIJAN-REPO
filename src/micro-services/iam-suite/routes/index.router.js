@@ -19,6 +19,7 @@ router.post("/register", registrationController.post);
 router.post("/resend", resendController.post);
 router.post("/status", bypassController.status);
 router.post("/bypass/id", bypassController.add);
+router.get("/bypass/id/:client_id", bypassController.get);
 router.get("/bypass/id", bypassController.getAll);
 router.put("/bypass/id", bypassController.update);
 router.delete("/bypass/id", bypassController.delete);
