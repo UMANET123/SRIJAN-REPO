@@ -16,7 +16,8 @@ export class LoginService {
       {
         headers: {
           Authorization: hash
-        }
+        },
+        observe: 'response'
       }
     );
   }

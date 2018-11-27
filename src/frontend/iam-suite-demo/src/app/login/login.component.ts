@@ -8,6 +8,10 @@ import {
 } from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
+import { OtpComponent } from "./otp/otp.component";
+import { MatDialog } from "@angular/material";
+import { OtpService } from "../shared/otp.service";
+import { UserService } from "../shared/user.service";
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
@@ -19,7 +23,9 @@ export class LoginComponent implements OnInit {
     private _loginService: LoginService,
     private _fb: FormBuilder,
     public _snackBar: MatSnackBar,
-    private _router: Router
+    private _router: Router,
+    private _matDialog: MatDialog,
+    private _userService: UserService
   ) {
     this.buildForm();
   }
@@ -51,12 +57,22 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this._loginService.login(this.loginForm.value).subscribe(
+    let payload: any = this.loginForm.value;
+    this._loginService.login(payload).subscribe(
       data => {
-        console.log(data);
-        this._router.navigate(["/dashboard"]);
+        this._userService.setCurrentUserEmail(payload.email);
+        if (data.status == 200) {
+          this._userService.setTwoFactorState(false);
+          this._router.navigate(["/dashboard"]);
+        } else if (data.status == 201) {
+          this._userService.setTwoFactorState(true);
+          this._matDialog.open(OtpComponent, {
+            data: { email: this.email.value }
+          });
+        }
       },
       err => {
+        console.log(err);
         this._snackBar.open(err.error.error, "", {
           duration: 3000
         });

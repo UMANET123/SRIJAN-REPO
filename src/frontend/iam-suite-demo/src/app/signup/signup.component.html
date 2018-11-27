@@ -1,5 +1,5 @@
 <div class="container d-flex flex-row justify-content-center align-items-center">
-  <mat-card class="col-md-8 col-lg-8 col-sm-8 text-center" *ngIf="!successfullSignup">
+  <mat-card class="col-md-6 col-lg-6 col-sm-6 text-center" *ngIf="!successfullSignup">
     <img mat-card-image class="img-fluid" src="assets/images/logo.png" alt="Card image cap">
     <mat-card-content>
       <h4>Signup</h4>
@@ -41,7 +41,7 @@
           </mat-form-field>
 
           <mat-form-field class="w-100">
-            <span matPrefix>+639 &nbsp;</span>
+            <span matPrefix>+63 &nbsp;</span>
             <input type="tel" matInput placeholder="Telephone" formControlName="msisdn">
             <mat-error *ngIf="msisdn.hasError('required')">
               Mobile is <strong>required</strong>

@@ -1,0 +1,16 @@
+<div class="text-center">
+  <h3>Enter OTP</h3>
+  <p>Please enter OTP sent to you via email/sms</p>
+  <form [formGroup]="otpForm">
+    <mat-form-field class="w-100">
+      <input matInput placeholder="OTP" formControlName="otp">
+      <mat-error *ngIf="otp.hasError('minlength') && !otp.hasError('required')">
+        Please enter a valid OTP
+      </mat-error>
+      <mat-error *ngIf="otp.hasError('failed')">
+        Invalid OTP, please try again
+      </mat-error>
+    </mat-form-field>
+  </form>
+  <button mat-raised-button color="primary" (click)="submit()">Verify</button>
+</div>

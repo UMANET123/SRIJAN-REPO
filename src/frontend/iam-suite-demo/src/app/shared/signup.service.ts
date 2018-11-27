@@ -12,7 +12,7 @@ export class SignupService {
       middleName: data.middleName,
       lastName: data.lastName,
       address: data.address,
-      msisdn: `639${data.msisdn}`,
+      msisdn: `63${data.msisdn}`,
       email: data.email,
       password: data.password
     };

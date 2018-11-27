@@ -1,0 +1,33 @@
+<mat-horizontal-stepper [linear]="true" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="authForm">
+      <ng-template matStepLabel>Please enter your password</ng-template>
+      <mat-form-field>
+        <input matInput placeholder="password" formControlName="password" required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext>Next</button>
+        <button mat-button (click)="setEmail()">Email</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="secondFormGroup">
+    <form [formGroup]="twoFactorForm">
+      <ng-template matStepLabel>Fill out your address</ng-template>
+      <mat-form-field>
+        <input matInput placeholder="OTP" formControlName="otp" required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    You are now done.
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

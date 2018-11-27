@@ -10,6 +10,9 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { LoginService } from "../shared/login.service";
 import { HttpClientModule } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { OtpComponent } from "./otp/otp.component";
+import { MatDialogModule } from "@angular/material/dialog";
+import { UserService } from "../shared/user.service";
 const routes: Routes = [
   {
     path: "",
@@ -28,9 +31,11 @@ const routes: Routes = [
     MatInputModule,
     MatFormFieldModule,
     MatButtonModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
-  declarations: [LoginComponent],
-  providers: [LoginService]
+  declarations: [LoginComponent, OtpComponent],
+  providers: [LoginService, UserService],
+  entryComponents: [OtpComponent]
 })
 export class LoginModule {}

@@ -1,7 +1,13 @@
 <div class="container-fluid d-flex flex-row justify-content-center align-items-center">
   <mat-card class="text-center">
     <mat-tab-group>
-      <mat-tab label="Two Factor Authentication"> Two Factor Authentication </mat-tab>
+      <mat-tab label="Two Factor Authentication">
+        {{otpActive}}
+        <button mat-raised-button color="primary" *ngIf="!otpActive" class="mt-3" (click)="toggleTwoFa()">Turn Two
+          Factor ON</button>
+        <button mat-raised-button color="accent" *ngIf="otpActive" class="mt-3" (click)="toggleTwoFa()">Turn Two Factor
+          OFF</button>
+      </mat-tab>
       <mat-tab label="Change Password"> Change Password </mat-tab>
     </mat-tab-group>
   </mat-card>
