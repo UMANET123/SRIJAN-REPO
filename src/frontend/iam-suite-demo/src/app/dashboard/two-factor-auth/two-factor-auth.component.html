@@ -1,4 +1,4 @@
-<mat-horizontal-stepper [linear]="true" #stepper>
+<mat-horizontal-stepper [linear]="false" #stepper>
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="authForm">
       <ng-template matStepLabel>Please enter your password</ng-template>
@@ -6,28 +6,28 @@
         <input matInput placeholder="password" formControlName="password" required>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext>Next</button>
-        <button mat-button (click)="setEmail()">Email</button>
+        <button mat-button matStepperNext (click)="toggleOtp()">Next</button>
       </div>
     </form>
   </mat-step>
   <mat-step [stepControl]="secondFormGroup">
     <form [formGroup]="twoFactorForm">
-      <ng-template matStepLabel>Fill out your address</ng-template>
+      <ng-template matStepLabel>Verify OTP</ng-template>
       <mat-form-field>
         <input matInput placeholder="OTP" formControlName="otp" required>
       </mat-form-field>
       <div>
         <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button mat-button *ngIf="!otpVerified" (click)="verifyOtp()">Verify</button>
+        <button mat-button matStepperNext *ngIf="otpVerified" color="primary">Next</button>
       </div>
     </form>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Done</ng-template>
-    You are now done.
+    Two Factor Auth has successfully been toggled
     <div>
-      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="done()">Done</button>
     </div>
   </mat-step>
 </mat-horizontal-stepper>

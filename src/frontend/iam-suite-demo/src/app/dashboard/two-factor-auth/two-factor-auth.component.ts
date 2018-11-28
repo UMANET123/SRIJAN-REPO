@@ -7,6 +7,9 @@ import {
   Validators
 } from "@angular/forms";
 import { combineLatest } from "rxjs";
+import { TwoFactorService } from "src/app/shared/two-factor.service";
+import { OtpService } from "src/app/shared/otp.service";
+import { MatDialog, MatDialogRef } from "@angular/material";
 @Component({
   selector: "app-two-factor-auth",
   templateUrl: "./two-factor-auth.component.html",
@@ -17,7 +20,14 @@ export class TwoFactorAuthComponent implements OnInit {
   public twoFactorState: boolean;
   public twoFactorForm: FormGroup;
   public authForm: FormGroup;
-  constructor(private _userService: UserService, private _fB: FormBuilder) {}
+  public otpVerified: boolean = false;
+  constructor(
+    private _userService: UserService,
+    private _fB: FormBuilder,
+    private _twoFactorService: TwoFactorService,
+    private _otpService: OtpService,
+    private _dialogRef: MatDialogRef<TwoFactorAuthComponent>
+  ) {}
 
   ngOnInit() {
     this.buildForm();
@@ -30,14 +40,7 @@ export class TwoFactorAuthComponent implements OnInit {
       this.twoFactorState = x[1];
       this.email.setValue(this.userEmail);
       this.emailAddress.setValue(this.userEmail);
-
-      console.log(this.userEmail);
-      console.log(this.twoFactorForm.value);
     });
-  }
-
-  setEmail() {
-    this._userService.setCurrentUserEmail("valindo@wafer.ee");
   }
 
   buildForm() {
@@ -66,5 +69,23 @@ export class TwoFactorAuthComponent implements OnInit {
     return this.authForm.get("emailAddress") as FormControl;
   }
 
-  verifyOtp() {}
+  toggleOtp() {
+    this._twoFactorService
+      .toggleTwoFactor(this.authForm.value, !this.twoFactorState)
+      .subscribe(data => console.log(data), error => console.log(error));
+  }
+
+  verifyOtp() {
+    this._otpService.verify(this.twoFactorForm.value).subscribe(
+      data => {
+        this.otpVerified = true;
+        this._userService.setTwoFactorState(!this.twoFactorState);
+      },
+      error => console.log(error)
+    );
+  }
+
+  done() {
+    this._dialogRef.close();
+  }
 }

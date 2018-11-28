@@ -15,7 +15,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { UserService } from "../shared/user.service";
 const routes: Routes = [
   {
-    path: "",
+    path: "login",
     component: LoginComponent
   }
 ];
@@ -36,6 +36,7 @@ const routes: Routes = [
   ],
   declarations: [LoginComponent, OtpComponent],
   providers: [LoginService, UserService],
-  entryComponents: [OtpComponent]
+  entryComponents: [OtpComponent],
+  exports:[RouterModule]
 })
 export class LoginModule {}

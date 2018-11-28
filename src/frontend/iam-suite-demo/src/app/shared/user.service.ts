@@ -10,7 +10,9 @@ import {
   providedIn: "root"
 })
 export class UserService {
-  public currentUserEmail: BehaviorSubject<string> = new BehaviorSubject("");
+  public currentUserEmail: BehaviorSubject<string> = new BehaviorSubject(
+    "valindo.godinho@srijan.net"
+  );
   public twoFactorState: BehaviorSubject<boolean> = new BehaviorSubject(false);
   constructor() {}
 
@@ -18,5 +20,7 @@ export class UserService {
     this.currentUserEmail.next(email);
   }
 
-  setTwoFactorState(state: boolean) {}
+  setTwoFactorState(state: boolean) {
+    this.twoFactorState.next(state);
+  }
 }
