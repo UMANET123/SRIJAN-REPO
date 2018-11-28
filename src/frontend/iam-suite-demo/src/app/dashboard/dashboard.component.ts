@@ -25,7 +25,10 @@ export class DashboardComponent implements OnInit {
   }
 
   toggleTwoFa() {
-    console.log(this.email);
     this._matDialog.open(TwoFactorAuthComponent);
+  }
+
+  changePassword() {
+    this._matDialog.open(ChangePasswordComponent);
   }
 }

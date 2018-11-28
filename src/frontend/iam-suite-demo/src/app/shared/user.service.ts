@@ -1,11 +1,5 @@
 import { Injectable } from "@angular/core";
-import {
-  Observable,
-  Observer,
-  Subscriber,
-  Subject,
-  BehaviorSubject
-} from "rxjs";
+import { BehaviorSubject } from "rxjs";
 @Injectable({
   providedIn: "root"
 })
@@ -14,6 +8,7 @@ export class UserService {
     "valindo.godinho@srijan.net"
   );
   public twoFactorState: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  public msisdn: string = "639123456789";
   constructor() {}
 
   setCurrentUserEmail(email: string) {

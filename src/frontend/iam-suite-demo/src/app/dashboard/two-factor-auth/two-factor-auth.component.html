@@ -1,5 +1,5 @@
 <mat-horizontal-stepper [linear]="false" #stepper>
-  <mat-step [stepControl]="firstFormGroup">
+  <mat-step>
     <form [formGroup]="authForm">
       <ng-template matStepLabel>Please enter your password</ng-template>
       <mat-form-field>
@@ -10,7 +10,7 @@
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="secondFormGroup">
+  <mat-step>
     <form [formGroup]="twoFactorForm">
       <ng-template matStepLabel>Verify OTP</ng-template>
       <mat-form-field>

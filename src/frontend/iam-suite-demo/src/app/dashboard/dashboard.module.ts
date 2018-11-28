@@ -17,6 +17,7 @@ import { TwoFactorAuthComponent } from "./two-factor-auth/two-factor-auth.compon
 import { ChangePasswordComponent } from "./change-password/change-password.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TwoFactorService } from "../shared/two-factor.service";
+import { ChangePasswordService } from "../shared/change-password.service";
 const routes: Routes = [
   {
     path: "dashboard",
@@ -44,7 +45,7 @@ const routes: Routes = [
     TwoFactorAuthComponent,
     ChangePasswordComponent
   ],
-  providers: [UserService, TwoFactorService],
+  providers: [UserService, TwoFactorService, ChangePasswordService],
   entryComponents: [TwoFactorAuthComponent, ChangePasswordComponent],
   exports: [RouterModule]
 })

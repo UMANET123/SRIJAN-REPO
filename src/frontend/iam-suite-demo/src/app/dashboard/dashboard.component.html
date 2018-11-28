@@ -7,7 +7,9 @@
         <button mat-raised-button color="accent" *ngIf="otpActive" class="mt-3" (click)="toggleTwoFa()">Turn Two Factor
           OFF</button>
       </mat-tab>
-      <mat-tab label="Change Password"> Change Password </mat-tab>
+      <mat-tab label="Change Password">
+        <button mat-raised-button color="primary" class="mt-3" (click)="changePassword()">Change Password</button>
+      </mat-tab>
     </mat-tab-group>
   </mat-card>
 </div>
