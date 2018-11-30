@@ -1,27 +1,36 @@
 const db = require("../config/db");
-const get = function(key, cb) {
+const get = function (key, cb) {
   db.get(key, cb);
 };
 
-const set = function(key, data) {
+const set = function (key, data) {
   db.set(key, data);
+  db.sadd('clientid', key);
 };
 
-const getAll = function(cb) {
-  db.getAll(cb);
+const getAll = function (cb) {
+  db.getAllClients(cb);
 };
 
-const remove = function(key) {
+const remove = function (key) {
   db.remove(key);
 };
 
-const update = function(key, data) {
+const removeClientId = function (key) {
+  db.remove(key);
+  db.srem('clientid', key);
+}
+
+const update = function (key, data) {
   db.set(key, data);
 };
 
-exports.generateMockData = function() {
-  let mockAPIid = [
-    {
+const setClientId = function (data) {
+  db.sadd('clientid', data);
+}
+
+exports.generateMockData = function () {
+  let mockAPIid = [{
       client_id: "1234598329kadhfa",
       scopes: ["ABC", "BCD"]
     },
@@ -57,7 +66,7 @@ exports.generateMockData = function() {
 
   mockAPIid.map(data => {
     set(data.client_id, JSON.stringify(data.scopes));
-    get;
+    setClientId(data.client_id);
   });
 };
 
@@ -66,3 +75,4 @@ exports.get = get;
 exports.getAll = getAll;
 exports.remove = remove;
 exports.update = update;
+exports.setClientId = setClientId;

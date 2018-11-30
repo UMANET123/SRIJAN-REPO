@@ -5,7 +5,7 @@ var state = {
   db: null
 };
 
-exports.create = function(opts, done) {
+exports.create = function (opts, done) {
   if (!state.db) {
     state.db = redis.createClient(opts);
     done(null);
@@ -15,7 +15,7 @@ exports.create = function(opts, done) {
   }
 };
 
-exports.get = function(key, done) {
+exports.get = function (key, done) {
   state.db.get(key, (err, data) => {
     if (data) {
       done(null, data);
@@ -25,7 +25,7 @@ exports.get = function(key, done) {
   });
 };
 
-exports.set = function(key, data, opts = null) {
+exports.set = function (key, data, opts = null) {
   if (!opts) {
     state.db.set(key, data);
   } else {
@@ -33,15 +33,26 @@ exports.set = function(key, data, opts = null) {
   }
 };
 
-exports.getAll = function(done) {
-  state.db.keys("*", (err, keys) => {
+exports.sadd = function (key, data) {
+  state.db.sadd(key, data);
+}
+
+exports.srem = function (key, data) {
+  state.db.srem(key, data);
+}
+
+exports.getAllClients = function (done) {
+  state.db.smembers("clientid", (err, keys) => {
     if (keys) {
       let payload = [];
       async.each(
         keys,
         (key, cb) => {
           state.db.get(key, (err, data) => {
-            payload.push({ client_id: key, scopes: JSON.parse(data) });
+            payload.push({
+              client_id: key,
+              scopes: JSON.parse(data)
+            });
             cb();
           });
         },
@@ -60,11 +71,11 @@ exports.getAll = function(done) {
   });
 };
 
-exports.remove = function(key) {
+exports.remove = function (key) {
   state.db.del(key);
 };
 
-exports.update = function(key, data, opts = null) {
+exports.update = function (key, data, opts = null) {
   if (!opts) {
     state.db.set(key, data);
   } else {
