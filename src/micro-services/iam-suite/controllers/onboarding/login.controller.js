@@ -21,9 +21,30 @@ exports.post = function (req, res) {
         if (!err) {
             data = JSON.parse(data);
             if (data.emailVerify) {
-                if (password == cryptr.decrypt(data.password)) {
-                    return res.status(200).send({
-                        message: "Successfully Logged in"
+                if (cryptr.generateHash(password) == data.password) {
+                    if (data.twoFactorAuth) {
+
+                        let body = {
+                            message: "Successfully Logged in"
+                        }
+                        switch (data.defaultTransponder) {
+                            case 'sms':
+                                body.address = data.msisdn;
+                                break;
+                            case 'email':
+                                body.email = data.email
+                            default:
+                                body = body;
+                        }
+                        return res.status(200).send(body);
+                    } else {
+                        return res.status(200).send({
+                            message: "Successfully Logged in"
+                        });
+                    }
+                } else {
+                    return res.status(401).send({
+                        message: "Invalid credentials"
                     });
                 }
             } else {

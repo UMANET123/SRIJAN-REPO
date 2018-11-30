@@ -17,6 +17,16 @@ app.use('/', router);
 app.set("view engine", "ejs");
 app.use(express.static(path.resolve('./public')));
 
+// app.use(errorHandler)
+
+
+// function errorHandler(err, req, res, next) {
+//     res.status(500);
+//     return res.render({
+//         error: err
+//     })
+// }
+
 app.listen(4000, () => {
     console.log(`Listening on port 4000`);
 })

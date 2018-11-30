@@ -1,0 +1,101 @@
+<div class="container d-flex flex-row justify-content-center align-items-center">
+  <mat-card class="col-md-6 col-lg-6 col-sm-6 text-center" *ngIf="!successfullSignup">
+    <img mat-card-image class="img-fluid" src="assets/images/logo.png" alt="Card image cap">
+    <mat-card-content>
+      <h4>Signup</h4>
+      <div>
+        <form [formGroup]="signupForm">
+
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field class="w-100">
+                <input matInput placeholder="First Name" formControlName="firstName">
+                <mat-error *ngIf="firstName.hasError('required')">
+                  First name is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="w-100">
+                <input matInput placeholder="Middle Name" formControlName="middleName">
+                <mat-error *ngIf="middleName.hasError('required')">
+                  Middle name is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="w-100">
+                <input matInput placeholder="Last Name" formControlName="lastName">
+                <mat-error *ngIf="lastName.hasError('required')">
+                  Last name is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Address" formControlName="address">
+            <mat-error *ngIf="address.hasError('required')">
+              Address name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <span matPrefix>+63 &nbsp;</span>
+            <input type="tel" matInput placeholder="Telephone" formControlName="msisdn">
+            <mat-error *ngIf="msisdn.hasError('required')">
+              Mobile is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="w-100">
+            <input matInput placeholder="Email" formControlName="email">
+            <mat-error *ngIf="email.hasError('email') && !email.hasError('required')">
+              Please enter a valid email address
+            </mat-error>
+            <mat-error *ngIf="email.hasError('required')">
+              Email is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <input matInput placeholder="Password" type="password" formControlName="password">
+                <mat-error *ngIf="password.hasError('minlength') && !password.hasError('required')">
+                  Please enter a password greater than 6
+                </mat-error>
+                <mat-error *ngIf="password.hasError('required')">
+                  password is <strong>required</strong>
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field class="w-100">
+                <input matInput placeholder="Confirm Password" type="text" formControlName="confirm_password">
+                <mat-error *ngIf="password.hasError('required')">
+                  Please confirm your password
+                </mat-error>
+                <mat-error *ngIf="confirm_password.hasError('mismatch') && !confirm_password.hasError('required')">
+                  Password's don't match
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+
+        </form>
+      </div>
+      <button class="mt-3" mat-raised-button color="primary" (click)="signup()">signup</button>
+    </mat-card-content>
+
+  </mat-card>
+  <mat-card class="col-md-6 col-lg-6 col-sm-6 text-center" *ngIf="successfullSignup">
+    <h1><i class="material-icons successful">
+        check_circle_outline
+      </i></h1>
+    <p>Successfully signed up, please check your email for confirmation</p>
+    <p>
+      Please close this window or <a href="/login">Login</a>
+    </p>
+  </mat-card>
+</div>

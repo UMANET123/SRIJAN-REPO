@@ -1,0 +1,32 @@
+<div class="container d-flex flex-row justify-content-center align-items-center">
+  <mat-card class="col-md-6 col-lg-6 col-sm-6 text-center">
+    <img mat-card-image class="img-fluid" src="assets/images/logo.png" alt="Card image cap">
+    <mat-card-content>
+      <h4>Login</h4>
+      <form [formGroup]="loginForm">
+        <mat-form-field class="w-100">
+          <input matInput placeholder="Email" formControlName="email">
+          <mat-error *ngIf="email.hasError('email') && !email.hasError('required')">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="email.hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="w-100">
+          <input matInput placeholder="Password" type="password" formControlName="password">
+          <mat-error *ngIf="password.hasError('minlength') && !password.hasError('required')">
+            Please enter a password greater than 6
+          </mat-error>
+          <mat-error *ngIf="password.hasError('required')">
+            password is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </form>
+      <button mat-raised-button color="primary" (click)="login()" [disabled]="!loginForm.valid">login</button>
+    </mat-card-content>
+    <mat-card-footer class="mb-2">
+      <small>Don't have an account yet? <a href="/signup">Signup</a></small>
+    </mat-card-footer>
+  </mat-card>
+</div>

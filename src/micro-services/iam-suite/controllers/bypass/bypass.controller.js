@@ -1,34 +1,135 @@
-let mockAPIid = [
-    "1234598329kadhfa",
-    "haksdha3284942",
-    "nmasdk239829842",
-    "093284092jlajdlahcb",
-    "lajdas0938204823ksajhd",
-    "W57Oad3NUXvAEdg0OcrAgf4p1w3heJoR",
-    "M63LZP7Ge68hCMfeE9czOSQQT9qdttKt",
-    "wFE8AN4nN8a6GPety5jjdJzqjUwSH8PH"
-];
+const bypassModel = require("../../models/bypass.model");
+setTimeout(() => {
+  bypassModel.generateMockData();
+}, 500);
 
-exports.get = function (req, res) {
-    let id = req.params.id;
-    if (id.length == 0) {
-        return res.status(400).send({
-            error: 'id not present'
-        });
-    }
+exports.status = function(req, res) {
+  let id = req.body.client_id;
+  let scope = req.body.scope;
 
-    if (/^\d+$/.test(id)) {
-        return res.status(400).send({
-            error: 'id invalid'
-        });
-    }
-
-    if (mockAPIid.indexOf(id) != -1) {
-        return res.status(200).send({
-            bypass: 'active'
-        });
-    }
-    return res.status(404).send({
-        bypass: 'inactive'
+  if (id.length == 0) {
+    return res.status(400).send({
+      error: "id not present"
     });
-}
+  }
+
+  bypassModel.get(id, (err, data) => {
+    if (data) {
+      data = JSON.parse(data);
+      if (data.indexOf(scope) != -1) {
+        return res.status(200).send({
+          bypass: "active"
+        });
+      } else {
+        return res.status(404).send({
+          bypass: "inactive"
+        });
+      }
+    } else {
+      return res.status(404).send({
+        bypass: "inactive"
+      });
+    }
+  });
+
+  // return res.status(404).send({
+  //     bypass: 'inactive'
+  // });
+};
+
+exports.add = function(req, res) {
+  const clientId = req.body.client_id;
+  const scopes = req.body.scopes;
+
+  if (!clientId || !scopes) {
+    return res.status(400).send({
+      error: "client_id or scopes missing"
+    });
+  } else {
+    // Check if client_id already whitelisted
+
+    bypassModel.get(clientId, (err, data) => {
+      if (data) {
+        return res.status(400).send({
+          error: "client_id already whitelisted"
+        });
+      } else {
+        bypassModel.set(clientId, JSON.stringify(scopes));
+        return res.status(201).send({
+          message: "success"
+        });
+      }
+    });
+  }
+};
+
+exports.getAll = function(req, res) {
+  bypassModel.getAll((err, data) => {
+    if (data) {
+      return res.status(200).send(data);
+    } else {
+      return res.status(404).send({
+        error: "No data available"
+      });
+    }
+  });
+};
+
+exports.delete = function(req, res) {
+  const clientId = req.body.client_id;
+  if (!clientId) {
+    return res.status(400).send({ error: "client_id missing" });
+  } else {
+    bypassModel.remove(clientId);
+    return res.status(200).send({
+      message: "success"
+    });
+  }
+};
+
+exports.update = function(req, res) {
+  const clientId = req.body.client_id;
+  const scopes = req.body.scopes;
+
+  if (!clientId || !scopes) {
+    return res.status(400).send({ error: "client_id or scopes missing" });
+  } else {
+    // Check if client_id already whitelisted
+
+    bypassModel.get(clientId, (err, data) => {
+      if (!data) {
+        return res.status(400).send({
+          error: "client_id not whitelisted"
+        });
+      } else {
+        bypassModel.set(clientId, JSON.stringify(scopes));
+        return res.status(201).send({ message: "success" });
+      }
+    });
+  }
+};
+
+exports.get = function(req, res) {
+  let id = req.params.client_id;
+
+  if (id.length == 0) {
+    return res.status(400).send({
+      error: "client_id not present"
+    });
+  }
+
+  bypassModel.get(id, (err, data) => {
+    if (data) {
+      data = JSON.parse(data);
+      let payload = {
+        client_id: id,
+        scopes: data
+      };
+      return res.status(200).send(payload);
+    } else {
+      return res.status(404).send({
+        error: "client_id not found"
+      });
+    }
+  });
+};
