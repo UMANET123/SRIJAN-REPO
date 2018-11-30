@@ -108,3 +108,28 @@ exports.update = function(req, res) {
     });
   }
 };
+
+exports.get = function(req, res) {
+  let id = req.params.client_id;
+
+  if (id.length == 0) {
+    return res.status(400).send({
+      error: "client_id not present"
+    });
+  }
+
+  bypassModel.get(id, (err, data) => {
+    if (data) {
+      data = JSON.parse(data);
+      let payload = {
+        client_id: id,
+        scopes: data
+      };
+      return res.status(200).send(payload);
+    } else {
+      return res.status(404).send({
+        error: "client_id not found"
+      });
+    }
+  });
+};
