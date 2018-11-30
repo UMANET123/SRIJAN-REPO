@@ -150,11 +150,12 @@
 
         <div id="section-two" class="card shadow-lg p-3 mb-5 bg-white rounded d-none">
             <div class="card-body">
-                <h3 class="card-text mb-5">Code</h3>
+                <!-- <h3 class="card-text mb-5">Code</h3>
                 <pre id="code"></pre>
                 <h3 class="card-text mb-5 d-none" id="accessToken">Access Token</h3>
                 <pre id="generatedToken" class="text-left"></pre>
-                <button id="generateAccessToken" class="btn btn-success btn-lg">Generate Access Token</button>
+                <button id="generateAccessToken" class="btn btn-success btn-lg">Generate Access Token</button> -->
+                <h3>Thank you for Granting this app Access</h3>
             </div>
         </div>
     </div>
@@ -172,19 +173,6 @@
         let clientId = "wFE8AN4nN8a6GPety5jjdJzqjUwSH8PH";
         let clientSecret = "pfLe5Y7WvJQsGcqv";
         let redirectUrl = "http://13.232.77.36:4000"
-        // let redirectUrl = $('#redirectUrl');
-        // redirectUrl.val("http://13.232.77.36:4000");
-        // $('#loginButton').prop('disabled', true);
-        // $(".clientdata").on("change paste keyup", function () {
-        //     clientId = $('#clientId').val();
-        //     clientSecret = $('#clientSecret').val();
-        //     if (clientId.length != 0 && clientSecret.length != 0) {
-        //         $('#loginButton').prop('disabled', false);
-        //     }
-        //     if (clientId.length == 0 || clientSecret.length == 0) {
-        //         $('#loginButton').prop('disabled', true);
-        //     };
-        // });
 
         function login() {
             $('#loginButton').addClass('d-none');
@@ -197,14 +185,15 @@
         }
 
         function generateCode(result) {
-            console.log(result);
             result = result.split('=');
             code = result[result.length - 1];
+            console.log(`Code : ${code}`);
             $('#section-one').addClass('d-none');
             $('#section-two').removeClass('d-none');
             $('#code').append(code);
             $('#loginButton').removeClass('d-none');
             $('.lds-roller').addClass('d-none');
+            generateAccessToken()
         }
 
         $('#generateAccessToken').click(() => {
@@ -231,6 +220,30 @@
                 $('#generateAccessToken').addClass('d-none');
             });
         })
+
+        function generateAccessToken() {
+            var string = `${clientId}:${clientSecret}`
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "https://globeslingshot-dev-labs.apigee.net/oauth/v2/token/generate",
+                "method": "POST",
+                "headers": {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Authorization": `Basic ${btoa(string)}`
+                },
+                "data": {
+                    "code": code,
+                    "grant_type": "authorization_code",
+                    "redirect_uri": `${redirectUrl}`
+                }
+            }
+
+            $.ajax(settings).done(function (response) {
+                console.log(`Access Token : ${JSON.stringify(response, null, 2)}`);
+            });
+
+        }
 
         if (window.location.search.indexOf('code') > -1) {
             try {
