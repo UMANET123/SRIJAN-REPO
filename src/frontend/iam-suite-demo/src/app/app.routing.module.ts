@@ -10,6 +10,10 @@ const routes: Routes = [
     path: "signup",
     loadChildren: "./signup/signup.module#SignupModule"
   },
+  {
+    path: "reset",
+    loadChildren: "./reset-password/reset-password.module#ResetPasswordModule"
+  },
   // {
   //   path: "dashboard",
   //   loadChildren: "./dashboard/dashboard.module#DashboardModule"
@@ -22,7 +26,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { useHash: true })],
+  imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
