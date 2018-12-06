@@ -19,7 +19,7 @@
       <div>
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button *ngIf="!otpVerified" (click)="verifyOtp()">Verify</button>
-        <button mat-button matStepperNext *ngIf="otpVerified" color="primary">Next</button>
+        <button mat-button matStepperNext *ngIf="otpVerified" class="btn btn-success" color="primary">Next</button>
       </div>
     </form>
   </mat-step>
