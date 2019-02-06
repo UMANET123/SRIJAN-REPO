@@ -24,10 +24,15 @@ status int);
 
 create index app_id_index2 on subscriber_blocklist_apps (app_id,developer_id);
 
+
 create table apps_metadata(
    id serial, 
    app_id varchar,
    developer_id varchar, 
+   appname varchar,
+   short_description text,
+   long_description text,
+   developer_name varchar,
    created date,
    updated date
 );
