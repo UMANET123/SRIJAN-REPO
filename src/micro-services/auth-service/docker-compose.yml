@@ -1,0 +1,57 @@
+version: "2"
+
+services:
+  redis:
+    image: redis
+    container_name: authredis
+    expose:
+      - 6379
+    networks:
+      - authservice-network
+  nginx:
+    build:
+      context: .docker/
+      dockerfile: Dockerfile
+    links:
+      - authservice:authservice
+    depends_on:
+      - authservice
+    ports:
+      - "3001:3000"
+    networks:
+      - authservice-network
+
+  authservice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+      - $HOME/logs:/var/log
+    links:
+      - redis:redis
+      - db:db
+    ports:
+      - "3000"
+    environment:
+      - INSTANCE=authservice
+    networks:
+      - authservice-network
+  db:
+    restart: always
+    image: postgres:10
+    environment:
+    - POSTGRES_USER=wakanda_auth_service
+    - POSTGRES_PASSWORD=12345
+    - POSTGRES_DB=wakanda_auth_db
+    volumes:
+    - ./postgres-data/postgres:/var/lib/postgresql/data
+    - ./dbdata:/docker-entrypoint-initdb.d/
+    ports:
+    - "5433:5432"
+    expose:
+    - "5432" 
+networks:
+  authservice-network:
+    driver: bridge
