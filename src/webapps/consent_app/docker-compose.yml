@@ -1,0 +1,36 @@
+version: "2"
+
+services:
+  nginx:
+    build:
+      context: .nginx/
+      dockerfile: Dockerfile
+    links:
+      - consentapp:consentapp
+    depends_on:
+      - consentapp
+    ports:
+      - "5560:5560"
+    networks:
+      - webapp-network
+
+  consentapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+      - $HOME/logs:/var/log
+    ports:
+      - "5560"
+
+    environment:
+      - INSTANCE=consentapp
+    networks: 
+      - webapp-network
+
+networks:
+  webapp-network:
+    driver: bridge
+    
