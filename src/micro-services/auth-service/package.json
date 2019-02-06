@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "OTP_TIMER=1 OTP_STEP=10 NODE_ENV=test npx mocha --recursive --timeout 70000 --exit  tests/unit-tests/",
-    "dev":"npx nodemon app.js"
+    "dev": "npx nodemon app.js"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +26,7 @@
     "mocha": "^5.2.0",
     "newman": "^4.2.1",
     "nodemon": "^1.18.4",
-    "sinon": "^6.3.4"
+    "sinon": "^6.3.4",
+    "pg": "6.2.2"
   }
 }

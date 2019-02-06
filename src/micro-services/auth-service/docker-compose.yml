@@ -29,9 +29,11 @@ services:
     volumes:
       - .:/usr/src/app
       - $HOME/logs:/var/log
+    depends_on:
+      - db
     links:
-      - redis:redis
-      - db:db
+      - redis
+      - db
     ports:
       - "3000"
     environment:
@@ -52,6 +54,8 @@ services:
     - "5433:5432"
     expose:
     - "5432" 
+    networks:
+        - authservice-network
 networks:
   authservice-network:
     driver: bridge
