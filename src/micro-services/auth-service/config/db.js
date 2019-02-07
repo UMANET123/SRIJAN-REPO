@@ -1,37 +1,11 @@
-const redis = require('redis');
+const pg = require('pg');
+const {DB_SETTINGS} = require('./environment');
+const pool = new pg.Pool(DB_SETTINGS);
 
-var state = {
-    db: null
-}
+// demo query
+pool.query('SELECT NOW()', function(err, res) {
+    if (err) throw err;
+    console.log(res.rows);
+  });
 
-exports.create = function (opts, done) {
-    if (!state.db) {
-        state.db = redis.createClient(opts)
-        done(null);
-    } else {
-        var error = 'Client Already Created'
-        done(error)
-    }
-}
-
-exports.get = function (key, done) {
-    state.db.get(key, (err, data) => {
-        if (data) {
-            done(null, data);
-        } else {
-            done("Not found", null);
-        }
-    })
-}
-
-exports.set = function (key, data, opts = null) {
-    if (!opts) {
-        state.db.set(key, data);
-    } else {
-        state.db.set(key, data, opts.option, opts.value);
-    }
-}
-
-exports.del = function (key) {
-    state.db.del(key);
-}
+module.exports = pool;
