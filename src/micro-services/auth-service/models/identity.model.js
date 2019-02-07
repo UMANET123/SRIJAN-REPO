@@ -46,14 +46,7 @@ function generateTOtp(key, app_id, developer_id , cb) {
 function invokeTOtpToDb({secret, key, otplib, app_id, developer_id}) {
     // let uuid = uuidv4();
     let currentDate = new Date();
-    //  create a record for mask table
-    try {
-        pool.query(`INSERT INTO subscriber_data_mask(uuid, phone_no, created, status) values($1,$2, $3, $4)`,
-        [secret, key, currentDate, 0]);
-    }catch (err) {
-        throw err;
-    }
-    
+    //  create a record for mask table  
     (async () => {
         const client = await pool.connect();
         try {
@@ -64,7 +57,7 @@ function invokeTOtpToDb({secret, key, otplib, app_id, developer_id}) {
         }
     })().catch(e => console.log(e.stack));
     //    get otp
-    let otp = otplib.totp.generate(secret);
+    let otp = otplib.authenticator.generate(secret);
     let expiration = addMinToDate(currentDate, 5);
      // create a record for otp table
     (async () => {
@@ -81,8 +74,34 @@ function invokeTOtpToDb({secret, key, otplib, app_id, developer_id}) {
 
 
 //  verify OTP
-function verifyTOtp(key, otp, app_id, developer_id) {
+function verifyTOtp(key, otp, app_id, developer_id, cb) {
+    (async () => {
+        const client = await pool.connect();
+        try {
+          const res = await client.query(`SELECT uuid FROM subscriber_otps
+          where app_id=($1) and
+          developer_id=($2) and
+          opt=($3)`, [app_id, developer_id, otp]);
+          let secret = null;
+            if (res.rows && res.rows[0]) {
+                secret = res.rows[0].uuid;
+            } 
+            console.log({secret});
+            if (!secret) {
+                cb(false);
+            } else {
+            let verify = otplib.authenticator.verify({
+                token: otp,
+                secret
+            })
+            console.log(verify);
+            return cb(verify);
+        }
 
+        } finally {
+          client.release();
+        }
+      })().catch(e => console.log(e.stack));
 }
 // exports.verifyTotp = function (key, otp, cb) {
 //     get(key, (err, data) => {

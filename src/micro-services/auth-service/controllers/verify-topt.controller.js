@@ -3,7 +3,7 @@ module.exports = function (req, res) {
     let address = req.body.address ? req.body.address : req.body.email;
     let {otp, app_id, developer_id} = req.body;
 
-    identity.verifyTotp(address, otp,app_id, developer_id, (status) => {
+    identity.verifyTOtp(address, otp,app_id, developer_id, (status) => {
         if (status) {
             return res.send({
                 status: "success"
