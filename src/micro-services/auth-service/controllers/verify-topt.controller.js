@@ -1,9 +1,9 @@
 const identity = require('../models/identity.model');
 module.exports = function (req, res) {
     let address = req.body.address ? req.body.address : req.body.email;
-    let otp = req.body.otp;
+    let {otp, app_id, developer_id} = req.body;
 
-    identity.verifyTotp(address, otp, (status) => {
+    identity.verifyTotp(address, otp,app_id, developer_id, (status) => {
         if (status) {
             return res.send({
                 status: "success"

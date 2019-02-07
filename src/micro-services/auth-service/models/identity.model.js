@@ -1,12 +1,13 @@
 const pool = require('../config/db');
 const otplib = require('otplib');
-const uuidv4 = require('uuid/v4');
+// const uuidv4 = require('uuid/v4');
 const addMinToDate = require('../helpers/add-minute-to-date');
 const {OTP_SETTINGS:{timer, step}} = require('../config/environment');
 
 
 function generateTOtp(key, app_id, developer_id , cb) {
     let secret = otplib.authenticator.generateSecret();
+    // console.log(secret);
     otplib.totp.options = {
         step: step,
         window: timer
@@ -14,67 +15,58 @@ function generateTOtp(key, app_id, developer_id , cb) {
 
     //  get otp by app-id, uuid, developer id
     //  check if any opt with same credentials exists 
-    try {
-        pool.query(`SELECT opt FROM subscriber_otps inner join 
-        subscriber_data_mask on
-        subscriber_otps.uuid=subscriber_data_mask.uuid
-        where app_id=($1) and
-        developer_id=($2)`, [app_id, developer_id], 
-        (err, res) => {
-            if (err) throw err;
-            let otp = null;
-            if (res.rows && res.rows[0]) {
-                otp = res.rows[0].opt;
-            } 
-            let otpStatus = null;
-            if (!otp) {
-                //  invoke otp
-                console.log('create otp');
-                otp = invokeTOtpToDb({secret, key, otplib, app_id, developer_id});
-                otpStatus = 201;
-            } else {
-                console.log('no otp');
-                otpStatus = 200;
-            }
-            console.log({otp, otpStatus});
-            pool.end();
-            cb(otp, otpStatus);
+  
+    pool.connect(function(err, client, done) {
+        if (err) {
+            console.error('Error connecting to pg server' + err.stack);
+            throw err;
+        } else {
+            console.log('Connection established with pg db server');
+        
+            client.query(`SELECT opt FROM subscriber_otps inner join 
+            subscriber_data_mask on
+            subscriber_otps.uuid=subscriber_data_mask.uuid
+            where app_id=($1) and
+            developer_id=($2)`, [app_id, developer_id], (err, res) => {
+        
+                if (err) {
+                    console.error('Error executing query on pg db' + err.stack);
+                    callback(err);
+                } else {
+                    if (err) throw err;
+                let otp = null;
+                if (res.rows && res.rows[0]) {
+                    otp = res.rows[0].opt;
+                } 
+                let otpStatus = null;
+                if (!otp) {
+                    //  invoke otp
+                    otp = invokeTOtpToDb({secret, key, otplib, app_id, developer_id});
+                    otpStatus = 201;
+                } else {
+                    otpStatus = 200;
+                }
+                cb(otp, otpStatus);
+                client.release();
+             }
         });
-    //     getUuidQuery.on('row', row => {
-    //             console.log(otpRow.opt);
-    //             let otp = otpRow.opt;
-    //             let otpStatus = null;
-    //             console.log({otp, otpStatus});
-    //             if (!otp) {
-    //                 //  invoke otp
-    //                 console.log('all otp');
-    //                 otp = invokeTOtpToDb({secret, key, otplib, app_id, developer_id});
-    //                 otpCreationStatus = 201;
-    //             } else {
-    //                 console.log('no otp');
-    //                 otpCreationStatus = 200;
-    //             }
-    //             console.log({otp, otpStatus});
-    //             // cb(otp, otpStatus);
-             
-    //         });
-    //      });
-       
-    } catch (err) {
-        throw err;
     }
+        
+        });  
+    pool.end();
+ 
   
 
 }
 
 // insert query transaction for totp for /generate/totp endpoint
 function invokeTOtpToDb({secret, key, otplib, app_id, developer_id}) {
-    let uuid = uuidv4();
+    // let uuid = uuidv4();
     let currentDate = new Date();
     //  create a record for mask table
     try {
         pool.query(`INSERT INTO subscriber_data_mask(uuid, phone_no, created, status) values($1,$2, $3, $4)`,
-        [uuid, key, currentDate, 0]);
+        [secret, key, currentDate, 0]);
     }catch (err) {
         throw err;
     }
@@ -86,7 +78,7 @@ function invokeTOtpToDb({secret, key, otplib, app_id, developer_id}) {
     try {
        
         pool.query(`INSERT INTO subscriber_otps(uuid, app_id, developer_id, opt, expiration,                    status) values($1, $2, $3, $4, $5, $6)`, 
-        [uuid, app_id, developer_id, otp, expiration, 0]);
+        [secret, app_id, developer_id, otp, expiration, 0]);
         pool.end();
     } catch (err) {
         throw err;
@@ -94,6 +86,11 @@ function invokeTOtpToDb({secret, key, otplib, app_id, developer_id}) {
     return otp;
 }
 
+
+//  verify OTP
+function verifyTOtp(key, otp, app_id, developer_id) {
+
+}
 // exports.verifyTotp = function (key, otp, cb) {
 //     get(key, (err, data) => {
 //         if (data) {
@@ -134,4 +131,4 @@ function invokeTOtpToDb({secret, key, otplib, app_id, developer_id}) {
 // exports.get = get;
 // exports.del = del;
 
-module.exports = {generateTOtp};
+module.exports = {generateTOtp, verifyTOtp};
