@@ -79,25 +79,37 @@ function verifyTOtp(key, otp, app_id, developer_id, cb) {
     (async () => {
         const client = await pool.connect();
         try {
-          const res = await client.query(`SELECT uuid FROM subscriber_otps
-          where app_id=($1) and
-          developer_id=($2) and
-          otp=($3)`, [app_id, developer_id, otp]);
-          let secret = null;
-            if (res.rows && res.rows[0]) {
-                secret = res.rows[0].uuid;
-            } 
-            console.log({secret});
-            if (!secret) {
-                cb(false);
-            } else {
-            let verify = otplib.authenticator.verify({
-                token: otp,
-                secret
-            })
-            console.log(verify);
-            return cb(verify);
-        }
+          const res = await client.query(`SELECT uuid FROM subscriber_data_mask
+          where phone_no=($1)`, [key]);
+          let uuid = null;
+          if (res.rows && res.rows[0]) {
+            uuid = res.rows[0].uuid;
+          } 
+          console.log({uuid});
+          if (!uuid) return cb({status: "failed"});
+          const otpRes = await client.query(`SELECT otp FROM subscriber_otps
+          where uuid=($1)  and app_id=($2) 
+          and developer_id=($3)`, [uuid, app_id, developer_id]);
+          let otpRetrieved = null;
+          if (otpRes.rows && otpRes.rows[0]) {
+            otpRetrieved = otpRes.rows[0].otp;
+          } 
+          console.log({otpRetrieved});
+          if (parseInt(otpRetrieved) === parseInt(otp)) {
+            return cb({status: "success"});
+          } else {
+            return cb({status: "failed"});
+          }
+        //     if (!secret) {
+        //         cb(false);
+        //     } else {
+        //     let verify = otplib.authenticator.verify({
+        //         token: otp,
+        //         secret
+        //     })
+        //     console.log(verify);
+        //     return cb(verify);
+        // }
 
         } finally {
           client.release();
