@@ -7,25 +7,26 @@ const {OTP_SETTINGS:{timer, step}} = require('../config/environment');
 
 function generateTOtp(key, app_id, developer_id , cb) {
     let secret = otplib.authenticator.generateSecret();
-    // console.log(secret);
+    console.log(secret);
     otplib.totp.options = {
         step: step,
         window: timer
     };
 
     //  get otp by app-id, uuid, developer id
-    //  check if any opt with same credentials exists 
+    //  check if any otp with same credentials exists 
     (async () => {
         const client = await pool.connect();
         try {
-          const res = await client.query(`SELECT opt FROM subscriber_otps inner join 
-          subscriber_data_mask on
-          subscriber_otps.uuid=subscriber_data_mask.uuid
-          where app_id=($1) and
-          developer_id=($2)`, [app_id, developer_id]);
+          const res = await client.query(`SELECT otp FROM subscriber_otps otp,
+          subscriber_data_mask mask
+          where otp.uuid=mask.uuid and
+          otp.app_id=($1) and
+          otp.developer_id=($2) and
+          mask.phone_no=($3)`, [app_id, developer_id, key]);
           let otp = null;
             if (res.rows && res.rows[0]) {
-                otp = res.rows[0].opt;
+                otp = res.rows[0].otp;
             } 
             let otpStatus = null;
             if (!otp) {
@@ -63,7 +64,7 @@ function invokeTOtpToDb({secret, key, otplib, app_id, developer_id}) {
     (async () => {
     const client = await pool.connect();
     try {
-        await client.query(`INSERT INTO subscriber_otps(uuid, app_id, developer_id, opt, expiration,                    status) values($1, $2, $3, $4, $5, $6)`, 
+        await client.query(`INSERT INTO subscriber_otps(uuid, app_id, developer_id, otp, expiration,                    status) values($1, $2, $3, $4, $5, $6)`, 
         [secret, app_id, developer_id, otp, expiration, 0]);
     } finally {
         client.release();
@@ -81,7 +82,7 @@ function verifyTOtp(key, otp, app_id, developer_id, cb) {
           const res = await client.query(`SELECT uuid FROM subscriber_otps
           where app_id=($1) and
           developer_id=($2) and
-          opt=($3)`, [app_id, developer_id, otp]);
+          otp=($3)`, [app_id, developer_id, otp]);
           let secret = null;
             if (res.rows && res.rows[0]) {
                 secret = res.rows[0].uuid;
