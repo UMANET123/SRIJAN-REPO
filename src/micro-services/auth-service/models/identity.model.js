@@ -1,6 +1,5 @@
 const pool = require('../config/db');
 const otplib = require('otplib');
-// const uuidv4 = require('uuid/v4');
 const addMinToDate = require('../helpers/add-minute-to-date');
 const {OTP_SETTINGS:{timer, step}} = require('../config/environment');
 
@@ -85,16 +84,16 @@ function verifyTOtp(key, otp, app_id, developer_id, cb) {
           if (res.rows && res.rows[0]) {
             uuid = res.rows[0].uuid;
           } 
-          console.log({uuid});
+        //   console.log({uuid});
           if (!uuid) return cb({status: "failed"});
           const otpRes = await client.query(`SELECT otp FROM subscriber_otps
-          where uuid=($1)  and app_id=($2) 
-          and developer_id=($3)`, [uuid, app_id, developer_id]);
+          where uuid=($1) and ($2) < expiration and app_id=($3) 
+          and developer_id=($4)`, [uuid, new Date(), app_id, developer_id]);
           let otpRetrieved = null;
           if (otpRes.rows && otpRes.rows[0]) {
             otpRetrieved = otpRes.rows[0].otp;
           } 
-          console.log({otpRetrieved});
+        //   console.log({otpRetrieved});
           if (parseInt(otpRetrieved) === parseInt(otp)) {
             return cb({status: "success"});
           } else {
@@ -116,44 +115,29 @@ function verifyTOtp(key, otp, app_id, developer_id, cb) {
         }
       })().catch(e => console.log(e.stack));
 }
-// exports.verifyTotp = function (key, otp, cb) {
-//     get(key, (err, data) => {
-//         if (data) {
-//             let verify = otplib.totp.verify({
-//                 token: otp,
-//                 secret: data
-//             })
-//             if (verify) {
-//                 del(key);
-//             }
 
-//             return cb(verify);
-//         } else {
-//             return cb(false);
-//         }
-//     })
-// }
+//  get 
 
-// exports.generateHotp = function (key, cb) {
-//     let secret = otplib.authenticator.encode(`${key}`);
-//     let otpurl = otplib.authenticator.keyuri(key, '2fa', secret)
-//     qrcode.toDataURL(otpurl, (error, base64) => {
-//         if (error) {
-//             return cb(error, null)
-//         }
-//         return cb(null, base64)
-//     })
-// }
+function verifyUser(phone_no, uuid, cb) {
+    (async () => {
+        const client = await pool.connect();
+        try {
+            let query = null;
+            if (phone_no) {
+                query = `SELECT uuid FROM subscriber_data_mask where phone_no='${phone_no}'`;
+            } else {
+                query= `SELECT phone_no FROM subscriber_data_mask where uuid='${uuid}'`;
+            }
+          const res = await client.query(query);
+          let item = null;
+          if (res.rows && res.rows[0]) {
+            item = res.rows[0];
+        } 
+          cb(item);
+        } finally {
+          client.release();
+        }
+      })().catch(e => console.log(e.stack));
+}
 
-// exports.verifyHotp = function (key, otp, cb) {
-//     let secret = otplib.authenticator.encode(`${key}`);
-//     cb(otplib.authenticator.verify({
-//         token: otp,
-//         secret: secret
-//     }))
-// }
-
-// exports.get = get;
-// exports.del = del;
-
-module.exports = {generateTOtp, verifyTOtp};
+module.exports = {generateTOtp, verifyTOtp, verifyUser};
