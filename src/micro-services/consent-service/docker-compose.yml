@@ -1,0 +1,52 @@
+version: "2"
+
+services:
+  nginx:
+    build:
+      context: .docker/
+      dockerfile: Dockerfile
+    links:
+      - consentms:consentms
+    depends_on:
+      - consentms
+    ports:
+      - "3000:3000"
+    networks:
+      - consentms-network
+  consentms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+      - $HOME/logs:/var/log
+    depends_on:
+      - db
+    links:
+      - db
+    ports:
+      - "3000"
+    environment:
+      - INSTANCE=consentms
+    networks:
+      - consentms-network  
+  db:
+    restart: always
+    image: postgres:10
+    environment:
+    - POSTGRES_USER=wakanda_consent_user
+    - POSTGRES_PASSWORD=12345
+    - POSTGRES_DB=wakanda_consent
+    volumes:
+    - ./postgres-data/postgres:/var/lib/postgresql/data
+    - ./dbdata:/docker-entrypoint-initdb.d/
+    ports:
+    - "5432:5432"
+    expose:
+    - "5432"     
+    networks:
+        - consentms-network
+networks:
+  consentms-network:
+    driver: bridge
