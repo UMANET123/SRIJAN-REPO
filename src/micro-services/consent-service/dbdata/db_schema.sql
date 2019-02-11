@@ -22,7 +22,7 @@ created date,
 updated date,
 status int);
 
-create index app_id_index2 on subscriber_blocklist_apps (app_id,developer_id);
+create index app_id_index2 on subscriber_blascklist_apps (app_id,developer_id);
 
 
 create table apps_metadata(

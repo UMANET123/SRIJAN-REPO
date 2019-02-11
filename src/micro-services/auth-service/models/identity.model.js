@@ -4,7 +4,7 @@ const addMinToDate = require('../helpers/add-minute-to-date');
 const {OTP_SETTINGS:{timer, step}} = require('../config/environment');
 
 
-function generateTOtp(key, app_id, developer_id , cb) {
+function generateTOtp(key, cb) {
     let secret = otplib.authenticator.generateSecret();
     console.log(secret);
     otplib.totp.options = {
