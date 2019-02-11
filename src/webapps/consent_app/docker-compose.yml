@@ -10,7 +10,7 @@ services:
     depends_on:
       - consentapp
     ports:
-      - "5560:5560"
+      - "8002:5560"
     networks:
       - webapp-network
 
@@ -22,9 +22,10 @@ services:
     volumes:
       - .:/usr/src/app
       - $HOME/logs:/var/log
-    ports:
+    expose:
       - "5560"
-
+    ports:
+      - "5560:5560"
     environment:
       - INSTANCE=consentapp
     networks: 
