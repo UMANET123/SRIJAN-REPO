@@ -8,8 +8,9 @@ const endpoints = {
     generate: '/generate/totp'
 };
 let data = JSON.stringify({
-    msisdn: 639234567891,
-    app_id:  "a46fa81d-9941-42c1-8b47-c8d57be4acc2"
+    "msisdn" : "639234567896",
+    "app_id" :"a46fa81d-9941-42c1-8b47-c8d57be4acc24",
+    "blacklist": false
 });
 
 describe('Testing Generate OTP API Response Status', () => {
@@ -25,11 +26,6 @@ describe('Testing Generate OTP API Response Status', () => {
                 });
         });
         it('Response body should have theses properties to generate otp POST', () => {
-            let data = JSON.stringify({
-                msisdn: 639234567891,
-                app_id:  "a46fa81d-9941-42c1-8b47-c8d57be4acc2"
-            });
-    
             chai.request(app)
                 .post(endpoints.generate)
                 .type('application/json')

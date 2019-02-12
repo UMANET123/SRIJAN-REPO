@@ -11,11 +11,20 @@ function getNewSecret() {
   return otplib.authenticator.generateSecret();
 }
 //  generate otp and save to db
-function generateTOtp(msisdn, app_id, callback) {
+function generateTOtp(...args) {
+    let [msisdn, app_id, blacklist, callback] = args;
     otplib.totp.options = {
         step: step,
         window: timer
     };
+    let is_blacklist = false;
+    if (blacklist) {
+      //  create check blacklist api call and check response
+      is_blacklist = true;
+    } 
+    if (is_blacklist) {
+      callback(null,null, 403);
+    }
     //  get otp by app-id, uuid
     //  check if any otp with same credentials exists 
     (async () => {
@@ -129,11 +138,12 @@ function verifyUser(phone_no, uuid, callback) {
                 query= `SELECT phone_no FROM subscriber_data_mask where uuid='${uuid}'`;
             }
           const res = await client.query(query);
-          let item = null;
           if (res.rows && res.rows[0]) {
-            item = res.rows[0];
-        } 
-          callback(item);
+            callback(res.rows[0], 200);
+        } else {
+          callback(null, 404);
+        }
+
         } finally {
           client.release();
         }
@@ -143,7 +153,7 @@ function verifyUser(phone_no, uuid, callback) {
           callback({
             "error_code": "BadRequest",
             "error_message": "Bad Request"
-          });
+          }, 404);
         });
 }
 
