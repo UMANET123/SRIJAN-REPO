@@ -18,35 +18,30 @@ function generateTOtp(msisdn, app_id, callback) {
     };
     //  get otp by app-id, uuid
     //  check if any otp with same credentials exists 
-    console.log('gen otp hit');
     (async () => {
         const client = await pool.connect();
         try {
-          const res = await client.query(`SELECT * FROM subscriber_otps otp,
+          const res = await client.query(`SELECT otp, otp.uuid FROM subscriber_otps otp,
           subscriber_data_mask mask
           where otp.uuid=mask.uuid and
-          otp.app_id=($1) and
-          mask.phone_no=($2) and otp.expiration > ($3)`, [app_id, msisdn, new Date()]);
-          console.log(res.rows[0]);
+          otp.app_id=($1) and mask.phone_no=($2)`, [app_id, msisdn]);
+          // console.log({app_id, msisdn, res: res.rows[0]});
             if (res.rows[0]) {
-              console.log('otp need to be updated');
+              // console.log('otp need to be updated');
                let {otp, uuid} = res.rows[0];
                if (otp && uuid) {
                 //  update the record
                 let newOtp = getNewOtp(uuid);
-                console.log({newOtp, uuid});
                 await client.query(`UPDATE subscriber_otps SET otp=($1), expiration=($2) WHERE uuid=($3) and app_id=($4)`, 
                 [newOtp, addMinToDate(new Date(), 5) , uuid, app_id]);
                 callback(newOtp, uuid, 200);
               } 
            
           }  else {
-            console.log('otp not created');
             //  create record for otp and update tables
             let secret = getNewSecret();
             let otp = getNewOtp(secret);
             insertOtpRecord({otp, secret, msisdn, app_id});
-            console.log({otp, secret});
             callback(otp, secret, 201);
           }
         } finally {
@@ -63,18 +58,23 @@ function generateTOtp(msisdn, app_id, callback) {
 
 // insert query transaction for totp for /generate/totp endpoint
 function insertOtpRecord({secret, otp, msisdn, app_id}) {
-
+    // console.log('insert otp mask called');
     //  create a record for mask table  
     (async () => {
         const client = await pool.connect();
         try {
             let currentDate = new Date();
-            await client.query(`INSERT INTO subscriber_data_mask(uuid, phone_no, created, status) values($1,$2, $3, $4)`,
-            [secret, msisdn, currentDate, 0]);
-            console.log('mask table record created');
-            await client.query(`INSERT INTO subscriber_otps(uuid, app_id, otp, expiration,                    status) values($1, $2, $3, $4, $5)`, 
+            let mask= await client.query(`SELECT uuid FROM subscriber_data_mask WHERE phone_no=($1)`, [msisdn]);
+            if (!mask.rows[0]) {
+              await client.query(`INSERT INTO subscriber_data_mask(uuid, phone_no, created, status) values($1, $2, $3, $4)`,
+              [secret, msisdn, currentDate, 0]);
+              console.log('mask table record created');
+            } else {
+              //  udpate secret as existing uuid 
+              secret = mask.rows[0].uuid;
+            }
+           await client.query(`INSERT INTO subscriber_otps(uuid, app_id, otp, expiration,                    status) values($1, $2, $3, $4, $5)`, 
             [secret, app_id, otp, addMinToDate(currentDate, 5), 0]);
-            console.log('otp table record created');
         } finally {
             client.release();
         }
