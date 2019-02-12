@@ -3,89 +3,101 @@ const otplib = require('otplib');
 const addMinToDate = require('../helpers/add-minute-to-date');
 const {OTP_SETTINGS:{timer, step}} = require('../config/environment');
 
+function getNewOtp(secret) {
+  return otplib.authenticator.generate(secret);
+}
+function getNewSecret() {
+  return otplib.authenticator.generateSecret();
+}
 
-function generateTOtp(key, cb) {
-    let secret = otplib.authenticator.generateSecret();
-    console.log(secret);
+function generateTOtp(msisdn, app_id, callback) {
     otplib.totp.options = {
         step: step,
         window: timer
     };
-
-    //  get otp by app-id, uuid, developer id
+    //  get otp by app-id, uuid
     //  check if any otp with same credentials exists 
+    console.log('gen otp hit');
     (async () => {
         const client = await pool.connect();
         try {
-          const res = await client.query(`SELECT otp FROM subscriber_otps otp,
+          const res = await client.query(`SELECT * FROM subscriber_otps otp,
           subscriber_data_mask mask
           where otp.uuid=mask.uuid and
           otp.app_id=($1) and
-          otp.developer_id=($2) and
-          mask.phone_no=($3)`, [app_id, developer_id, key]);
-          let otp = null;
-            if (res.rows && res.rows[0]) {
-                otp = res.rows[0].otp;
-            } 
-            let otpStatus = null;
-            if (!otp) {
-                //  invoke otp
-                otp = invokeTOtpToDb({secret, key, otplib, app_id, developer_id});
-                otpStatus = 201;
-            } else {
-                otpStatus = 200;
-            }
-            cb(otp, otpStatus);
+          mask.phone_no=($2) and otp.expiration > ($3)`, [app_id, msisdn, new Date()]);
+          console.log(res.rows[0]);
+            if (res.rows[0]) {
+              console.log('otp need to be updated');
+               let {otp, uuid} = res.rows[0];
+               if (otp && uuid) {
+                //  update the record
+                let newOtp = getNewOtp(uuid);
+                console.log({newOtp, uuid});
+                await client.query(`UPDATE subscriber_otps SET otp=($1), expiration=($2) WHERE uuid=($3) and app_id=($4)`, 
+                [newOtp, addMinToDate(new Date(), 5) , uuid, app_id]);
+                callback(newOtp, uuid, 200);
+              } 
+           
+          }  else {
+            console.log('otp not created');
+            //  create record for otp and update tables
+            let secret = getNewSecret();
+            let otp = getNewOtp(secret);
+            insertOtpRecord({otp, secret, msisdn, app_id});
+            console.log({otp, secret});
+            callback(otp, secret, 201);
+          }
         } finally {
           client.release();
         }
-      })().catch(e => console.log(e.stack));
+      })().catch(e => {
+        console.log(e.stack)
+       callback(    {
+          "error_code": "BadRequest",
+          "error_message": "Bad Request"
+        });
+      });
 }
 
 // insert query transaction for totp for /generate/totp endpoint
-function invokeTOtpToDb({secret, key, otplib, app_id, developer_id}) {
-    // let uuid = uuidv4();
-    let currentDate = new Date();
+function insertOtpRecord({secret, otp, msisdn, app_id}) {
+
     //  create a record for mask table  
     (async () => {
         const client = await pool.connect();
         try {
+            let currentDate = new Date();
             await client.query(`INSERT INTO subscriber_data_mask(uuid, phone_no, created, status) values($1,$2, $3, $4)`,
-            [secret, key, currentDate, 0]);
+            [secret, msisdn, currentDate, 0]);
+            console.log('mask table record created');
+            await client.query(`INSERT INTO subscriber_otps(uuid, app_id, otp, expiration,                    status) values($1, $2, $3, $4, $5)`, 
+            [secret, app_id, otp, addMinToDate(currentDate, 5), 0]);
+            console.log('otp table record created');
         } finally {
             client.release();
         }
-    })().catch(e => console.log(e.stack));
-    //    get otp
-    let otp = otplib.authenticator.generate(secret);
-    let expiration = addMinToDate(currentDate, 5);
-     // create a record for otp table
-    (async () => {
-    const client = await pool.connect();
-    try {
-        await client.query(`INSERT INTO subscriber_otps(uuid, app_id, developer_id, otp, expiration,                    status) values($1, $2, $3, $4, $5, $6)`, 
-        [secret, app_id, developer_id, otp, expiration, 0]);
-    } finally {
-        client.release();
-    }
-    })().catch(e => console.log(e.stack));
-    return otp;
+    })().catch(e => {
+      console.log(e.stack);
+      return Error;
+    });
+  
 }
 
 
 //  verify OTP
-function verifyTOtp(key, otp, app_id, developer_id, cb) {
+function verifyTOtp(msisdn, otp, app_id, developer_id, callback) {
     (async () => {
         const client = await pool.connect();
         try {
           const res = await client.query(`SELECT uuid FROM subscriber_data_mask
-          where phone_no=($1)`, [key]);
+          where phone_no=($1)`, [msisdn]);
           let uuid = null;
           if (res.rows && res.rows[0]) {
             uuid = res.rows[0].uuid;
           } 
         //   console.log({uuid});
-          if (!uuid) return cb({status: "failed"});
+          if (!uuid) return callback({status: "failed"});
           const otpRes = await client.query(`SELECT otp FROM subscriber_otps
           where uuid=($1) and ($2) < expiration and app_id=($3) 
           and developer_id=($4)`, [uuid, new Date(), app_id, developer_id]);
@@ -95,30 +107,26 @@ function verifyTOtp(key, otp, app_id, developer_id, cb) {
           } 
         //   console.log({otpRetrieved});
           if (parseInt(otpRetrieved) === parseInt(otp)) {
-            return cb({status: "success"});
+            return callback({status: "success"});
           } else {
-            return cb({status: "failed"});
+            return callback({status: "failed"});
           }
-        //     if (!secret) {
-        //         cb(false);
-        //     } else {
-        //     let verify = otplib.authenticator.verify({
-        //         token: otp,
-        //         secret
-        //     })
-        //     console.log(verify);
-        //     return cb(verify);
-        // }
-
         } finally {
           client.release();
         }
-      })().catch(e => console.log(e.stack));
+      })().catch(e =>{
+        console.log(e.stack);
+        callback(    {
+          "error_code": "BadRequest",
+          "error_message": "Bad Request"
+        });
+    
+      } );
 }
 
 //  get 
 
-function verifyUser(phone_no, uuid, cb) {
+function verifyUser(phone_no, uuid, callback) {
     (async () => {
         const client = await pool.connect();
         try {
@@ -133,11 +141,18 @@ function verifyUser(phone_no, uuid, cb) {
           if (res.rows && res.rows[0]) {
             item = res.rows[0];
         } 
-          cb(item);
+          callback(item);
         } finally {
           client.release();
         }
-      })().catch(e => console.log(e.stack));
+      })().catch(e => 
+        {
+          console.log(e.stack)
+          callback({
+            "error_code": "BadRequest",
+            "error_message": "Bad Request"
+          });
+        });
 }
 
 module.exports = {generateTOtp, verifyTOtp, verifyUser};
