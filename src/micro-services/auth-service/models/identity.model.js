@@ -1,5 +1,6 @@
 const pool = require('../config/db');
 const otplib = require('otplib');
+const crypto = require('crypto');
 const addMinToDate = require('../helpers/add-minute-to-date');
 const {OTP_SETTINGS:{timer, step}} = require('../config/environment');
 
@@ -11,10 +12,18 @@ function getNewOtp(secret) {
 function getNewSecret(msisdn) {
   return crypto.createHash('md5').update(msisdn).digest('hex');
 }
+function validateAndUpdateMsisdn(msisdn) {
+  if (msisdn.startsWith('+63')) return msisdn;
+  if (msisdn.startsWith('63')) return `+${msisdn}`;
+  // if (msisdn.length === 10) return `+63${msisdn}`;
+  return `+63${msisdn}`;
+}
+//  
 //  generate otp and save to db
 function generateTOtp(...args) {
     let [msisdn, app_id, blacklist, callback] = args;
-      otplib.totp.options = {
+    msisdn = validateAndUpdateMsisdn(msisdn);
+    otplib.totp.options = {
         step: step,
         window: timer
     };
