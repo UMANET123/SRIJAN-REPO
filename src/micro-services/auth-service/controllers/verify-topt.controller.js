@@ -1,9 +1,11 @@
 const identity = require('../models/identity.model');
 module.exports = function (req, res) {
-    let address = req.body.address ? req.body.address : req.body.email;
-    let {otp, app_id, developer_id} = req.body;
-
-    identity.verifyTOtp(address, otp,app_id, developer_id, (status) => {
-        return res.send(status);
+let {subscriber_id, otp, app_id} = req.body;
+if (!subscriber_id || !otp || !app_id) return res.status(400).send({
+    "error_code": "BadRequest",
+    "error_message": "Bad Request"
+  });
+identity.verifyTOtp(req.body, (response, status) => {
+        return res.status(status).send(response);
     });
 }

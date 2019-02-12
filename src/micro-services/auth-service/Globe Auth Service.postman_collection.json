@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "b550b42e-e1f7-41ae-b301-48d90600f8c9",
-		"name": "Globe 2FA",
+		"_postman_id": "a818222c-f09b-4350-b221-1f1df06ce88d",
+		"name": "Globe Auth Service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -29,23 +29,79 @@
 				"header": [
 					{
 						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
+						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"address\":639234567891\n}"
+					"raw": "{\n    \"msisdn\" : \"639234567896\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n    \"blacklist\": false\n}\t"
 				},
 				"url": {
-					"raw": "{{host}}/generate/totp",
+					"raw": "{{host}}/generate/totp?",
 					"host": [
 						"{{host}}"
 					],
 					"path": [
 						"generate",
 						"totp"
+					],
+					"query": [
+						{
+							"key": "a",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Successfully Generate TOTP New One",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "812f63ce-3a9e-4c84-af01-ac784df5575e",
+						"exec": [
+							"pm.test(\"Should successfully return 201\", function () {",
+							"    pm.expect(pm.response.code).to.be.equal(201);",
+							"});",
+							"",
+							"pm.environment.set(\"otp\", pm.response.json().otp);",
+							"pm.environment.set(\"address\", pm.response.json().address);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"address\" : \"639234567893\",\n    \"email\": \"testemail@testemail.com\",\n    \"app_id\" :\"{{app_id}}\",\n    \"developer_id\": \"{{developer_id}}\" \n}\t"
+				},
+				"url": {
+					"raw": "{{host}}/generate/totp?",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"generate",
+						"totp"
+					],
+					"query": [
+						{
+							"key": "a",
+							"value": null,
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -72,14 +128,12 @@
 				"header": [
 					{
 						"key": "Content-Type",
-						"name": "Content-Type",
-						"value": "application/json",
-						"type": "text"
+						"value": "application/json"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"address\":\"{{address}}\",\n\t\"otp\":\"{{otp}}\"\n}"
+					"raw": "{\n\t\"address\":\"{{address}}\",\n\t\"otp\":\"860558\",\n\t\"app_id\" :\"{{app_id}}\",\n    \"developer_id\": \"{{developer_id}}\" \n}"
 				},
 				"url": {
 					"raw": "{{host}}/verify/totp",
@@ -538,6 +592,134 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get User uuid by phone no",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"phone_no\" : \"639234567891\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/verify/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"verify",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User phone no by uuid",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"uuid\": \"M5YUCQTMM43FQTZRGU2EYTCWOBYUUT3T\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/verify/user",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"verify",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a Consent",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"subscriber_id\": \"a0040a18-e227-4bca-b5aa-452c7ae03165\",\n  \"app_id\": \"e2274bcab5aa452c7ae03165\",\n  \"developer_id\": \"a0040a18e227\",\n  \"scopes\": [\"scope1\", \"scope2\", \"scope3\"],\n  \"access_token\": \"FnyqFzJKZ5hrSB9JARCSpt90tgPN\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/consent",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"consent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update a Consent",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"subscriber_id\": \"a0040a18-e227-4bca-b5aa-452c7ae03165\",\n  \"app_id\": \"e2274bcab5aa452c7ae03165\",\n  \"developer_id\": \"a0040a18e227\",\n  \"scopes\": [\"scope1\", \"scope2\", \"scope3\"],\n  \"access_token\": \"FnyqFzJKZ5hrSB9JARCSpt90tgPN\"\n}"
+				},
+				"url": {
+					"raw": "{{host}}/consent",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"consent"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "0c345d5e-d934-40dc-8872-d4b233e61741",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "4bd747ed-5929-45e4-81a8-0875957f619d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
