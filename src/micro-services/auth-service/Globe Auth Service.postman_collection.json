@@ -34,7 +34,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"msisdn\" : \"{{msisdn}}\",\n    \"app_id\" :\"{{app_id}}\"\n}\t"
+					"raw": "{\n    \"msisdn\" : \"639234567896\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n    \"blacklist\": false\n}\t"
 				},
 				"url": {
 					"raw": "{{host}}/generate/totp?",

@@ -2,6 +2,7 @@ const pool = require('../config/db');
 const otplib = require('otplib');
 const addMinToDate = require('../helpers/add-minute-to-date');
 const {OTP_SETTINGS:{timer, step}} = require('../config/environment');
+
 //  create new otp
 function getNewOtp(secret) {
   return otplib.authenticator.generate(secret);
@@ -13,7 +14,7 @@ function getNewSecret() {
 //  generate otp and save to db
 function generateTOtp(...args) {
     let [msisdn, app_id, blacklist, callback] = args;
-    otplib.totp.options = {
+      otplib.totp.options = {
         step: step,
         window: timer
     };
