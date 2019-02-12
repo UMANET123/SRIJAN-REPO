@@ -87,31 +87,22 @@ function insertOtpRecord({secret, otp, msisdn, app_id}) {
 
 
 //  verify OTP
-function verifyTOtp(msisdn, otp, app_id, developer_id, callback) {
+function verifyTOtp({subscriber_id, otp, app_id}, callback) {
     (async () => {
         const client = await pool.connect();
         try {
-          const res = await client.query(`SELECT uuid FROM subscriber_data_mask
-          where phone_no=($1)`, [msisdn]);
-          let uuid = null;
-          if (res.rows && res.rows[0]) {
-            uuid = res.rows[0].uuid;
-          } 
-        //   console.log({uuid});
-          if (!uuid) return callback({status: "failed"});
-          const otpRes = await client.query(`SELECT otp FROM subscriber_otps
-          where uuid=($1) and ($2) < expiration and app_id=($3) 
-          and developer_id=($4)`, [uuid, new Date(), app_id, developer_id]);
-          let otpRetrieved = null;
-          if (otpRes.rows && otpRes.rows[0]) {
-            otpRetrieved = otpRes.rows[0].otp;
-          } 
-        //   console.log({otpRetrieved});
-          if (parseInt(otpRetrieved) === parseInt(otp)) {
-            return callback({status: "success"});
-          } else {
-            return callback({status: "failed"});
-          }
+          const otpRes = await client.query(`SELECT * FROM subscriber_otps
+          where otp=($1) and uuid=($2) and ($3) < expiration and app_id=($4)`, [otp, subscriber_id, new Date(), app_id]);
+          console.log({test: otpRes.rows[0]});
+          if (otpRes.rows[0]) {
+              return callback( null ,200);
+            } else {
+              return callback({
+                "error_code": "Unauthorized",
+                "error_message": "OTP Verification Failed"
+              }, 401);
+            }
+       
         } finally {
           client.release();
         }
