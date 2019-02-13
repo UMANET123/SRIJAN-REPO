@@ -9,6 +9,6 @@ module.exports = function (req, res) {
           });
     }
     updateConsent(req.body, (status, response) => {
-        res.status(status).send(response);
+        return res.status(status).send(response);
     });
 }
