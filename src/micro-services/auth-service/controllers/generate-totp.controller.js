@@ -12,7 +12,7 @@ module.exports = function (req, res) {
         console.log({otp, secret, status});
         if (status === 403) {
             res.status(403).send({
-                "error_code": "Unauthorized",
+                "error_code": "Forbidden",
                 "error_message": "App is blacklisted"
               });
         }
