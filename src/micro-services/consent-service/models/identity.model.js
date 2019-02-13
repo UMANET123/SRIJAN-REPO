@@ -116,13 +116,31 @@ function checkBlacklist({subscriber_id, app_id}, callback) {
       //  create transaction
       (async () => {
         const client = await pool.connect();
+        console.log({client});
         try {
           //  create a record entry for subscriber consent
-          let consent_table =`subscriber_consent`;
-          let record =  await client.query(`select scopes from ${consent_table} where uuid=($1) and app_id=($2) and developer_id=($3) and access_token=($4)`,[subscriber_id, app_id, developer_id, access_token]);
-          let createdDate = new Date();
-          if ( ! record.rows[0]) {
-          }
+          let table =`subscriber_blacklist_apps`;
+          let record =  await client.query(`select blacklist_status from ${table} where uuid=($1) and app_id=($2)`,[subscriber_id, app_id]);
+          console.log({record});
+          if ( record.rows[0]) {
+              let {blacklist_status} = record.rows[0];
+              switch(parseInt(blacklist_status)) {
+                case 1 :
+                  //  it is blacklised app
+                  callback (200, {
+                    "is_blacklisted": true
+                  });
+                case 0 :
+                //  it is not blacklisted app
+                  callback( 200, {
+                    "is_blacklisted": false
+                  });
+                default:
+                  callback(204, null);
+              }
+          } else {
+            callback(204, null);
+         }
           //  create a record entry for app meta data 
          
         } finally {
@@ -130,6 +148,32 @@ function checkBlacklist({subscriber_id, app_id}, callback) {
         }
       })().catch(e => {
           console.log(e.stack);
+          throw Error(e.message);
         });
 }
-module.exports = {createConsent, updateConsent};
+
+//  create black list record
+function createBlackList({subscriber_id, app_id , developer_id} , callback) {
+    //  create transaction
+    (async () => {
+      const client = await pool.connect();
+      try {
+        //  create a record entry for subscriber consent
+        let table =`subscriber_blacklist_apps`;
+        let record =  await client.query(`select * from ${table} where uuid=($1) and app_id=($2) and developer_id=($3)`,[subscriber_id, app_id, developer_id]);
+        if ( record.rows[0]) {
+          callback(302, {"status": "Record already exists!"});
+        } else {
+          await client.query(`INSERT INTO ${table}(uuid, app_id, developer_id, blacklist_status, created, status) values ($1, $2, $3, $4, $5, $6)`,[subscriber_id, app_id, developer_id, 1, new Date(), 0]);
+        }
+        //  create a record entry for app meta data 
+        
+      } finally {
+        client.release();
+      }
+    })().catch(e => {
+        console.log(e.stack);
+        throw Error(e.message);
+      });
+}
+module.exports = {createConsent, updateConsent, checkBlacklist, createBlackList};
