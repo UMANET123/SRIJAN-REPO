@@ -109,4 +109,27 @@ function updateConsent({subscriber_id, access_token, app_id, developer_id, scope
 
 }
 
+
+
+//  check blacklist app 
+function checkBlacklist({subscriber_id, app_id}, callback) {
+      //  create transaction
+      (async () => {
+        const client = await pool.connect();
+        try {
+          //  create a record entry for subscriber consent
+          let consent_table =`subscriber_consent`;
+          let record =  await client.query(`select scopes from ${consent_table} where uuid=($1) and app_id=($2) and developer_id=($3) and access_token=($4)`,[subscriber_id, app_id, developer_id, access_token]);
+          let createdDate = new Date();
+          if ( ! record.rows[0]) {
+          }
+          //  create a record entry for app meta data 
+         
+        } finally {
+          client.release();
+        }
+      })().catch(e => {
+          console.log(e.stack);
+        });
+}
 module.exports = {createConsent, updateConsent};
