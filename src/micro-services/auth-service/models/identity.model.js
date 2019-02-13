@@ -1,5 +1,6 @@
 const pool = require('../config/db');
 const otplib = require('otplib');
+const crypto = require('crypto');
 const addMinToDate = require('../helpers/add-minute-to-date');
 const {OTP_SETTINGS:{timer, step}} = require('../config/environment');
 
@@ -8,13 +9,21 @@ function getNewOtp(secret) {
   return otplib.authenticator.generate(secret);
 }
 // create new secret
-function getNewSecret() {
-  return otplib.authenticator.generateSecret();
+function getNewSecret(msisdn) {
+  return crypto.createHash('md5').update(msisdn).digest('hex');
 }
+function validateAndUpdateMsisdn(msisdn) {
+  if (msisdn.startsWith('+63')) return msisdn;
+  if (msisdn.startsWith('63')) return `+${msisdn}`;
+  // if (msisdn.length === 10) return `+63${msisdn}`;
+  return `+63${msisdn}`;
+}
+//  
 //  generate otp and save to db
 function generateTOtp(...args) {
     let [msisdn, app_id, blacklist, callback] = args;
-      otplib.totp.options = {
+    msisdn = validateAndUpdateMsisdn(msisdn);
+    otplib.totp.options = {
         step: step,
         window: timer
     };
@@ -49,7 +58,7 @@ function generateTOtp(...args) {
            
           }  else {
             //  create record for otp and update tables
-            let secret = getNewSecret();
+            let secret = getNewSecret(msisdn);
             let otp = getNewOtp(secret);
             insertOtpRecord({otp, secret, msisdn, app_id});
             callback(otp, secret, 201);
@@ -97,13 +106,12 @@ function insertOtpRecord({secret, otp, msisdn, app_id}) {
 
 
 //  verify OTP
-function verifyTOtp({subscriber_id, otp, app_id}, callback) {
+function verifyTOtp({subscriber_id, otp, app_id }, callback) {
     (async () => {
         const client = await pool.connect();
         try {
-          const otpRes = await client.query(`SELECT * FROM subscriber_otps
+          const otpRes = await client.query(`SELECT  FROM subscriber_otps
           where otp=($1) and uuid=($2) and ($3) < expiration and app_id=($4)`, [otp, subscriber_id, new Date(), app_id]);
-          console.log({test: otpRes.rows[0]});
           if (otpRes.rows[0]) {
               return callback( null ,200);
             } else {
@@ -112,6 +120,15 @@ function verifyTOtp({subscriber_id, otp, app_id}, callback) {
                 "error_message": "OTP Verification Failed"
               }, 401);
             }
+          // let otpVerified = otplib.authenticator.check(otp, subscriber_id);
+          // if (otpVerified) {
+          // return callback( null ,200);
+          // } else {
+          // return callback({
+          //     "error_code": "Unauthorized",
+          //     "error_message": "OTP Verification Failed"
+          //   }, 401);
+          // }
        
         } finally {
           client.release();
