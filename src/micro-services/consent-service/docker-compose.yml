@@ -10,7 +10,7 @@ services:
     depends_on:
       - consentms
     ports:
-      - "3000:3000"
+      - "3002:3000"
     networks:
       - consentms-network
   consentms:

@@ -12,17 +12,17 @@ status int);
 
 create index app_id_index on subscriber_consent(app_id, developer_id);
 
-create table subscriber_blocklist_apps (
+create table subscriber_blacklist_apps (
 id serial, 
 uuid varchar,
 app_id varchar,
 developer_id varchar,
-blocklist_status int,
+blacklist_status int,
 created date,
 updated date,
 status int);
 
-create index app_id_index2 on subscriber_blascklist_apps (app_id,developer_id);
+create index app_id_index2 on subscriber_blacklist_apps (app_id,developer_id);
 
 
 create table apps_metadata(
