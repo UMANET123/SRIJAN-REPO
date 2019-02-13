@@ -27,14 +27,14 @@ function generateTOtp(...args) {
         step: step,
         window: timer
     };
-    let is_blacklist = false;
-    if (blacklist) {
-      //  create check blacklist api call and check response
-      is_blacklist = true;
-    } 
-    if (is_blacklist) {
-      callback(null,null, 403);
-    }
+    // let is_blacklist = false;
+    // if (blacklist) {
+    //   //  create check blacklist api call and check response
+    //   is_blacklist = true;
+    // } 
+    // if (is_blacklist) {
+    //   callback(null,null, 403);
+    // }
     //  get otp by app-id, uuid
     //  check if any otp with same credentials exists 
     (async () => {
