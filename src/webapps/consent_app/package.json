@@ -10,6 +10,10 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
-    "nodemon": "^1.18.9"
+    "nodemon": "^1.18.9",
+    "dotenv": "6.2.0",
+    "request": "2.88.0",
+    "express-session": "1.15.6",
+    "ejs": "^1.0.0"
   }
 }
