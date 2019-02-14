@@ -1,4 +1,4 @@
-const {createConsent} = require('../models/identity.model');
+const {createConsent} = require('../models/consent.model');
 
 module.exports = function (req, res) {
     let {subscriber_id, access_token, app_id, developer_id, scopes, appname} = req.body;
