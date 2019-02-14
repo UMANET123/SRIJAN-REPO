@@ -1,4 +1,4 @@
-const {checkBlacklist} = require('../models/identity.model');
+const {checkBlacklist} = require('../models/blacklist.model');
 
 module.exports = (req, res) => {
     //  check app is blacklisted

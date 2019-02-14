@@ -1,4 +1,4 @@
-const {createBlackList} = require('../models/identity.model');
+const {createBlackList} = require('../models/blacklist.model');
 
 module.exports = (req, res) => {
     //  get  required elements  from request body
