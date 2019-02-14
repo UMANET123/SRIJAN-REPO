@@ -2,6 +2,7 @@
 const { NODE_SETTINGS, APIGEE_CREDS: { apigeeBaseURL }, APIGEE_CREDS: { clientID }, APIGEE_CREDS: { clientSecret }, APIGEE_ENDPOINTS: { verifyOTP } } = require("../config/environment")
 
 var request = require('request');
+var session = require("express-session")
 module.exports = function (req, res, next) {
 
     let subscriber_id = req.body.subscriber_id;
@@ -30,6 +31,10 @@ module.exports = function (req, res, next) {
         res_data.statusCode = response.statusCode
         if (response.statusCode == 302) {
              res_data.message = 'Success.'
+             sess = req.session;
+             sess.sessionid = subscriber_id
+             console.log(subscriber_id)
+             
         }
         else {
              res_data.error_message = 'Invalid OTP.'

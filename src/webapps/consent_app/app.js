@@ -1,17 +1,17 @@
 var express = require("express");
 var app = express();
+var session = require("express-session")
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
 
 const router = require('./router/index.router.js');
 
 
-var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
 app.use(express.static('public'));
 
 global.viewspath = __dirname + '/views/';
-
-var subscribers = [];
 
 router.use(function (req, res, next) {
 	console.log("/" + req.method);
@@ -44,6 +44,11 @@ router.use(function (req, res, next) {
 
 // 	return res.send(subsciber);
 // });
+app.use(session({
+	secret: 'wakanda', 
+	resave: true
+	}
+));
 
 app.use("/", router);
 

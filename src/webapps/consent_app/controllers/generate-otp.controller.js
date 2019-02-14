@@ -5,6 +5,7 @@ var request = require('request');
 module.exports = function (req, res, next) {
     var subscribers = [];
     let phone_no = req.body.phone_no;
+    
     var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
     var authorizationHeaderString = 'Basic ' + encodedData;
     console.log(authorizationHeaderString);
