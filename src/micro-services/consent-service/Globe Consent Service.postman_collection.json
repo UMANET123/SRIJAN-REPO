@@ -1,0 +1,486 @@
+{
+	"info": {
+		"_postman_id": "a818222c-f09b-4350-b221-1f1df06ce88d",
+		"name": "Globe Auth Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Consent API",
+			"description": "",
+			"item": [
+				{
+					"name": "Successful Update a Consent",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subscriber_id\": \"a0040a18-e227-4bca-b5aa-452c7ae03165\",\n  \"app_id\": \"e2274bcab5aa452c7ae03165\",\n  \"developer_id\": \"a0040a18e227\",\n  \"scopes\": [\n    \"sms\",\n    \"location\"\n  ],\n  \"access_token\": \"12344FnyqFzJKZ5hrSB9JARCSpt90tgPN\",\n  \"appname\" : \"Weather App\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/consent",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"consent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail Create a Consent without appname in payload",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subscriber_id\": \"a0040a18-e227-4bca-b5aa-452c7ae03165\",\n  \"app_id\": \"e2274bcab5aa452c7ae03165\",\n  \"developer_id\": \"a0040a18e223\",\n  \"scopes\": [\n    \"sms\",\n    \"location\"\n  ],\n  \"access_token\": \"FnyqFzJKZ5hrSB9JARCSpt90tgPN\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/consent",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"consent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Success Check App is BlackListed",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subscriber_id\": \"a0040a18-e227-4bca-b5aa-452c7ae03165\",\n  \"app_id\": \"e2274bcab5aa452c7ae03165\",\n  \"developer_id\": \"a0040a18e223\",\n  \"scopes\": [\n    \"sms\",\n    \"location\"\n  ],\n  \"access_token\": \"FnyqFzJKZ5hrSB9JARCSpt90tgPN\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/blacklist/{{subscriber_id}}/{{app_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"blacklist",
+								"{{subscriber_id}}",
+								"{{app_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail Create a Consent without accesstoken in payload",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subscriber_id\": \"a0040a18-e227-4bca-b5aa-452c7ae03165\",\n  \"app_id\": \"e2274bcab5aa452c7ae03165\",\n  \"developer_id\": \"a0040a18e223\",\n  \"scopes\": [\n    \"sms\",\n    \"location\"\n  ],\n  \"appname\": \"Weather App\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/consent",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"consent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Successfully Create a Consent",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subscriber_id\": \"a0040a18-e227-4bca-b5aa-452c7ae03165\",\n  \"app_id\": \"e2274bcab5aa452c7ae03165\",\n  \"developer_id\": \"a0040a18e227\",\n  \"scopes\": [\n    \"snqss\"\n  ],\n  \"access_token\": \"FnyqFzJKZ5hrSB9Jsdssdsds\",\n  \"appname\": \"Weather App\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/consent",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"consent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Successfully Create Black List app",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subscriber_id\": \"a0040a18-e227-4bca-b5aa-452c7ae03165\",\n  \"app_id\": \"e2274bcab5aa452c7ae03165\",\n  \"developer_id\": \"a0040a18e227\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/blacklist",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"blacklist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail Update a Consent when req payload has no appname",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subscriber_id\": \"a0040a18-e227-4bca-b5aa-452c7ae03165\",\n  \"app_id\": \"e2274bcab5aa452c7ae03165\",\n  \"developer_id\": \"a0040a18e227\",\n  \"scopes\": [\n    \"sms\",\n    \"location\"\n  ],\n  \"access_token\": \"12344FnyqFzJKZ5hrSB9JARCSpt90tgPN\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/consent",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"consent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail Update a Consent when req payload has no access_token",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subscriber_id\": \"a0040a18-e227-4bca-b5aa-452c7ae03165\",\n  \"app_id\": \"e2274bcab5aa452c7ae03165\",\n  \"developer_id\": \"a0040a18e227\",\n  \"scopes\": [\n    \"sms\",\n    \"location\"\n  ],\n  \"appname\": \"Weather App\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/consent",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"consent"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth API",
+			"description": "",
+			"item": [
+				{
+					"name": "Successfully Generate TOTP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "812f63ce-3a9e-4c84-af01-ac784df5575e",
+								"exec": [
+									"pm.test(\"Should successfully return 201\", function () {",
+									"    pm.expect(pm.response.code).to.be.equal(201);",
+									"});",
+									"",
+									"pm.environment.set(\"otp\", pm.response.json().otp);",
+									"pm.environment.set(\"address\", pm.response.json().address);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"msisdn\" : \"639234567896\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n    \"blacklist\": false\n}\t"
+						},
+						"url": {
+							"raw": "{{host}}/generate/totp?",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"generate",
+								"totp"
+							],
+							"query": [
+								{
+									"key": "a",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Successfully Verify TOTP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "72b25a31-f4ec-4d8b-80c9-3e51370d819a",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"address\":\"{{address}}\",\n\t\"otp\":\"860558\",\n\t\"app_id\" :\"{{app_id}}\",\n    \"developer_id\": \"{{developer_id}}\" \n}"
+						},
+						"url": {
+							"raw": "{{host}}/verify/totp",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"verify",
+								"totp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail Generate TOTP endpoint if Mobile number is invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9a9f8e71-ff2a-43a9-b6bc-b622446b7c60",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"address\":\"7020972580\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/verify/totp",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"verify",
+								"totp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Success Generate TOTP endpoint if Mobile number is valid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9a9f8e71-ff2a-43a9-b6bc-b622446b7c60",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"address\":\"639234567891\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/verify/totp",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"verify",
+								"totp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User uuid by phone no",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"phone_no\" : \"639234567891\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/verify/user",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"verify",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User phone no by uuid",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"uuid\": \"M5YUCQTMM43FQTZRGU2EYTCWOBYUUT3T\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}/verify/user",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"verify",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "0c345d5e-d934-40dc-8872-d4b233e61741",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "4bd747ed-5929-45e4-81a8-0875957f619d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
