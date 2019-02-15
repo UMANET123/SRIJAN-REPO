@@ -46,8 +46,14 @@ function updateConsent({subscriber_id, access_token, app_id, developer_id, scope
            let record = await client.query(`UPDATE ${table} SET scopes=($1), access_token=($2), updated=($3) WHERE uuid=($4) and app_id=($5) and developer_id=($6)  RETURNING (SELECT access_token FROM ${table} WHERE uuid=($4) and app_id=($5) and developer_id=($6))`, [JSON.stringify(scopes),access_token, new Date(), subscriber_id, app_id, developer_id ]);
            if (record.rows[0]) {
              let {access_token} = record.rows[0];
-             callback(200, {old_token: true,
-             old_token_value: access_token});  
+             if (access_token) {
+              callback(200, {old_token: true,
+                old_token_value: access_token});  
+             } else {
+              callback(200, {old_token: false,
+                old_token_value: ""}); 
+             }
+       
            } else {
              callback(400, {
                "error_code": "BadRequest",
