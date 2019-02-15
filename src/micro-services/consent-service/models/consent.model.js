@@ -65,18 +65,28 @@ function updateConsent({subscriber_id, access_token, app_id, developer_id, scope
 
 }
 
-function getConsentList(subscriber_id, callback){
-  //SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id 
-//where status=0 and scopes IS NOT null
+function getConsentList(subscriber_id, limit=10, page=0, appname=null, callback){
 //  create transaction
     (async () => {
       const client = await pool.connect();
       try {
-          let record = await client.query("SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) and status=($2) and scopes IS NOT ($3)", [subscriber_id, 0, null]);
+          let offset = (page * limit);
+          let record = null;
+          if (appname) {
+            record = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
+            and appname=($2) and status=($3) and scopes IS NOT NULL LIMIT ($4) OFFSET ($5)`, [subscriber_id, appname, 0, limit, offset]);
+          } else {
+            record = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
+            and status=($2) and scopes IS NOT NULL LIMIT ($3) OFFSET ($4)`, [subscriber_id, 0, limit, offset]);
+          
+          }
           if (record.rows[0]) {
-            console.log(record.rows);
-            callback(200, {old_token: true,
-            old_token_value: access_token});  
+            callback(200, {
+              page,
+              limit,
+              resultCount: record.rows.length,
+              apps: record.rows
+            });  
           } else {
             callback(400, {
               "error_code": "BadRequest",
