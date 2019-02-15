@@ -13,13 +13,20 @@ router.get("/", function (req, res) {
 	sess = req.session;
 	
 	if (sess.sessionid){
-		res.sendFile(viewspath + "consents.html");
+		res.redirect('/consent');
 	} else {
 		res.sendFile(viewspath + "index.html");
 	}
 });
 
-
+router.get("/consent", function (req, res) {
+	sess = req.session;
+	if (sess.sessionid){
+		res.sendFile(viewspath + "consents.html");
+	} else {
+		res.redirect('/');
+	}
+});
 
 router.get("/logout", function (req, res) {
 	req.session.destroy(function(err) {
