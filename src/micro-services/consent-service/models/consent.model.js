@@ -46,8 +46,14 @@ function updateConsent({subscriber_id, access_token, app_id, developer_id, scope
            let record = await client.query(`UPDATE ${table} SET scopes=($1), access_token=($2), updated=($3) WHERE uuid=($4) and app_id=($5) and developer_id=($6)  RETURNING (SELECT access_token FROM ${table} WHERE uuid=($4) and app_id=($5) and developer_id=($6))`, [JSON.stringify(scopes),access_token, new Date(), subscriber_id, app_id, developer_id ]);
            if (record.rows[0]) {
              let {access_token} = record.rows[0];
-             callback(200, {old_token: true,
-             old_token_value: access_token});  
+             if (access_token) {
+              callback(200, {old_token: true,
+                old_token_value: access_token});  
+             } else {
+              callback(200, {old_token: false,
+                old_token_value: ""}); 
+             }
+       
            } else {
              callback(400, {
                "error_code": "BadRequest",
@@ -65,4 +71,43 @@ function updateConsent({subscriber_id, access_token, app_id, developer_id, scope
 
 }
 
-module.exports = {createConsent, updateConsent};
+function getConsentList(subscriber_id, limit=10, page=0, appname=null, callback){
+//  create transaction
+    (async () => {
+      const client = await pool.connect();
+      try {
+          let offset = (page * limit);
+          let record = null;
+          if (appname) {
+            record = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
+            and appname=($2) and status=($3) and scopes IS NOT NULL LIMIT ($4) OFFSET ($5)`, [subscriber_id, appname, 0, limit, offset]);
+          } else {
+            record = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
+            and status=($2) and scopes IS NOT NULL LIMIT ($3) OFFSET ($4)`, [subscriber_id, 0, limit, offset]);
+          
+          }
+          if (record.rows[0]) {
+            callback(200, {
+              page,
+              limit,
+              resultCount: record.rows.length,
+              apps: record.rows
+            });  
+          } else {
+            callback(400, {
+              "error_code": "BadRequest",
+              "error_message": "Bad Request"
+            });
+          }
+              
+      } finally {
+        client.release();
+      }
+    })().catch(e => {
+        console.log(e.stack)
+        throw e;
+      });
+
+}
+
+module.exports = {createConsent, updateConsent, getConsentList};
