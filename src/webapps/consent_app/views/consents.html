@@ -1,2 +1,55 @@
-Consents HTML page
-<a href="/logout">Logout</a>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Scopes </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../js/consent.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="col-sm-4">
+            <h3>App would need to access following service</h3><a href="/logout">Logout</a>
+            <div id="postResultDiv">
+            </div>
+            <div></div>
+            <br>
+            <div class="class=" form-group"">
+                <div>
+                    <label for="email"> Select All </label><input type="checkbox" id="selectall" />
+                </div>
+
+            </div>
+            <div>
+                <div>
+                    <label for="email"> CONTACT </label> <input class="consents" name="consents" type="checkbox" value="CONTACT"/>
+                </div>
+                <div>
+                    <label for="email"> LOCATION </label> <input class="consents" name="consents" type="checkbox" value="LOCATION"  />
+                </div>
+
+                <div>
+                        <label for="email"> SUBSCRIBER </label> <input class="consents" name="consents" type="checkbox" value="SUBSCRIBER" />
+                    </div>
+                
+            </div>
+            <div>
+                    <button type="button" class="btn btn-default" id="accept_consent">Accept</button>
+                    <button type="button" class="btn btn-default" id="reject">Reject</button>
+            </div>
+            <div id="getResultDiv">
+                <ul class="list-group">
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    </div>
+</body>
+
+</html>

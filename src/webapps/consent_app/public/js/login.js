@@ -99,7 +99,7 @@ $( document ).ready(function() {
 			success : function(subsciber) {
 
 				if(subsciber['statusCode'] == 302){
-					window.location.href = window.location
+				  window.location.href = subsciber['redirect']
 					$("#postResultDiv").html("<p class='success'>" + subsciber['message'] +
 					"</p>")
 				} else {
