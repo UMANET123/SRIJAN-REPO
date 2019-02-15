@@ -1,4 +1,4 @@
-const {revokeSingleConsent} = require('../models/revoke.model');
+const {revokeSingle} = require('../models/revoke.model');
 
 module.exports = (req, res) => {
     let {subscriber_id} = req.params;
@@ -8,7 +8,7 @@ module.exports = (req, res) => {
         "error_code": "BadRequest",
         "error_message": "Bad Request"
       });
-     revokeSingleConsent({subscriber_id, app_id, developer_id}, (status, response)=> {
+     revokeSingle({subscriber_id, app_id, developer_id}, (status, response)=> {
         return res.status(status).send(response);
      }); 
 

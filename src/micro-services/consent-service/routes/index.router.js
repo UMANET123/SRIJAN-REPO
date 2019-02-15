@@ -4,13 +4,15 @@ const createConsent = require('../controllers/create-consent.controller');
 const updateConsent = require('../controllers/update-consent.controller');
 const checkBlackList = require('../controllers/check-blacklist.controller');
 const createBlackList = require('../controllers/create-blacklist.controller');
-const revokeConsent = require('../controllers/revoke-app-consent.controller');
+const revokeSingle= require('../controllers/revoke-app-consent.controller');
+const revokeAll= require('../controllers/revoke-all-app-consent.controller');
 
 router.post(`/consent`, createConsent);
 router.put(`/consent`, updateConsent);
 router.get(`/blacklist/:subscriber_id/:app_id`, checkBlackList);
 router.post(`/blacklist`, createBlackList);
-router.put(`/revoke/:subscriber_id`, revokeConsent);
+router.put(`/revoke/all`, revokeAll);
+router.put(`/revoke/:subscriber_id`, revokeSingle);
 
 
 module.exports = router;
