@@ -22,7 +22,8 @@ router.get("/consent", function (req, res) {
 	sess = req.session;
 	if (sess.sessionid){
 		console.log(req.query.scope)
-
+		console.log(req.query.redirect_uri)
+		sess.redirect_uri = req.query.redirect_uri
 		res.sendFile(viewspath + "consents.html");
 	} else {
 		res.redirect('/');
