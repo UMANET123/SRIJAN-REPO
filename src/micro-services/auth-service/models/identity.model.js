@@ -12,10 +12,10 @@ function getNewOtp(secret) {
 function getNewSecret(msisdn) {
   return crypto.createHash('md5').update(msisdn).digest('hex');
 }
+//  update std code +63 if not exists
 function validateAndUpdateMsisdn(msisdn) {
   if (msisdn.startsWith('+63')) return msisdn;
   if (msisdn.startsWith('63')) return `+${msisdn}`;
-  // if (msisdn.length === 10) return `+63${msisdn}`;
   return `+63${msisdn}`;
 }
 //  
@@ -40,6 +40,7 @@ function generateTOtp(...args) {
     (async () => {
         const client = await pool.connect();
         try {
+          //  get otp 
           const res = await client.query(`SELECT otp, otp.uuid FROM subscriber_otps otp,
           subscriber_data_mask mask
           where otp.uuid=mask.uuid and
@@ -58,8 +59,12 @@ function generateTOtp(...args) {
            
           }  else {
             //  create record for otp and update tables
+
+            //  get new Secret
             let secret = getNewSecret(msisdn);
+            //  get new otp for new record
             let otp = getNewOtp(secret);
+            //  insert records to the table
             insertOtpRecord({otp, secret, msisdn, app_id});
             callback(otp, secret, 201);
           }
@@ -83,15 +88,18 @@ function insertOtpRecord({secret, otp, msisdn, app_id}) {
         const client = await pool.connect();
         try {
             let currentDate = new Date();
+            //  check for any record exists with the phone
             let mask= await client.query(`SELECT uuid FROM subscriber_data_mask WHERE phone_no=($1)`, [msisdn]);
             if (!mask.rows[0]) {
+              //  insert record to mask table
               await client.query(`INSERT INTO subscriber_data_mask(uuid, phone_no, created, status) values($1, $2, $3, $4)`,
               [secret, msisdn, currentDate, 0]);
               console.log('mask table record created');
             } else {
-              //  udpate secret as existing uuid 
+              //  update secret as existing uuid 
               secret = mask.rows[0].uuid;
             }
+            // insert new otp record
            await client.query(`INSERT INTO subscriber_otps(uuid, app_id, otp, expiration,                    status) values($1, $2, $3, $4, $5)`, 
             [secret, app_id, otp, addMinToDate(currentDate, 5), 0]);
         } finally {
@@ -110,8 +118,10 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
     (async () => {
         const client = await pool.connect();
         try {
-          const otpRes = await client.query(`SELECT  FROM subscriber_otps
+          //  get valid otp with  given params {subscriber_id, otp, app_id}
+          const otpRes = await client.query(`SELECT * FROM subscriber_otps
           where otp=($1) and uuid=($2) and ($3) < expiration and app_id=($4)`, [otp, subscriber_id, new Date(), app_id]);
+          //  check for valid otp
           if (otpRes.rows[0]) {
               return callback( null ,200);
             } else {
@@ -150,9 +160,11 @@ function verifyUser(phone_no, uuid, callback) {
         const client = await pool.connect();
         try {
             let query = null;
+            // for  phone no find uuid
             if (phone_no) {
                 query = `SELECT uuid FROM subscriber_data_mask where phone_no='${phone_no}'`;
             } else {
+                 // find phone_no
                 query= `SELECT phone_no FROM subscriber_data_mask where uuid='${uuid}'`;
             }
           const res = await client.query(query);
