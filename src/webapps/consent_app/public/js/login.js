@@ -73,7 +73,7 @@ $( document ).ready(function() {
 				error : function(e) {
 					
 					$("#postResultDiv").html("<p class='error'>" + 
-						"Please enter valid Globe mobile no only.<br>")
+						"Invalid Phone No/OTP<br>")
 					console.log("ERROR: ", e);
 				}
 			});
