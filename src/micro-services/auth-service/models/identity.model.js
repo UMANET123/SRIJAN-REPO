@@ -1,8 +1,10 @@
-const pool = require('../config/db');
 const otplib = require('otplib');
 const crypto = require('crypto');
+
+const pool = require('../config/db');
 const addMinToDate = require('../helpers/add-minute-to-date');
-const {OTP_SETTINGS:{timer, step}} = require('../config/environment');
+const {OTP_SETTINGS:{timer, step}, } = require('../config/environment');
+const { checkBlackListApp} = require('./_auth.helper');
 
 //  create new otp
 function getNewOtp(secret) {
@@ -27,14 +29,9 @@ function generateTOtp(...args) {
         step: step,
         window: timer
     };
-    // let is_blacklist = false;
-    // if (blacklist) {
-    //   //  create check blacklist api call and check response
-    //   is_blacklist = true;
-    // } 
-    // if (is_blacklist) {
-    //   callback(null,null, 403);
-    // }
+    if (blacklist) {
+      checkBlackListApp({msisdn, app_id});
+    } 
     //  get otp by app-id, uuid
     //  check if any otp with same credentials exists 
     (async () => {
