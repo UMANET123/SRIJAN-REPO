@@ -8,7 +8,7 @@ module.exports = function (req, res, next) {
     console.log('subscriber id - ')
     console.log(sess.subscriber_id)
     let scopes = req.body.scopes
-    console.log({scopes})
+    
     var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
     var authorizationHeaderString = 'Basic ' + encodedData;
     console.log(authorizationHeaderString);
@@ -23,7 +23,8 @@ module.exports = function (req, res, next) {
         },
         form: {
             subscriber_id: sess.subscriber_id,
-            subscriber_consent: '["LOCATION"]',
+          //  subscriber_consent: '["LOCATION"]',
+            subscriber_consent: scopes,
             response_type: 'code',
             redirect_uri: sess.redirect_uri
 
@@ -38,14 +39,13 @@ module.exports = function (req, res, next) {
         res_data.statusCode = response.statusCode
         
         if (response.statusCode == 302) {
-             res.redirect(302, sess.redirect_uri)
+            // res.redirect(302, sess.redirect_uri)
+            res_data.redirect_uri = sess.redirect_uri
+             res.send(res_data)
         }
         else {
              res_data.error_message = 'Invalid request'
              res.send(res_data)
          }
-       
-        
-
     });
 }

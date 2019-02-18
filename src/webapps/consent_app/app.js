@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 
 const router = require('./router/index.router.js');
 
+app.set('view engine', 'ejs');
 
 app.use(bodyParser.json());
 
