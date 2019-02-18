@@ -94,9 +94,9 @@ function getConsentList(subscriber_id, limit=10, page=0, appname=null, callback)
               apps: record.rows
             });  
           } else {
-            callback(400, {
-              "error_code": "BadRequest",
-              "error_message": "Bad Request"
+            callback(200, {
+              resultCount: 0,
+              apps: []
             });
           }
               
