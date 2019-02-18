@@ -26,6 +26,7 @@ module.exports = function (req, res, next) {
     request(options, function (error, response, body) {
         if (error) throw new Error(error);
         console.log(response.statusCode)
+        console.log()
 
         var res_data = {} 
         res_data.statusCode = response.statusCode
@@ -33,8 +34,9 @@ module.exports = function (req, res, next) {
              res_data.message = 'Success.'
              sess = req.session;
              sess.sessionid = subscriber_id
+             sess.subscriber_id = subscriber_id
              console.log(subscriber_id)
-             
+             res_data.redirect = response.headers.location
         }
         else {
              res_data.error_message = 'Invalid OTP.'

@@ -19,7 +19,8 @@ const APIGEE_CREDS = {
 //  node server settings
 const APIGEE_ENDPOINTS = {
     generateOTP : "auth/v1/generate/otp",
-    verifyOTP: "auth/v1/verify/otp"
+    verifyOTP: "auth/v1/verify/otp",
+    updateConsent: "auth/v1/consent"
 }
 
 
