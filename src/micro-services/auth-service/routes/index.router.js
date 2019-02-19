@@ -16,7 +16,7 @@ router.post(`/verify/hotp`, verifyHotpController);
 router.post(`/verify/totp`, verifyTotpController);
 router.post(`/verify/user`, verifyUserController);
 
-router.get(`${BASE_PATH}/transaction/:transaction_id/:subscriber_id/:app_id`, validateTransaction);
+router.get(`/transaction/:transaction_id/:subscriber_id/:app_id`, validateTransaction);
 
 
 module.exports = router;

@@ -1,18 +1,18 @@
 version: '3'
 
 services:
-  nginx:
-    build:
-      context: .docker/
-      dockerfile: Dockerfile
-    links:
-      - consentms:consentms
-    depends_on:
-      - consentms
-    ports:
-      - "3002:3002"
-    networks: 
-      - consentserivce_default
+  # nginx:
+  #   build:
+  #     context: .docker/
+  #     dockerfile: Dockerfile
+  #   links:
+  #     - consentms:consentms
+  #   depends_on:
+  #     - consentms
+  #   ports:
+  #     - "3002:3002"
+  #   networks: 
+  #     - consentserivce_default
       
   consentms:
     container_name: consentservice
@@ -28,7 +28,7 @@ services:
     links:
       - db
     ports:
-      - "3002"
+      - "3002:3002"
     environment:
       - INSTANCE=consentms
     networks: 
