@@ -103,33 +103,51 @@ function insertOtpRecord({secret, otp, msisdn, app_id}) {
     });
   
 }
+//  create a transaction
+function createTransaction(...args) {
+  let [txnId, subscriberId, appId, currentDate, status, callback] = args;
+  if (!txnId) {
+    //  create txnid
+    let secret_key = subscriberId + appId + currentDate.getTime();
+    console.log(secret_key);
+    txnId = getNewSecret(secret_key);
+  }
+  //  create a transaction record
+    (async () => {
+      const client = await pool.connect();
+      try {
+        //  insert transaction record
+        await client.query("INSERT INTO transaction_data(transaction_id, uuid, app_id, created, status) values($1, $2, $3, $4, $5)", [txnId, subscriberId, appId, currentDate, status]);
+        callback(txnId);
+     } finally {
+        client.release();
+      }
+    })().catch(e =>{
+      console.log(e.stack);
+      callback(false);
+    } );
 
+}
 
 //  verify OTP
 function verifyTOtp({subscriber_id, otp, app_id }, callback) {
     (async () => {
         const client = await pool.connect();
+        let currentDate = new Date();
         try {
           const otpRes = await client.query(`SELECT  FROM subscriber_otps
-          where otp=($1) and uuid=($2) and ($3) < expiration and app_id=($4)`, [otp, subscriber_id, new Date(), app_id]);
+          where otp=($1) and uuid=($2) and ($3) < expiration and app_id=($4)`, [otp, subscriber_id, currentDate, app_id]);
           if (otpRes.rows[0]) {
-              return callback( null ,200);
+              // create a transaction
+              createTransaction(null, subscriber_id, app_id,currentDate, 0, txnId => {
+                callback( {transaction_id: txnId} ,200);
+              });
             } else {
               return callback({
                 "error_code": "Unauthorized",
                 "error_message": "OTP Verification Failed"
               }, 401);
             }
-          // let otpVerified = otplib.authenticator.check(otp, subscriber_id);
-          // if (otpVerified) {
-          // return callback( null ,200);
-          // } else {
-          // return callback({
-          //     "error_code": "Unauthorized",
-          //     "error_message": "OTP Verification Failed"
-          //   }, 401);
-          // }
-       
         } finally {
           client.release();
         }
