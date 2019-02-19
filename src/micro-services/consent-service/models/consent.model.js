@@ -90,12 +90,12 @@ function getConsentList(subscriber_id, limit=10, page=0, appname=null, callback)
             callback(200, {
               page,
               limit,
-              resultCount: record.rows.length,
+              result_count: record.rows.length,
               apps: record.rows
             });  
           } else {
             callback(200, {
-              resultCount: 0,
+              result_count: 0,
               apps: []
             });
           }
