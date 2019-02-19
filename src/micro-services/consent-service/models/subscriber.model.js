@@ -16,7 +16,7 @@ function getSubscriberApps(subscriber_id, appname, callback) {
               let appArray = record.rows.map(({appname}) => appname);
               callback(200, { "appname": appArray});  
             } else {
-              callback(204, {"status": "Record Not Found"});
+              callback(200, {"appname": []});
             }
                 
         } finally {
