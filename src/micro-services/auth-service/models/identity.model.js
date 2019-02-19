@@ -161,7 +161,7 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
       } );
 }
 
-//  get 
+//  get user subscriber_id or phone no
 
 function verifyUser(phone_no, uuid, callback) {
     (async () => {
