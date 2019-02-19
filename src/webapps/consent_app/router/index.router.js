@@ -14,19 +14,21 @@ router.get("/", function (req, res) {
 	if (sess.sessionid){
 		res.redirect('/consent');
 	} else {
-		res.sendFile(viewspath + "index.html");
+		res.render('index') 
+		// res.sendFile(viewspath + "index.html");
 	}
 });
 
 router.get("/consent", function (req, res) {
 	sess = req.session;
-	if (sess.sessionid){
-		console.log(req.query.scope)
-		console.log(req.query.redirect_uri)
+	if (sess.sessionid && typeof req.query.scope != 'undefined'){
+		var scope_arr = req.query.scope.split(', ')
+		var scopes = scope_arr
 		sess.redirect_uri = req.query.redirect_uri
+		res.render('consent', {scopes : scopes, redirect_uri: req.query.redirect_uri}) 
 		res.sendFile(viewspath + "consents.html");
 	} else {
-		res.redirect('/');
+		res.redirect('/logout');
 	}
 });
 

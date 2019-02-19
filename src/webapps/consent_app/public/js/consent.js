@@ -16,7 +16,10 @@ $(document).ready(function () {
 		}
 
 	});
-
+	$('#reject').click(function () {
+		redirect_uri = $(this).val()
+		window.location.href=redirect_uri
+	});
 	$('#accept_consent').click(function () {
 		checked_cons = $(".consents:checked")
 		console.log(checked_cons)
@@ -28,11 +31,12 @@ $(document).ready(function () {
 				scopes.push($(this).val());
 			});
 			console.log(scopes)
-			var scopes_data = scopes.join(',')
-			console.log(scopes_data)
+			// var scopes_data = scopes.join('')
+			var scopes_data = JSON.stringify(scopes)
+			console.log({scopes_data})
 			// Get checked values
 			event.preventDefault();
-			updateConsent(scopes);
+			updateConsent(scopes_data);
 		}
 		function updateConsent(scopes) {
 			$("#postResultDiv").html('')
@@ -52,7 +56,7 @@ $(document).ready(function () {
 				dataType: 'json',
 				success: function (subsciber) {
 					if (subsciber['statusCode'] == 302) {
-
+						window.location.href = subsciber['redirect_uri']
 					}
 				},
 				error: function (e) {

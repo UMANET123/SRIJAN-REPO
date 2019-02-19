@@ -39,6 +39,7 @@ module.exports = function (req, res, next) {
              res_data.redirect = response.headers.location
         }
         else {
+             
              res_data.error_message = 'Invalid OTP.'
          }
         res.send(res_data)
