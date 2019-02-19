@@ -9,7 +9,7 @@ create table subscriber_otps (id serial,
 uuid varchar, 
 app_id varchar,
 developer_id varchar,
-otp int,
+otp varchar,
 expiration timestamp,
 status int);
 
