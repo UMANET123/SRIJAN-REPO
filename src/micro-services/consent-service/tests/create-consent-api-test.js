@@ -3,9 +3,8 @@ const chaiHTTP = require('chai-http');
 const app = require('../app');
 const {expect} = chai;
 chai.use(chaiHTTP);
-const {BASE_PATH} = require('../config/environment');
 
-const endpoint =  `${BASE_PATH}/consent`
+const endpoint =  `/consent`;
 
 
 let chaiApiCall = ({app, endpoint, type='application/json', data}, callback ) => {
