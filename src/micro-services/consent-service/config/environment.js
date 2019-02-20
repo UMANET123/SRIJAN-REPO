@@ -5,7 +5,7 @@ const ENV = process.env;
 
 //  node server settings
 const NODE_SETTINGS = {
-    portNumber : ENV.PORT_NUMBER || 3000,
+    portNumber : ENV.PORT_NUMBER || 3002,
     nodeEnv : ENV.NODE_ENV || 'dev'
 }
 
