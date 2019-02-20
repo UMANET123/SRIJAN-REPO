@@ -1,6 +1,6 @@
 require('dotenv').config();
 const axios = require('axios');
-const { createAppMetaData, validateTxnId} = require('./_util.model');
+const { createAppMetaData} = require('./_util.model');
 const pool = require('../config/db');
 
 function createConsent(...args) {
@@ -49,8 +49,9 @@ function createConsent(...args) {
         });
 }
 
-function updateConsent({subscriber_id, access_token, app_id, developer_id, scopes, appname}, callback) {
-    
+function updateConsent(...args) {
+  let [reqBody, callback] = args;
+  let {subscriber_id, transaction_id, access_token, app_id, developer_id, scopes, appname} = reqBody;
     //  create transaction
     (async () => {
        const client = await pool.connect();
@@ -58,10 +59,19 @@ function updateConsent({subscriber_id, access_token, app_id, developer_id, scope
            let table=`subscriber_consent`;
            let record = await client.query(`UPDATE ${table} SET scopes=($1), access_token=($2), updated=($3) WHERE uuid=($4) and app_id=($5) and developer_id=($6)  RETURNING (SELECT access_token FROM ${table} WHERE uuid=($4) and app_id=($5) and developer_id=($6))`, [JSON.stringify(scopes),access_token, new Date(), subscriber_id, app_id, developer_id ]);
            if (record.rows[0]) {
-             let {access_token} = record.rows[0];
-             if (access_token) {
+              let invalidateTxnUrl =`${process.env.AUTH_SERVICE_BASEPATH}/transaction/${transaction_id}/invalidate`; 
+              console.log({invalidateTxnUrl});
+         //   invalidate transaction after setting access token
+              let data = await axios.put(invalidateTxnUrl, {
+                                                        subscriber_id,
+                                                        app_id
+                                                      });
+             console.log({output: data});
+
+             let accessToken = record.rows[0].access_token;
+             if (accessToken) {
               return callback(200, {old_token: true,
-                old_token_value: access_token});  
+                old_token_value: accessToken});  
              } else {
               return callback(200, {old_token: false,
                 old_token_value: ""}); 
