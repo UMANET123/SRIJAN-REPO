@@ -10,7 +10,7 @@ function revokeSingle({subscriber_id, app_id, developer_id}, callback) {
         let record = await client.query(`UPDATE ${consentTable} SET scopes=($1), status=($2) WHERE uuid=($3) and app_id=($4) and developer_id=($5) RETURNING access_token`, [null, 1, subscriber_id, app_id, developer_id ]);
         if (record.rows[0]) {
           let {access_token} = record.rows[0];
-          callback(200, {"revoked_token": [access_token]});  
+          callback(200, {"revoked_tokens": [access_token]});  
         } else {
           callback(400, {
             "error_code": "BadRequest",
@@ -36,7 +36,7 @@ function revokeAll(subscriber_id, callback) {
           let record = await client.query(`UPDATE ${consentTable} SET scopes=($1), status=($2) WHERE uuid=($3) RETURNING access_token`, [null, 1, subscriber_id ]);
           if (record.rows[0]) {
             let tokenArray = record.rows.map(({access_token}) => access_token);
-            callback(200, {"revoked_token": tokenArray});  
+            callback(200, {"revoked_tokens": tokenArray});  
           } else {
             callback(400, {
               "error_code": "BadRequest",
