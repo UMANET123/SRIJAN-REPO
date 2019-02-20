@@ -1,6 +1,6 @@
 const pool = require('../config/db');
 
-//  create a transaction
+//  validate a transaction
 function validateTransaction(...args) {
     let [reqParams, callback] = args;
     let {transaction_id, subscriber_id, app_id} = reqParams;
@@ -27,4 +27,32 @@ function validateTransaction(...args) {
   
   }
 
-module.exports = {validateTransaction};
+//  invalidate a transaction
+function invalidateTransaction(...args) {
+    let [reqParams,reqBody, callback] = args;
+    let {transaction_id} = reqParams;
+    let {subscriber_id, app_id} = reqBody;
+     // create a transaction record
+    (async () => {
+      const client = await pool.connect();
+      try {
+        // insert transaction record
+        let txnRecord = await client.query("UPDATE transaction_data SET status=($1) WHERE transaction_id=($2) and uuid=($3) and app_id=($4)", [1, transaction_id, subscriber_id, app_id]);
+        let txnValid = false;
+        if(txnRecord.rows[0]) {
+          txnValid = true;
+        } 
+        callback(200, {
+          "is_valid": txnValid
+        });
+
+      } finally {
+        client.release();
+      }
+    })().catch(e =>{
+      console.log(e.stack);
+    } );
+  
+  }
+
+module.exports = {validateTransaction, invalidateTransaction};
