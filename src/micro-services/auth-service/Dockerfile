@@ -16,7 +16,7 @@ VOLUME ["/usr/src/app"]
 
 COPY . ./
 
-EXPOSE 4000
+EXPOSE 3000
 
 RUN npm i -g nodemon
 
