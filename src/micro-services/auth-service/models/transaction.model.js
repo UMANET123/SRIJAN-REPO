@@ -14,7 +14,7 @@ function validateTransaction(...args) {
           if(txnRecord.rows[0]) {
             txnValid = true;
           } 
-          callback(200, {
+          return callback(200, {
             "is_valid": txnValid
           });
 
@@ -44,6 +44,7 @@ function invalidateTransaction(...args) {
         }  else {
           callback(204, null);
         }
+        return;
     } finally {
         client.release();
       }

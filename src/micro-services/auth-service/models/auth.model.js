@@ -1,5 +1,7 @@
 
 const pool = require('../config/db');
+const updatePhoneNo = require('../helpers/mobile-number.modify');
+
 
 function verifyUser(phone_no, uuid, callback) {
     (async () => {
@@ -8,6 +10,7 @@ function verifyUser(phone_no, uuid, callback) {
             let query = null;
             // for  phone no find uuid
             if (phone_no) {
+                phone_no = updatePhoneNo(phone_no);
                 query = `SELECT uuid FROM subscriber_data_mask where phone_no='${phone_no}'`;
             } else {
                  // find phone_no
@@ -19,7 +22,7 @@ function verifyUser(phone_no, uuid, callback) {
         } else {
           callback(null, 404);
         }
-
+        return;
         } finally {
           client.release();
         }

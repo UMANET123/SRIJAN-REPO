@@ -5,7 +5,7 @@ const axios = require('axios');
 const {OTP_SETTINGS:{timer, step} } = require('../config/environment');
 const {verifyUser} = require('./auth.model');
 const pool = require('../config/db');
-
+const addMinToDate = require('../helpers/add-minute-to-date');
 //  create new otp
 function getNewOtp(secret) {
     return otplib.authenticator.generate(secret);
@@ -14,12 +14,7 @@ function getNewOtp(secret) {
 function getNewSecret(msisdn) {
     return crypto.createHash('md5').update(msisdn).digest('hex');
 }
-  //  update std code +63 if not exists
-function updatePhoneNo(msisdn) {
-    if (msisdn.startsWith('+63')) return msisdn;
-    if (msisdn.startsWith('63')) return `+${msisdn}`;
-    return `+63${msisdn}`;
-}
+
 function setOtpSettings() {
     otplib.totp.options = {
         step: step,
@@ -70,7 +65,7 @@ function  checkBlackListApp({msisdn, app_id}, callback) {
             axios.get(reqUrl)
                 .then(({data}) =>{
                    if (data) {
-                       callback(null, null, 403); 
+                      return callback(null, null, 403); 
                    } 
                 })
                 .catch(function (error) {
@@ -80,4 +75,4 @@ function  checkBlackListApp({msisdn, app_id}, callback) {
     });
 }
 
-module.exports = {getNewOtp, getNewSecret, updatePhoneNo, setOtpSettings, insertOtpRecord, checkBlackListApp};
+module.exports = {getNewOtp, getNewSecret, setOtpSettings, insertOtpRecord, checkBlackListApp};

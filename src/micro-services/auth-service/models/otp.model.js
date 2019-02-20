@@ -1,8 +1,9 @@
 const pool = require('../config/db');
 const addMinToDate = require('../helpers/add-minute-to-date');
 const {createTransaction} = require('./_transaction.util');
-const {updatePhoneNo, setOtpSettings, getNewOtp, getNewSecret, insertOtpRecord, checkBlackListApp} = require('./helper.model');
-
+const {setOtpSettings, getNewOtp, getNewSecret, insertOtpRecord, checkBlackListApp} = require('./helper.model');
+const updatePhoneNo = require('../helpers/mobile-number.modify');
+console.log({updatePhoneNo});
 //  generate otp and save to db
 function generateTOtp(...args) {
     let [msisdn, app_id, blacklist, callback] = args;
@@ -84,7 +85,7 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
         }
       })().catch(e =>{
         console.log(e.stack);
-        callback(    {
+        return callback(    {
           "error_code": "BadRequest",
           "error_message": "Bad Request"
         });
