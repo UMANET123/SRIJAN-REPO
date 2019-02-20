@@ -19,9 +19,9 @@ function verifyUser(phone_no, uuid, callback) {
           const res = await client.query(query);
           if (res.rows && res.rows[0]) {
             callback(res.rows[0], 200);
-        } else {
-          callback(null, 404);
-        }
+          } else {
+            callback(null, 204);
+          }
         return;
         } finally {
           client.release();
