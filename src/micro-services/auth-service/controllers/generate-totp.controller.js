@@ -28,7 +28,7 @@ module.exports = function (req, res) {
               });
         }
         //  response success
-        res.status(status).send({
+        return res.status(status).send({
             subscriber_id: secret,
             otp: otp, 
             app_id: app_id
