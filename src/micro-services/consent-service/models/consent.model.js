@@ -1,9 +1,21 @@
+require('dotenv').config();
+const axios = require('axios');
 const { createAppMetaData} = require('./_util.model');
 const pool = require('../config/db');
 
-function createConsent({subscriber_id, access_token, app_id, developer_id, scopes, appname}, callback) {
+function createConsent(...args) {
+    let [reqBody, callback] = args;
+    let {subscriber_id, transaction_id, access_token, app_id, developer_id, scopes, appname} = reqBody;
     //  create transaction
     (async () => {
+            // check transaction id Exists
+        let txnValidityUrl =`${process.env.AUTH_SERVICE_BASEPATH}/transaction/${transaction_id}/${subscriber_id}/${app_id}`;
+
+        let txnData = await axios.get(txnValidityUrl);
+
+        if ( !txnData.data.is_valid) {
+          return callback(403, {status: "Transaction id is not valid"});
+        }
         const client = await pool.connect();
         try {
           //  create a record entry for subscriber consent
@@ -13,10 +25,11 @@ function createConsent({subscriber_id, access_token, app_id, developer_id, scope
           if ( record.rows[0]) {
             let scopeFound = record.rows[0].scopes;
             if ( JSON.stringify(scopeFound) == JSON.stringify(scopes)) {
-              callback(302, { "status" : "Record already Exists!"});
+              console.log("code passing");
+             return callback(302, { "status" : "Record already Exists!"});
             } else {
                   let old_token = await client.query(`UPDATE ${consent_table} SET scopes=($1), access_token=($2),  updated=($3) WHERE  uuid=($4) and app_id=($5) and developer_id=($6) RETURNING (SELECT access_token FROM ${consent_table} WHERE uuid=($4) and app_id=($5) and developer_id=($6))`, [JSON.stringify(scopes), access_token, createdDate, subscriber_id, app_id, developer_id ]);
-                  callback(200, {
+                  return callback(200, {
                     "old_token": true,
                     "old_token_value": old_token.rows[0].access_token
                   });
@@ -36,8 +49,9 @@ function createConsent({subscriber_id, access_token, app_id, developer_id, scope
         });
 }
 
-function updateConsent({subscriber_id, access_token, app_id, developer_id, scopes, appname}, callback) {
-    
+function updateConsent(...args) {
+  let [reqBody, callback] = args;
+  let {subscriber_id, transaction_id, access_token, app_id, developer_id, scopes, appname} = reqBody;
     //  create transaction
     (async () => {
        const client = await pool.connect();
@@ -45,17 +59,26 @@ function updateConsent({subscriber_id, access_token, app_id, developer_id, scope
            let table=`subscriber_consent`;
            let record = await client.query(`UPDATE ${table} SET scopes=($1), access_token=($2), updated=($3) WHERE uuid=($4) and app_id=($5) and developer_id=($6)  RETURNING (SELECT access_token FROM ${table} WHERE uuid=($4) and app_id=($5) and developer_id=($6))`, [JSON.stringify(scopes),access_token, new Date(), subscriber_id, app_id, developer_id ]);
            if (record.rows[0]) {
-             let {access_token} = record.rows[0];
-             if (access_token) {
-              callback(200, {old_token: true,
-                old_token_value: access_token});  
+              let invalidateTxnUrl =`${process.env.AUTH_SERVICE_BASEPATH}/transaction/${transaction_id}/invalidate`; 
+              console.log({invalidateTxnUrl});
+         //   invalidate transaction after setting access token
+              let data = await axios.put(invalidateTxnUrl, {
+                                                        subscriber_id,
+                                                        app_id
+                                                      });
+             console.log({output: data});
+
+             let accessToken = record.rows[0].access_token;
+             if (accessToken) {
+              return callback(200, {old_token: true,
+                old_token_value: accessToken});  
              } else {
-              callback(200, {old_token: false,
+              return callback(200, {old_token: false,
                 old_token_value: ""}); 
              }
        
            } else {
-             callback(400, {
+              return callback(400, {
                "error_code": "BadRequest",
                "error_message": "Bad Request"
              });
@@ -87,14 +110,14 @@ function getConsentList(subscriber_id, limit=10, page=0, appname=null, callback)
           
           }
           if (record.rows[0]) {
-            callback(200, {
+            return callback(200, {
               page,
               limit,
               resultcount: record.rows.length,
               apps: record.rows
             });  
           } else {
-            callback(200, {
+            return callback(200, {
               resultcount: 0,
               apps: []
             });

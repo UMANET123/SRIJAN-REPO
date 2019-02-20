@@ -15,7 +15,7 @@ function createAppMetaData(...args) {
       if (! record.rows[0]) {
         await client.query(`INSERT INTO ${apps_meta_table}(app_id, developer_id, appname, short_description, long_description, developer_name, created) values ($1, $2, $3, $4, $5, $6, $7)`, [app_id, developer_id, appname, short_description,  long_description, developer_name, created]);
       }  
-      callback(201, {
+      return callback(201, {
         "old_token": false,
         "old_token_value": ""
       });       
@@ -40,7 +40,7 @@ function updateAppMetaData(...args) {
     // UPDATE ${table} SET scopes=($1), access_token=($2), updated=($3) WHERE uuid=($4) and app_id=($5) and developer_id=($6)
     let apps_meta_table =`apps_metadata`;
     await client.query(`UPDATE ${apps_meta_table} SET short_description=($1), long_description=($2), developer_name=($3), updated=($4) WHERE app_id=($5) and developer_id=($6) and appname=($7)`, [ short_description, long_description, developer_name, updated, app_id, developer_id, appname]);
-      callback(200, null);
+    return callback(200, null);
            
   } finally {
     client.release();
