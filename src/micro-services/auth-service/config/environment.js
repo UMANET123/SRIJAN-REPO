@@ -31,5 +31,5 @@ const DB_SETTINGS = {
     port : ENV.DB_PORT || "5432",
     database: ENV.DB_NAME
 }
-const BASE_PATH = `/auth/v1`;
-module.exports = { NODE_SETTINGS, OTP_SETTINGS, DB_SETTINGS, EMAIL_SETTINGS, BASE_PATH};
+const AUTH_BASE_PATH = `/auth/v1`;
+module.exports = { NODE_SETTINGS, OTP_SETTINGS, DB_SETTINGS, EMAIL_SETTINGS, AUTH_BASE_PATH};

@@ -1,0 +1,37 @@
+version: "2"
+
+services:
+  nginx:
+    build:
+      context: .nginx/
+      dockerfile: Dockerfile
+    links:
+      - subscriberapp:subscriberapp
+    depends_on:
+      - subscriberapp
+    ports:
+      - "8003:8003"
+    networks:
+      - subscriberapp-network
+
+  subscriberapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+      - $HOME/logs:/var/log
+    # expose:
+    #   - "5561"
+    ports:
+      - "5561:5561"
+    environment:
+      - INSTANCE=subscriberapp
+    networks: 
+      - subscriberapp-network
+
+networks:
+  subscriberapp-network:
+    driver: bridge
+    

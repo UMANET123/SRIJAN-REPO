@@ -18,6 +18,6 @@ const DB_SETTINGS = {
     port : ENV.DB_PORT || "5432",
     database: ENV.DB_NAME
 }
-const BASE_PATH= `/subscriber/v1`;
+const CONSENT_BASE_PATH= `/subscriber/v1`;
 
-module.exports = { NODE_SETTINGS,  DB_SETTINGS, BASE_PATH};
+module.exports = { NODE_SETTINGS,  DB_SETTINGS, CONSENT_BASE_PATH};
