@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const {getNewSecret} = require('./helper.model');
 //  create a transaction
 function createTransaction(...args) {
     let [txnId, subscriberId, appId, currentDate, status, callback] = args;

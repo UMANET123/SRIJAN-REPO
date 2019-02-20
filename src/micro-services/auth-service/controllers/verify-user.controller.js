@@ -1,9 +1,10 @@
-const identity = require('../models/identity.model');
+const {verifyUser} = require('../models/auth.model');
+
 module.exports = function (req, res) {
     let {msisdn, subscriber_id} = req.body;
     if ((!msisdn && !subscriber_id) || (msisdn && subscriber_id)) return res.status(400).send({status: 'Please enter either phone_no or uuid to validate'});
     
-    identity.verifyUser(msisdn, subscriber_id, (response, status) => {
+    verifyUser(msisdn, subscriber_id, (response, status) => {
         console.log();
         let key = Object.keys(response)[0];
         if(key) {

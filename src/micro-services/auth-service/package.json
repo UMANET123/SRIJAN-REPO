@@ -10,9 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "dotenv": "^6.2.0",
     "express": "^4.16.3",
-    "node-fetch": "^2.3.0",
     "nodemailer": "^4.6.8",
     "otplib": "^10.0.1",
     "pg": "6.2.2",

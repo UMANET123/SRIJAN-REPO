@@ -1,4 +1,4 @@
-const {generateTOtp} = require('../models/identity.model');
+const {generateTOtp} = require('../models/otp.model');
 const subscriberNumber = require('../helpers/subscriber');
 
 module.exports = function (req, res) {
