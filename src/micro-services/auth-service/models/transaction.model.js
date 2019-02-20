@@ -37,16 +37,14 @@ function invalidateTransaction(...args) {
       const client = await pool.connect();
       try {
         // insert transaction record
-        let txnRecord = await client.query("UPDATE transaction_data SET status=($1) WHERE transaction_id=($2) and uuid=($3) and app_id=($4)", [1, transaction_id, subscriber_id, app_id]);
-        let txnValid = false;
+        let txnRecord = await client.query("UPDATE transaction_data SET status=($1) WHERE transaction_id=($2) and uuid=($3) and app_id=($4) RETURNING status", [1, transaction_id, subscriber_id, app_id]);
+        // console.log({txn: txnRecord.rows[0]});
         if(txnRecord.rows[0]) {
-          txnValid = true;
-        } 
-        callback(200, {
-          "is_valid": txnValid
-        });
-
-      } finally {
+          callback(200, null);
+        }  else {
+          callback(204, null);
+        }
+    } finally {
         client.release();
       }
     })().catch(e =>{

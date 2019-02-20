@@ -17,7 +17,7 @@ function revokeSingle({subscriber_id, app_id, developer_id}, callback) {
             "error_message": "Bad Request"
           });
         }
-            
+        return;    
     } finally {
       client.release();
     }
@@ -43,7 +43,7 @@ function revokeAll(subscriber_id, callback) {
               "error_message": "Bad Request"
             });
           }
-              
+        return;     
       } finally {
         client.release();
       }

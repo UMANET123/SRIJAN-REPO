@@ -18,6 +18,7 @@ function getSubscriberApps(subscriber_id, appname, callback) {
             } else {
               callback(200, {"appname": []});
             }
+            return;
                 
         } finally {
           client.release();

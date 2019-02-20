@@ -8,9 +8,9 @@ function checkBlacklist({subscriber_id, app_id}, callback) {
       try {
         //  select status of blacklist app
         let table =`subscriber_blacklist_apps`;
-        console.log({subscriber_id, app_id});
+        // console.log({subscriber_id, app_id});
         let record =  await client.query(`SELECT blacklist_status FROM ${table} where uuid=($1) and app_id=($2)`,[subscriber_id, app_id]);
-        console.log({record: record.rows[0]});
+        // console.log({record: record.rows[0]});
         //  check blacklist status code
         if ( record.rows[0]) {
             let {blacklist_status} = record.rows[0];
@@ -18,7 +18,7 @@ function checkBlacklist({subscriber_id, app_id}, callback) {
               // true for blacklist status 1
               case 1 :
                 //  it is blacklised app
-                callback (200, {
+                 callback (200, {
                   "is_blacklisted": true
                 });
               //  false for blacklist status 0
@@ -33,6 +33,7 @@ function checkBlacklist({subscriber_id, app_id}, callback) {
         } else {
           callback(204, null);
        }
+       return;
         //  create a record entry for app meta data 
        
       } finally {
@@ -59,7 +60,7 @@ function createBlackList({subscriber_id, app_id , developer_id} , callback) {
 
       if ( record.rows[0]) {
         //  return if record exists
-        callback(302, {"status": "Record already exists!"});
+        return callback(302, {"status": "Record already exists!"});
       } else {
         //  update a subscriber consent method status 0
         let recordResponse = await client.query(`UPDATE ${subscriber_consent_table} SET status=($1) WHERE uuid=($2) and app_id=($3) and developer_id=($4) RETURNING access_token`, [1, subscriber_id, app_id, developer_id]);
@@ -74,7 +75,7 @@ function createBlackList({subscriber_id, app_id , developer_id} , callback) {
         } else {
           callback(204, {"status": "Record Not Found"});
         }
-
+        return;
       }
 
       
@@ -83,7 +84,7 @@ function createBlackList({subscriber_id, app_id , developer_id} , callback) {
     }
   })().catch(e => {
       console.log(e.stack);
-      callback(204, {"status": "Record Not Found"});
+      return callback(204, {"status": "Record Not Found"});
     });
 }
 

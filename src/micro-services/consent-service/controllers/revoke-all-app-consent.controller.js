@@ -8,7 +8,7 @@ module.exports = (req, res) => {
         "error_message": "Bad Request"
       });
     revokeAll(subscriber_id,(status, response) => {
-        res.status(status).send(response);
+        return res.status(status).send(response);
     });
     
 }
