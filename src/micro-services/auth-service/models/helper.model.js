@@ -58,7 +58,8 @@ function  checkBlackListApp({msisdn, app_id}, callback) {
     let consent_base_url= process.env.CONSENT_SERVICE_BASEPATH;
     // get uuid from phone
     verifyUser(msisdn, null, (response) => {
-        if (response.uuid) {
+        console.log({checkBlackList: response});
+        if (response && response.uuid) {
             //  do a query to check blacklist api with uuid and msisdn
             let reqUrl=`${consent_base_url}/blacklist/${response.uuid}/${app_id}`;
             axios.get(reqUrl)

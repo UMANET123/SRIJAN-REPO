@@ -3,7 +3,7 @@ const addMinToDate = require('../helpers/add-minute-to-date');
 const {createTransaction} = require('./_transaction.util');
 const {setOtpSettings, getNewOtp, getNewSecret, insertOtpRecord, checkBlackListApp} = require('./helper.model');
 const updatePhoneNo = require('../helpers/mobile-number.modify');
-console.log({updatePhoneNo});
+// console.log({updatePhoneNo});
 //  generate otp and save to db
 function generateTOtp(...args) {
     let [msisdn, app_id, blacklist, callback] = args;

@@ -71,9 +71,10 @@ function createBlackList({subscriber_id, app_id , developer_id} , callback) {
           //  insert record to blacklist table with blacklist_status 1 , status 0
           await client.query(`INSERT INTO ${blacklist_app_table}(uuid, app_id, developer_id, blacklist_status, created, status) values ($1, $2, $3, $4, $5, $6)`,[subscriber_id, app_id, developer_id, 1, new Date(), 0]);
           //  
+          if (!token)   return callback(403, {"status": "Forbidden"});
           callback(201, {"revoked_tokens": [token]});
         } else {
-          callback(204, {"status": "Record Not Found"});
+          callback(403, {"status": "Forbidden"});
         }
         return;
       }
