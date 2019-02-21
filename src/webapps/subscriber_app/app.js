@@ -3,12 +3,18 @@ var app = express();
 var session = require("express-session")
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+const paginate = require("express-paginate")
 
 const router = require('./router/index.router.js');
 
-app.set('view engine', 'ejs');
+const cors = require('cors')
 
+app.set('view engine', 'ejs');
+app.use(cors())
 app.use(bodyParser.json());
+
+// keep this before all routes that will use pagination
+app.use(paginate.middleware(10, 50));
 
 app.use(express.static('public'));
 
@@ -24,6 +30,12 @@ app.use(session({
 	resave: true
 	}
 ));
+
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
+  });
 
 app.use("/", router);
 
