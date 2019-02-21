@@ -6,48 +6,92 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/jquery.autocomplete.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="../js/consent.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="../js/jquery.autocomplete.js"></script>
+    <script src="../js/dashboard.js"></script>
 </head>
 
 <body>
     <div class="container">
         <div class="col-sm-4">
             <h3>Manage App Permission</h3><a href="/logout">Logout</a>
+            <div class="form-group">
+
+                <input class="form-control autocomplete" id="subscriber_apps" name="subscriber_apps"
+                    placeholder="Search Apps">
+                <div></div>
+            </div>
             <div id="postResultDiv">
             </div>
             <div></div>
             <br>
-            <!-- <div class="class="form-group"">
-                <!-- <div>
-                    <label for="email"> Select All </label><input type="checkbox" id="selectall" />
-                </div> -->
-       
+            <div class="class=" form-group"">
+                <div>
+                    <label for="revoke_all"> Revoke All </label><input type="checkbox" id="selectall" />
+                </div>
 
-        <div class="list-group">
-            <div>
-                <div>Weather App</div>
-                <div>
-                    <ui>
-                        <li>SMS</li>
-                        <li>Location</li>
-                    </ui>
+                <% apps.forEach(function(app){ %>
+                <div class="list-group">
+                    <div>
+                        <div id="<%= app.app_id %><br>"> <%= app.appname %><br></div>
+                        <div>
+
+                            <ul>
+                                <% app.scopes.forEach((scope) => {
+                                  %>
+                                <li><%= scope %></li>
+                                <%}) %>
+                            </ul>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-default" id="accept_consent">Revoke</button>
+                            <button type="button" class="btn btn-default" id="accept_consent">Blacklist</button>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <button type="button" class="btn btn-default" id="accept_consent">Revoke</button>
-                    <button type="button" class="btn btn-default" id="accept_consent">Blacklist</button>
-                </div>
+
+                <% })%>
+
             </div>
-        </div>
-    </div>
-        <div id="getResultDiv">
-            <ul class="list-group">
+            <% if (pageCount > 1) { %>
+            <ul class="pagination">
+                <% if (currentPage > 1) { %>
+                <li><a href="/?page=1">&laquo;</a></li>
+                <% } %>
+                <% var i = 1;
+	            if (currentPage > 5) {
+	                i = +currentPage - 4;
+	            } %>
+                <% if (i !== 1) { %>
+                <li class="disabled"><a href="#">...</a></li>
+                <% } %>
+                <% for (i; i<=pageCount; i++) { %>
+                <% if (currentPage == i) { %>
+                <li class="active"><span><%= i %> <span class="sr-only">(current)</span></span></li>
+                <% } else { %>
+                <li><a href="/dashboard/?page=<%= i %>"><%= i %></a></li>
+                <% } %>
+                <% if (i == (+currentPage + 4)) { %>
+                <li class="disabled"><a href="#">...</a></li>
+                <% break; } %>
+                <% } %>
+                <% if (currentPage != pageCount) { %>
+                <li><a href="/dashboard/?page=<%= pageCount %>">&raquo;</a></li>
+                <% } %>
             </ul>
+            <% } %>
         </div>
-    </div>
 
     </div>
+    </div>
+    <div id='modal_dialog'>
+        <div class='title'>
+        </div>
+        <input type='button' value='yes' id='btnYes' />
+        <input type='button' value='no' id='btnNo' />
     </div>
 </body>
 
