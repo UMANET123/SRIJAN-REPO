@@ -9,7 +9,7 @@ function createConsent(...args) {
     let {subscriber_id, transaction_id, access_token, app_id, developer_id, scopes, appname} = reqBody;
     //  create transaction
     (async () => {
-        if (transaction_id) validateRedirectTxn({subscriber_id, transaction_id, app_id, callback});
+        validateRedirectTxn({subscriber_id, transaction_id, app_id, callback});
         const client = await pool.connect();
         try {
           //  create a record entry for subscriber consent

@@ -31,14 +31,11 @@ function revokeAll(subscriber_id, callback) {
       const client = await pool.connect();
       try {
           let consentTable=`subscriber_consent`;
-          let record = await client.query(`UPDATE ${consentTable} SET scopes=($1), status=($2) WHERE uuid=($3) RETURNING access_token`, [null, 1, subscriber_id ]);
-          console.log({tes: record.rows[0]});
+          let record = await client.query(`UPDATE ${consentTable} SET scopes=($1), status=($2) WHERE uuid=($3) and status=($4) RETURNING access_token`, [ null, 1, subscriber_id, 0]);
+          console.log({tes: record.rows});
           if (record.rows[0]) {
-            let tokenArray = record.rows.map(({access_token}) => {
-              if (!access_token) return access_token;
-            });
-            let isArrayAllNull = tokenArray.every(item => !item);
-            if(! isArrayAllNull) {
+            let tokenArray = record.rows.map(({access_token}) => { if (access_token) return access_token;});
+            if(tokenArray) {
               callback(200, {"revoked_tokens": tokenArray});  
             } else {
               callback(403, {"status": "Forbidden"});

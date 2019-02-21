@@ -63,7 +63,7 @@ function createBlackList({subscriber_id, app_id , developer_id} , callback) {
         return callback(302, {"status": "Record already exists!"});
       } else {
         //  update a subscriber consent method status 0
-        let recordResponse = await client.query(`UPDATE ${subscriber_consent_table} SET status=($1) WHERE uuid=($2) and app_id=($3) and developer_id=($4) RETURNING access_token`, [1, subscriber_id, app_id, developer_id]);
+        let recordResponse = await client.query(`UPDATE ${subscriber_consent_table} SET status=($1) WHERE uuid=($2) and app_id=($3) and developer_id=($4) and status=($5) RETURNING access_token`, [1, subscriber_id, app_id, developer_id, 0]);
         //  on success create a record in blacklist table
         if (recordResponse.rows[0]){
           //  return the token from subscriber_consent table
