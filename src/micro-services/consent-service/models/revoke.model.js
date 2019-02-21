@@ -33,6 +33,7 @@ function revokeAll(subscriber_id, callback) {
           let consentTable=`subscriber_consent`;
           let record = await client.query(`UPDATE ${consentTable} SET scopes=($1), status=($2) WHERE uuid=($3) and status=($4) RETURNING access_token`, [ null, 1, subscriber_id, 0]);
           console.log({tes: record.rows});
+          console.log({tes: record.rows[0]});
           if (record.rows[0]) {
             let tokenArray = record.rows.map(({access_token}) => { if (access_token) return access_token;});
             if(tokenArray) {

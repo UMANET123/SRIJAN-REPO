@@ -23,7 +23,7 @@ function createConsent(...args) {
               // console.log("code passing");
              return callback(302, { "status" : "Record already Exists!"});
             } else {
-                  let old_token = await client.query(`UPDATE ${consent_table} SET scopes=($1), updated=($2) WHERE  uuid=($3) and app_id=($4) and developer_id=($5)  RETURNING access_token`, [JSON.stringify(scopes), createdDate, subscriber_id, app_id, developer_id]);
+                  let old_token = await client.query(`UPDATE ${consent_table} SET scopes=($1), updated=($2), status=($6) WHERE  uuid=($3) and app_id=($4) and developer_id=($5)  RETURNING (SELECT access_token FROM ${consent_table} WHERE uuid=($3) and app_id=($4) and developer_id=($5))`, [JSON.stringify(scopes), createdDate, subscriber_id, app_id, developer_id, 0]);
                   if (old_token.rows[0].access_token) {
                     callback(200, {
                       "old_token": true,
