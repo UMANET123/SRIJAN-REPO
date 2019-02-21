@@ -7,14 +7,15 @@ function revokeSingle({subscriber_id, app_id, developer_id}, callback) {
     const client = await pool.connect();
     try {
         let consentTable=`subscriber_consent`;
-        let record = await client.query(`UPDATE ${consentTable} SET scopes=($1), status=($2) WHERE uuid=($3) and app_id=($4) and developer_id=($5) RETURNING access_token`, [null, 1, subscriber_id, app_id, developer_id ]);
+        let record = await client.query(`UPDATE ${consentTable} SET scopes=($1), status=($2) WHERE uuid=($3) and app_id=($4) and developer_id=($5) and status=($6) RETURNING access_token`, [null, 1, subscriber_id, app_id, developer_id, 0 ]);
         if (record.rows[0]) {
           let {access_token} = record.rows[0];
+          if (!access_token)   return callback(403, {"status": "Forbidden"});
           callback(200, {"revoked_tokens": [access_token]});  
        } else {
-          callback(204, { "status" : "Record Not Found" });
+          callback(403, {"status": "Forbidden"});
         }
-        return;    
+        return;
     } finally {
       client.release();
     }
@@ -30,13 +31,19 @@ function revokeAll(subscriber_id, callback) {
       const client = await pool.connect();
       try {
           let consentTable=`subscriber_consent`;
-          let record = await client.query(`UPDATE ${consentTable} SET scopes=($1), status=($2) WHERE uuid=($3) RETURNING access_token`, [null, 1, subscriber_id ]);
+          let record = await client.query(`UPDATE ${consentTable} SET scopes=($1), status=($2) WHERE uuid=($3) and status=($4) RETURNING access_token`, [ null, 1, subscriber_id, 0]);
+          console.log({tes: record.rows});
           console.log({tes: record.rows[0]});
           if (record.rows[0]) {
-            let tokenArray = record.rows.map(({access_token}) => access_token);
-            callback(200, {"revoked_tokens": tokenArray});  
+            let tokenArray = record.rows.map(({access_token}) => { if (access_token) return access_token;});
+            if(tokenArray) {
+              callback(200, {"revoked_tokens": tokenArray});  
+            } else {
+              callback(403, {"status": "Forbidden"});
+            }
+           
           } else {
-            callback(204, { "status" : "Record Not Found" });
+            callback(403, {"status": "Forbidden"});
           }
         return;     
       } finally {
