@@ -1,0 +1,221 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Auth Service
+  description: |
+    Authorization based on OAuth 2.0 Authorization Grant Type
+    
+schemes:
+  - https
+
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+
+  '/generate/totp':
+    post:
+      tags: 
+        - Generate & Send OTP to Subscriber
+      description: Generate & Send OTP to Subscriber
+      parameters:
+        - name: OtpGenerator
+          in: body
+          description: ''
+          required: true
+          schema:
+            $ref: '#/definitions/GenerateOTPSchema'
+      responses:
+        201:
+          $ref: '#/definitions/GenerateOTPSuccess'
+        400:
+          $ref: '#/definitions/BadRequest'
+        403:
+          $ref: '#/definitions/UnauthorizedApp'
+          
+  '/verify/totp':
+    post:
+      operationId: VerifyOTP
+      tags:
+        - Verify OTP
+      description: Verify OTP
+      
+      parameters:
+        - name: VerifyOtp
+          in: body
+          description: ''
+          required: true
+          schema:
+            $ref: '#/definitions/VerifyOtpSchema'
+      responses:
+        200:
+          $ref: '#/definitions/VerifyOTPSuccess'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/OTPVerficationFails'
+  
+          
+  '/transaction/{transaction_id}/{subscriber_id}/{app_id}':
+    get:
+      operationId: VerifyTransactionID
+      tags:
+        - Validate Transaction
+      description: verify transaction internal api call from any ms to auth ms
+      
+      parameters:
+        - name: transaction_id
+          in: path
+          description: Transaction ID to be validated
+          required: true
+          type: string
+        - name: app_id
+          in: path
+          description: Transaction ID to be validated
+          required: true
+          type: string
+        - name: subscriber_id
+          in: path
+          description: Transaction ID to be validated
+          required: true
+          type: string  
+      responses:
+        200:
+          $ref: '#/definitions/VerifyTransactionSucess'
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/OTPVerficationFails'
+          
+  '/transaction/{transaction_id}/invalidate':
+    put:
+      operationId: validatetransaction
+      tags:
+        - Validate Transaction
+      description: ValidateTransaction
+      
+      parameters:
+        - name: transaction_id
+          in: path
+          description: Transaction ID to be validated
+          required: true
+          type: string
+        - name: verifytransaction
+          in: body
+          schema:
+            $ref: '#/definitions/VerifyTransactionSchema'
+      responses:
+        200:
+          description: ok
+        400:
+          $ref: '#/definitions/BadRequest'
+        401:
+          $ref: '#/definitions/OTPVerficationFails'
+    
+  
+          
+definitions:
+  GenerateOTPSchema:
+    type: "object"
+    properties:
+      msisdn:
+        type: string
+        example: '+639944559933'
+      app_id:
+        type: string
+        example: 'e2274bcab5aa452c7ae03165'
+      blacklist:
+        type: boolean
+        example: true
+  GenerateOTPSuccess:
+    description: Created
+    type: object
+    properties:
+      subscriber_id:
+        type: string
+      otp:
+        type: string
+      app_id:
+        type: string
+    example:
+      subscriber_id: a0040a18-e227-4bca-b5aa-452c7ae03165
+      otp: 12343
+      app_id: 'e2274bcab5aa452c7ae03165' 
+  VerifyOTPSuccess:
+    description: Created
+    type: object
+    properties:
+      transaction_id:
+        type: string
+    example:
+      transaction_id: a0040a18a0040a18a0040a18
+  VerifyOtpSchema:
+    type: "object"
+    properties:
+      subscriber_id:
+        type: string
+        example: a0040a18-e227-4bca-b5aa-452c7ae03165
+      otp:
+        type: integer
+        example: 12345
+      app_id:
+        type: string
+        example: 'e2274bcab5aa452c7ae03165'
+  
+  VerifyTransactionSchema:
+    type: "object"
+    properties:
+      subscriber_id:
+        type: string
+        example: a0040a18-e227-4bca-b5aa-452c7ae03165
+      app_id:
+        type: string
+        example: 'e2274bcab5aa452c7ae03165'        
+      
+  VerifyTransactionSucess:
+    description: ok
+    type: object
+    properties:
+      is_valid:
+        type: boolean
+        example: true
+
+  UnauthorizedApp:
+    description: Unauthorized
+    type: "object"
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: Unauthorized
+      error_message: App is blacklisted
+  BadRequest:
+    description: Bad Request
+    type: "object"
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: BadRequest
+      error_message: Bad Request
+      
+  OTPVerficationFails:
+    description: Unauthorized 
+    type: "object"
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: Unauthorized
+      error_message: OTP Verification Failed
+# Added by API Auto Mocking Plugin
+host: globeslingshot-dev-labs.apigee.net
+basePath: /auth/v1/

@@ -1,0 +1,309 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Subscriber-Dashboard
+  description: |
+    Dashboard Authorization based on OAuth 2.0 Password Credential Grant Type
+    
+schemes:
+  - https
+host: globeslingshot-dev-labs.apigee.net
+basePath: /subscriber/v1
+
+consumes:
+  - application/x-www-form-urlencoded
+produces:
+  - application/json
+
+securityDefinitions:
+  Basic:
+    type: basic
+
+paths:
+          
+  '/generate/otp':
+    post:
+      operationId: GenerateOTP
+      tags: 
+        - Generate & Send OTP to Subscriber
+      description: Generate & Send OTP to Subscriber
+      security: 
+        - Basic: []
+      parameters:
+        - name: msisdn
+          in: formData
+          description: ''
+          required: true
+          type: string
+      responses:
+        201:
+          $ref: '#/definitions/GenerateOTPSuccess'
+        401:
+          $ref: '#/definitions/Unauthorized'
+          
+  '/verify/otp':
+    post:
+      operationId: VerifyOTP
+      tags:
+        - Verify OTP
+      description: Verify OTP
+      security:
+        - Basic: []
+      parameters:
+        - name: subscriber_id
+          in: formData
+          description: ''
+          required: true
+          type: string
+        - name: otp
+          in: formData
+          description: ''
+          required: true
+          type: string
+      responses:
+        201:
+          $ref: "#/definitions/AccessTokenSuccess"
+        400:
+          $ref: "#/definitions/BadRequest"
+        401:
+          $ref: "#/definitions/Unauthorized"
+  
+  '/refresh/token':
+    post:
+      operationId: RefreshAccessToken
+      tags:
+        - "Refresh Access Token"
+      description: "Refresh Access Token"
+      security:
+        - Basic: []
+      parameters:
+        - name: grant_type
+          in: formData
+          description: |
+          required: true
+          type: string
+          enum: 
+            - refresh_token
+        - name: refresh_token
+          in: formData
+          description: |
+          required: true
+          type: string
+      responses:
+        201:
+          $ref: "#/definitions/AccessTokenSuccess"
+        400:
+          $ref: "#/definitions/BadRequest"
+        401:
+          $ref: "#/definitions/Unauthorized"
+  
+  '/consent/{subscriber_id}/list':
+    get:
+      operationId: ConsentList
+      tags:
+        - "Subscriber Consent"
+      description:  "Provide Subscriber Consent"
+      parameters:
+        - in: header
+          name: Authorization
+          description: Access token
+          required: true
+          type: string
+        - in: query
+          name: limit
+          description: maximum number of records to return
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 50
+          default: 10
+        - in: query
+          name: page
+          description: page no
+          type: integer
+          format: int32
+          default: 0
+        - in: query
+          name: appname
+          description: App Name
+          type: string
+        - in: path
+          name: subscriber_id
+          description: Subscriber Id
+          type: string
+          required: true
+      responses:
+        200:
+          $ref: "#/definitions/ConsentListSuccess"
+        400:
+          $ref: "#/definitions/BadRequest"
+        401:
+          $ref: "#/definitions/Unauthorized"
+  
+  '/revoke':
+    delete:
+      operationId: RevokeApp
+      tags: 
+        - Revoke Single App
+      description: Revoke Single App
+      parameters:
+        - in: header
+          name: Authorization
+          description: Access token
+          required: true
+          type: string
+        - in: query
+          name: app_id
+          required: true
+          type: string
+        - in: query
+          name: developer_id
+          required: true
+          type: string
+      responses:
+        200:
+          $ref: '#/definitions/DefaultSuccess'
+        401:
+          $ref: '#/definitions/Unauthorized'
+  
+  '/revoke/all':
+    delete:
+      operationId: RevokeAll
+      tags: 
+        - Revoke All Apps
+      description: Revoke All Apps
+      parameters:
+        - in: header
+          name: Authorization
+          description: Access token
+          required: true
+          type: string
+      responses:
+        200:
+          $ref: '#/definitions/DefaultSuccess'
+        401:
+          $ref: '#/definitions/Unauthorized'
+  
+  '/blacklist/{app_id}':
+    delete:
+      operationId: BlacklistApp
+      tags: 
+        - Blacklist App
+      description: Blacklist App
+      parameters:
+        - in: header
+          name: Authorization
+          description: Access token
+          required: true
+          type: string
+        - name: app_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          $ref: '#/definitions/DefaultSuccess'
+        401:
+          $ref: '#/definitions/Unauthorized'
+          
+definitions:
+  DefaultSuccess:
+    description: OK
+    type: object
+    properties:
+      status:
+        type: string
+    example: 
+      status: success
+      
+  GenerateOTPSuccess:
+    description: Created
+    type: object
+    properties:
+      subscriber_id:
+        type: string
+    example:
+      subscriber_id: a0040a18-e227-4bca-b5aa-452c7ae03165
+  
+  ConsentListSuccess:
+    description: OK
+    type: object
+    properties:
+      page:
+        type: string
+      limit:
+        type: string
+      resultCount:
+        type: number
+      apps:
+        type: array
+        items:
+          type: object
+          properties:
+            app_id:
+              type: string
+            appname: 
+              type: string
+            developer_id: 
+              type: string
+            scopes:
+              type: array
+              items:
+                type: string
+    example:
+      page: '0'
+      limit: '10'
+      resultCount: 1
+      apps:
+        - app_id: "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21"
+          appname: ExampleApp
+          developer_id: ExampleDev
+          scopes:
+            - LOCATION
+            - SMS
+      
+  
+  AccessTokenSuccess:
+    description: Created
+    type: "object"
+    properties:
+      token_type:
+        type: string
+      access_token: 
+        type: string
+      expires_in:
+        type: string
+      refresh_token:
+        type: string
+      refresh_token_expires:
+        type: string  
+    example:
+      token_type: "BearerToken"
+      access_token: "FnyqFzJKZ5hrSB9JARCSpt90tgPN"
+      expires_in: "3599"
+      refresh_token: "rJiqR7uA0mA1IFgBKcDlvwXBNLj6850Z"
+      refresh_token_expires: "5399"
+  
+  BadRequest:
+    description: Bad Request
+    type: "object"
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: BadRequest
+      error_message: Bad Request
+      
+  Unauthorized:
+    description: Unauthorized
+    type: object
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: Unauthorized
+      error_message: Invalid Client ID
