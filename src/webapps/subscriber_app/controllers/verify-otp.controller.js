@@ -2,7 +2,13 @@
 const { NODE_SETTINGS, APIGEE_CREDS: { apigeeBaseURL }, APIGEE_CREDS: { clientID }, APIGEE_CREDS: { clientSecret }, APIGEE_ENDPOINTS: { verifyOTP } } = require("../config/environment")
 
 var request = require('request');
+var generate_key = function() {
+    var sha = crypto.createHash('sha256');
+    sha.update(Math.random().toString());
+    return sha.digest('hex');
+};
 var session = require("express-session")
+
 module.exports = function (req, res, next) {
 
     let subscriber_id = req.body.subscriber_id;
@@ -26,27 +32,28 @@ module.exports = function (req, res, next) {
     request(options, function (error, response, body) {
         if (error) throw new Error(error);
         console.log(response.statusCode)
-        console.log()
-
         var res_data = {} 
         res_data.statusCode = response.statusCode
-        console.log(response.body)
         if (response.statusCode == 201) {
              sess = req.session;
-             sess.sessionid = subscriber_id
-             sess.access_token = response.body.access_token
-             sess.token_type = response.body.token_type
-             sess.expires_in = response.body.expires_in
-             sess.refresh_token = response.body.refresh_token
-             sess.refresh_token_expires_in = response.body.refresh_token_expires_in
+             body_data = JSON.parse(body)  
+             sess.sessionid = subscriber_id + body_data['expires_in']
+             sess.access_token = body_data['access_token']
+             sess.token_type = body_data['token_type']
+             sess.expires_in = body_data['expires_in']
+             sess.refresh_token = body_data['refresh_token']
+             sess.refresh_token_expires_in = body_data['refresh_token_expires_in']
              sess.subscriber_id = subscriber_id
-             console.log(subscriber_id)
+             req.session.save(function(){
+                res.send(res_data)
+             });
         }
         else {
              
              res_data.error_message = 'Invalid OTP.'
+             res.send(res_data)
+        
          }
-        res.send(res_data)
         
     });
 }

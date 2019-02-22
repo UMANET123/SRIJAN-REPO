@@ -22,7 +22,15 @@
 
                 <input class="form-control autocomplete" id="subscriber_apps" name="subscriber_apps"
                     placeholder="Search Apps">
-                <div></div>
+                <div>
+                    <div class="form-group">
+                        <label for="short_by_date">Example select</label>
+                        <select class="form-control" id="short_by_date">
+                            <option>Date Asc</option>
+                            <option>Date Desc</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div id="postResultDiv">
             </div>
@@ -30,9 +38,9 @@
             <br>
             <div class="class=" form-group"">
                 <div>
-                    <label for="revoke_all"> Revoke All </label><input type="checkbox" id="selectall" />
+                    <button type="button" class="btn btn-default" id="revoke_all">Revoke All</button>
                 </div>
-
+                <% if (itemCount > 1) { %>
                 <% apps.forEach(function(app){ %>
                 <div class="list-group">
                     <div>
@@ -54,12 +62,14 @@
                 </div>
 
                 <% })%>
-
+                <% } else { %>
+                    <div>No apps installed.</div>
+                    <% }  %>
             </div>
             <% if (pageCount > 1) { %>
             <ul class="pagination">
                 <% if (currentPage > 1) { %>
-                <li><a href="/?page=1">&laquo;</a></li>
+                <li><a href="/dashboard?page=1&limit=<%= limit %>&appname=<%= appname %>">&laquo;</a></li>
                 <% } %>
                 <% var i = 1;
 	            if (currentPage > 5) {
@@ -72,14 +82,14 @@
                 <% if (currentPage == i) { %>
                 <li class="active"><span><%= i %> <span class="sr-only">(current)</span></span></li>
                 <% } else { %>
-                <li><a href="/dashboard/?page=<%= i %>"><%= i %></a></li>
+                <li><a href="/dashboard?page=<%= i %>&limit=<%= limit %>&appname=<%= appname %>"><%= i %></a></li>
                 <% } %>
                 <% if (i == (+currentPage + 4)) { %>
                 <li class="disabled"><a href="#">...</a></li>
                 <% break; } %>
                 <% } %>
                 <% if (currentPage != pageCount) { %>
-                <li><a href="/dashboard/?page=<%= pageCount %>">&raquo;</a></li>
+                <li><a href="/dashboard?page=<%= pageCount %>&limit=<%= limit %>&appname=<%= appname %>">&raquo;</a></li>
                 <% } %>
             </ul>
             <% } %>
