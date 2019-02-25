@@ -1,0 +1,174 @@
+button {
+  background: #00afec;
+  padding: 0.6em 2em;
+  border-radius: 20px;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: "Roboto-Regular"; }
+  button:focus {
+    outline: none; }
+
+main {
+  background: url("../images/login-bg.png") no-repeat scroll 0 0 transparent; }
+
+.login-form-container {
+  padding: 5em 5em 3em;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  min-height: calc(100vh - 90px);
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between; }
+  .login-form-container .login-form {
+    background: #fff;
+    width: 40%;
+    height: 410px;
+    max-width: 300px;
+    border-top-left-radius: 35px;
+    border-bottom-right-radius: 35px; }
+    .login-form-container .login-form h3 {
+      border-top-left-radius: 35px;
+      background-color: #ededed;
+      color: #000;
+      margin: 0;
+      padding: 1em 1em;
+      text-align: center; }
+  .login-form-container .login-form-image {
+    width: 50%;
+    background: url("../images/login-image.png") no-repeat scroll center center transparent;
+    background-size: 60%; }
+  .login-form-container button {
+    width: 100%; }
+
+.generate-otp {
+  text-align: center;
+  margin-bottom: 1em; }
+  .generate-otp a:nth-child(2):before {
+    content: " / "; }
+
+.helper-text {
+  color: #999999;
+  font-size: 11px; }
+
+@font-face {
+  font-family: 'Roboto-Regular';
+  src: url("../fonts/Roboto-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Roboto-Light';
+  src: url("../fonts/Roboto-Light.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Roboto-Bold';
+  src: url("../fonts/Roboto-Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Roboto-Medium';
+  src: url("../fonts/Roboto-Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal; }
+
+body {
+  margin: 0;
+  font-family: "Roboto-Regular";
+  font-size: 14px;
+  height: 100%; }
+
+a {
+  color: #00afec;
+  font-size: 14px;
+  text-decoration: none; }
+
+.container {
+  max-width: 1280px;
+  width: 100%; }
+
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box; }
+
+header {
+  background: #ededed; }
+
+.logo img {
+  height: 40px;
+  width: auto; }
+
+.header-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 1.4em 1em; }
+
+.form-fields {
+  padding: 2em 1em; }
+  .form-fields input[type="text"] {
+    border: 1px solid #999999;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0; }
+    .form-fields input[type="text"]:hover, .form-fields input[type="text"]:focus {
+      outline: none; }
+    .form-fields input[type="text"]:focus {
+      border: 1px solid #00afec; }
+
+.form-group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  margin-bottom: 20px; }
+  .form-group label {
+    font-family: "Roboto-Medium";
+    color: #151515; }
+
+.error {
+  color: #f53d34;
+  font-size: 12px; }
+  .error:first-child {
+    margin-top: 0; }
+
+.footer-menu {
+  padding: 1em 1em 3em; }
+  .footer-menu ul {
+    margin: 0;
+    padding: 0;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    color: #fff;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    list-style: none; }
+  .footer-menu li {
+    padding: 0 1.7em;
+    position: relative; }
+    .footer-menu li:not(:last-child):after {
+      content: "|";
+      position: absolute;
+      right: 0;
+      top: 0; }
+    .footer-menu li a {
+      color: #fff; }
