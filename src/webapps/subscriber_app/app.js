@@ -30,7 +30,7 @@ app.use(session({
 	resave: true,
 	saveUninitialized: true,
 	name: 'wakanda',
-	cookie: { maxAge: 36000, path: '/'}
+	cookie: { maxAge: null, path: '/'}
 }
 ));
 

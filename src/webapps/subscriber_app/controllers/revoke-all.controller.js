@@ -22,7 +22,6 @@ module.exports = function (req, res, next) {
             Authorization: authorizationHeaderString,
             'Content-Type': 'application/x-www-form-urlencoded'
         }
-        
     };
     request(options, function (error, response, body) {
         if (error) throw new Error(error);

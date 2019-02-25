@@ -10,6 +10,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script src="../js/jquery.autocomplete.js"></script>
     <script src="../js/dashboard.js"></script>
 </head>
@@ -42,11 +44,10 @@
                 </div>
                 <% if (itemCount > 1) { %>
                 <% apps.forEach(function(app){ %>
-                <div class="list-group">
-                    <div>
-                        <div id="<%= app.app_id %><br>"> <%= app.appname %><br></div>
-                        <div>
-
+                <div class="list-group subscribers_apps">
+                    <div class="developer_id" id="<%= app.developer_id%>">
+                        <div class="app_id" id="<%= app.app_id %>"> <%= app.appname %></div>
+                        <div class="scopes_list">
                             <ul>
                                 <% app.scopes.forEach((scope) => {
                                   %>
@@ -55,16 +56,17 @@
                             </ul>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-default" id="accept_consent">Revoke</button>
-                            <button type="button" class="btn btn-default" id="accept_consent">Blacklist</button>
+                            <button type="button" class="btn btn-default revoke_app" id="accept_consent">Revoke</button>
+                            <button type="button" class="btn btn-default blacklist_app"
+                                id="accept_consent">Blacklist</button>
                         </div>
                     </div>
                 </div>
 
                 <% })%>
                 <% } else { %>
-                    <div>No apps installed.</div>
-                    <% }  %>
+                <div>No apps installed.</div>
+                <% }  %>
             </div>
             <% if (pageCount > 1) { %>
             <ul class="pagination">
@@ -89,19 +91,14 @@
                 <% break; } %>
                 <% } %>
                 <% if (currentPage != pageCount) { %>
-                <li><a href="/dashboard?page=<%= pageCount %>&limit=<%= limit %>&appname=<%= appname %>">&raquo;</a></li>
+                <li><a href="/dashboard?page=<%= pageCount %>&limit=<%= limit %>&appname=<%= appname %>">&raquo;</a>
+                </li>
                 <% } %>
             </ul>
             <% } %>
         </div>
 
     </div>
-    </div>
-    <div id='modal_dialog'>
-        <div class='title'>
-        </div>
-        <input type='button' value='yes' id='btnYes' />
-        <input type='button' value='no' id='btnNo' />
     </div>
 </body>
 
