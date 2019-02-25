@@ -1,0 +1,51 @@
+@import "var";
+
+main {
+    background: url('../images/login-bg.png') no-repeat scroll 0 0 transparent;
+}
+
+.login-form-container {
+    padding: 5em 5em 3em;
+    display: flex;
+    min-height: calc(100vh - 90px);
+    justify-content: space-between;
+    .login-form {
+        background: $white;
+        width: 40%;
+        height: 410px;
+        max-width: 300px;
+        border-top-left-radius: 35px;
+        border-bottom-right-radius: 35px;
+        h3 {
+            border-top-left-radius: 35px;
+            background-color: $header-bg;
+            color: $black;
+            margin: 0;
+            padding: 1em 1em;
+            text-align: center;
+        }
+    }
+    .login-form-image {
+        width: 50%;
+        background: url('../images/login-image.png') no-repeat scroll center center transparent;
+        background-size: 60%;
+    }
+    button {
+        width: 100%;
+    }
+}
+
+.generate-otp {
+    text-align: center;
+    margin-bottom: 1em;
+    a:nth-child(2) {
+        &:before {
+            content: " / ";
+        }
+    }
+}
+
+.helper-text {
+    color: $grey;
+    font-size: 11px;
+}

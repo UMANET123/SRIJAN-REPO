@@ -1,0 +1,34 @@
+@import "var";
+
+.form-fields {
+    padding: 2em 1em;
+    input[type="text"] {
+        border: 1px solid $grey;
+        border-radius: 5px;
+        padding: 10px;
+        margin: 5px 0;
+        &:hover,
+        &:focus {
+            outline: none;
+        }
+        &:focus {
+            border: 1px solid $links;
+        }
+    }
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    label {
+        font-family: $roboto-medium;
+        color: $form_labels;
+    }
+}
+.error {
+    color: $red;
+    font-size: 12px;
+    &:first-child {
+        margin-top: 0;
+    }
+}
