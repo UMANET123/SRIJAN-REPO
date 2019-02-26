@@ -108,11 +108,19 @@ function getConsentList(subscriber_id, limit=10, page=0, appname=null, callback)
       try {
           let offset = (page * limit);
           let record = null;
+          let totalRecords = null;
           if (appname) {
+            // Total Records
+             totalRecords = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
+             and appname like ($2) and status=($3) and scopes IS NOT NULL`, [subscriber_id, '%'+appname+'%', 0]);
+            
             //  get consent app list query by appname
             record = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
-            and appname=($2) and status=($3) and scopes IS NOT NULL LIMIT ($4) OFFSET ($5)`, [subscriber_id, appname, 0, limit, offset]);
+            and appname like ($2) and status=($3) and scopes IS NOT NULL LIMIT ($4) OFFSET ($5)`, [subscriber_id, '%'+appname+'%', 0, limit, offset]);
           } else {
+             totalRecords = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
+             and status=($2) and scopes IS NOT NULL`, [subscriber_id, 0]);
+            
             //  get consent app list query without appname
             record = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
             and status=($2) and scopes IS NOT NULL LIMIT ($3) OFFSET ($4)`, [subscriber_id, 0, limit, offset]);
@@ -122,7 +130,7 @@ function getConsentList(subscriber_id, limit=10, page=0, appname=null, callback)
             return callback(200, {
               page,
               limit,
-              resultcount: record.rows.length,
+              resultcount: totalRecords.rows.length,
               apps: record.rows
             });  
           } else {
