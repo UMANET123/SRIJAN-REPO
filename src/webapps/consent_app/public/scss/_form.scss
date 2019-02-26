@@ -25,10 +25,13 @@
         color: $form_labels;
     }
 }
-.error {
+.error, .success {
     color: $red;
     font-size: 12px;
     &:first-child {
         margin-top: 0;
     }
+}
+.success {
+    color: green;
 }

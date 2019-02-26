@@ -5,48 +5,52 @@
     <title>Scopes </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="../js/consent.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
-    <div class="container">
-        <div class="col-sm-4">
-            <h3>This app would like to access your mobile number to allow:</h3><a href="/logout">Logout</a>
-            <div id="postResultDiv">
+    <!-- <header>
+        <div class="header-wrap container">
+            <div class="logo">
+                <img src="../images/logo.png" alt="Globe">
             </div>
-            <div></div>
-            <br>
-            <div class="class=" form-group"">
-                <!-- <div>
-                    <label for="email"> Select All </label><input type="checkbox" id="selectall" />
-                </div> -->
-
-            </div>
-            <div class="list-group">
-                <% scopes.forEach(function(scope){ %>
-
-                <div class="list-group-item">
-                    <label for="email"> <%=scope%> </label> <input class="consents" checked name="consents" type="checkbox"
-                        value="<%=scope%>" />
+            <div class="user-details"></div>
+        </div>
+    </header> -->
+    <main>
+        <div class="login-form-container container modal-box-wrapper">
+            <div class="modal-box">
+                <div class="modal-box-header">
+                    <h3>This app would like to access your mobile number to allow:</h3>
                 </div>
-
-                <% })%>
-            </div>
-            <div>
-                <button type="button" class="btn btn-default" id="accept_consent">Accept</button>
-                <button type="button" class="btn btn-default" id="reject" value="<%=redirect_uri%>">Reject</button>
-            </div>
-            <div id="getResultDiv">
-                <ul class="list-group">
-                </ul>
+                <div class="modal-box-body">
+                    <div id="postResultDiv" class="error-container">
+                    </div>
+                    <% scopes.forEach(function(scope){ %>
+                    <div class="form-group">
+                        <span class="label-text">
+                            <label for="email"> <%=scope%> </label>
+                        </span>
+                        <span class="apple-switch-botton">
+                            <input class="apple-switch" checked name="consents" type="checkbox" value="<%=scope%>">
+                        </span>
+                    </div>
+                    <% })%>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-default" id="accept_consent">Accept</button>
+                    <button type="button" class="btn btn-default" id="reject" value="<%=redirect_uri%>">Reject</button>
+                </div>
+                <div id="getResultDiv">
+                    <ul class="list-group">
+                    </ul>
+                </div>
             </div>
         </div>
-
-    </div>
-    </div>
+    </main>
 </body>
 
 </html>

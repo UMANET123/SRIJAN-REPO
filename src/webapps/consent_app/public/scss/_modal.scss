@@ -1,0 +1,106 @@
+@import "mixins";
+
+.modal-box {
+    background: linear-gradient(0deg, rgba(230,233,238,1) 0%, rgba(246,247,249,1) 100%);
+    max-width: 350px;
+    border-radius: 6px;
+    position: relative;
+}
+
+.modal-box-header {
+    padding: 2em;
+    border-bottom: 1px solid darken($signIn_header, 10%);
+    h3 {
+        margin: 0;
+        font-size: 20px;
+        text-align: center;
+        font-family: $roboto-light;
+    }
+}
+
+.modal-box-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-box-body {
+    height: 330px;
+    overflow: scroll;
+    padding-bottom: 3em;
+    .form-group {
+        padding: 1em;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        &:not(:last-child) {
+            border-bottom: 1px solid darken($signIn_header, 10%);
+        }
+        label {
+            font-size: 18px;
+            font-family: $roboto-regular;
+        }
+    }
+    .error-container {
+        .error {
+            padding: 1em 1em 0;
+        }
+    }
+}
+
+.modal-actions {
+    display: flex;
+    border-top: 1px solid darken($signIn_header, 10%);
+    background: linear-gradient(0deg, rgba(230,233,238,1) 0%, rgba(246,247,249,1) 100%);
+    padding: 10px 0;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    button {
+        background: transparent;
+        width: 50%;
+        color: $links;
+        font-size: 18px;
+        font-family: $roboto-light;
+        padding: 4px;
+        &:first-child {
+            &:after {
+                content: "";
+                width: 1px;
+                height: 100%;
+                position: absolute;
+                left: 50%;
+                top: 0;
+                background: darken($signIn_header, 10%);
+            }
+        }
+    }
+}
+
+.apple-switch {
+    position: relative;
+    appearance: none; outline: none;
+    width: 50px; height: 30px;
+    background-color: #ffffff; border: 1px solid #D9DADC;
+    border-radius: 50px; box-shadow: inset -20px 0 0 0 #ffffff;
+    transition-duration: 200ms;
+    &:after {
+        content: "";
+        position: absolute;
+        top: 1px; left: 1px;
+        width: 26px; height: 26px;
+        background-color: transparent;
+        border-radius: 50%; box-shadow: 2px 4px 6px rgba(0,0,0,0.2);
+    }
+    &:checked {
+        border-color: #4ED164;
+        box-shadow: inset 20px 0 0 0 #4ED164;
+        &:after {
+            left: 20px;
+            box-shadow: -2px 4px 3px rgba(0,0,0,0.05);
+        }
+    }
+}

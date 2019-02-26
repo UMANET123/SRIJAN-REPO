@@ -1,8 +1,11 @@
+html, body, main {
+    height: 100%;
+}
+
 body {
     margin: 0;
     font-family: $roboto-regular;
     font-size: 14px;
-    height: 100%;
 }
 
 a {
