@@ -47,7 +47,7 @@ router.get("/dashboard", async (req, res, next) => {
 				if (itemCount == 0) {
 					pageCount = 0;
 				} else {
-					pageCount = Math.ceil(itemCount / 1);
+					pageCount = Math.ceil(itemCount / 5);
 				}
 				if (!getData.page) { page_no = 0 } else { page_no = parseInt(getData.page) }
 				var currentPage = page_no + 1

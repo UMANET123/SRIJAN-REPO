@@ -6,7 +6,7 @@ var session = require("express-session")
 
 async function consentList(req, res, sub_access_token) {
     var { page, limit, appname } = req.query;
-    if (!limit) limit = '10';
+    if (!limit) limit = '5';
     // if (!page)  page = '0'; else page = parseInt(page) - 1;
     page = (!page)? '0':(parseInt(page)-1);
     var authorizationHeaderString = 'Bearer ' + sub_access_token;
