@@ -63,7 +63,7 @@ function updateConsent(...args) {
        const client = await pool.connect();
        try {
            let table=`subscriber_consent`;
-           let record = await client.query(`UPDATE ${table} SET scopes=($1), access_token=($2), status=($7), updated=($3) WHERE uuid=($4) and app_id=($5) and developer_id=($6)  RETURNING (SELECT access_token FROM ${table} WHERE uuid=($4) and app_id=($5) and developer_id=($6))`, [JSON.stringify(scopes), access_token, new Date(), subscriber_id, app_id, developer_id, 0]);
+           let record = await client.query(`UPDATE ${table} SET scopes=($1), access_token=($2), status=($7), updated=($3) WHERE uuid=($4) and app_id=($5) and developer_id=($6)  RETURNING (SELECT access_token FROM ${table} WHERE uuid=($4) and app_id=($5) and developer_id=($6) limit 1)`, [JSON.stringify(scopes), access_token, new Date(), subscriber_id, app_id, developer_id, 0]);
            if (record.rows[0]) {
              console.log('consent updated');
               let invalidateTxnUrl =`${process.env.AUTH_SERVICE_BASEPATH}/transaction/${transaction_id}/invalidate`; 
