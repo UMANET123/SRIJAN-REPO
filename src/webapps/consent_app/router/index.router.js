@@ -7,26 +7,28 @@ const generateTotpController = require('../controllers/generate-otp.controller')
 const verifyTotpController = require('../controllers/verify-otp.controller');
 const updateConsentController = require('../controllers/update-consent.controller');
 
-var sess;
+
 router.get("/", function (req, res) {
 	sess = req.session;
-	
+	console.log(sess)
 	if (sess.sessionid){
 		res.redirect('/consent');
 	} else {
-		res.render('index') 
-		// res.sendFile(viewspath + "index.html");
+		var client_id = req.query.client_id
+		if (!client_id) client_id = null
+		console.log(client_id)
+		res.render('index', {client_id: client_id}) 
 	}
 });
-
 router.get("/consent", function (req, res) {
 	sess = req.session;
 	if (sess.sessionid && typeof req.query.scope != 'undefined'){
 		var scope_arr = req.query.scope.split(', ')
 		var scopes = scope_arr
 		sess.redirect_uri = req.query.redirect_uri
+		sess.transaction_id = req.query.transaction_id
 		res.render('consent', {scopes : scopes, redirect_uri: req.query.redirect_uri}) 
-		res.sendFile(viewspath + "consents.html");
+	
 	} else {
 		res.redirect('/logout');
 	}

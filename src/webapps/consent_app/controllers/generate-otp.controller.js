@@ -5,20 +5,21 @@ var request = require('request');
 module.exports = function (req, res, next) {
     var subscribers = [];
     let phone_no = req.body.phone_no;
-    
-    var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
-    var authorizationHeaderString = 'Basic ' + encodedData;
-    console.log(authorizationHeaderString);
+    let client_id = req.body.client_id
+   // var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
+   // var authorizationHeaderString = 'Basic ' + encodedData;
+  //  console.log(authorizationHeaderString);
     var options = {
         method: 'POST',
         url: `${apigeeBaseURL}/${generateOTP}`,
         headers:
         {
             'cache-control': 'no-cache',
-            Authorization: authorizationHeaderString,
+         //   Authorization: authorizationHeaderString,
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        form: { msisdn: phone_no }
+        form: { msisdn: phone_no },
+        qs: { client_id: client_id },
     };
 
     request(options, function (error, response, body) {
@@ -30,6 +31,7 @@ module.exports = function (req, res, next) {
         if (response.statusCode == 201) {
             res_data.message = 'OTP has send to your mobile successfully.'
             res_data.subscriber_id = body_data['subscriber_id']
+            res_data.otp = body_data['otp']
             
         }
         else {

@@ -7,20 +7,19 @@ module.exports = function (req, res, next) {
 
     let subscriber_id = req.body.subscriber_id;
     let otp = req.body.otp;
-
-    var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
-    var authorizationHeaderString = 'Basic ' + encodedData;
-    console.log(authorizationHeaderString);
+    let client_id = req.body.client_id
+    
     var options = {
         method: 'POST',
         url: `${apigeeBaseURL}/${verifyOTP}`,
         headers:
         {
             'cache-control': 'no-cache',
-            Authorization: authorizationHeaderString,
+          //  Authorization: authorizationHeaderString,
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        form: { subscriber_id: subscriber_id, otp: otp }
+        form: { subscriber_id: subscriber_id, otp: otp },
+        qs: { client_id: client_id }
     };
 
     request(options, function (error, response, body) {
@@ -35,7 +34,9 @@ module.exports = function (req, res, next) {
              sess = req.session;
              sess.sessionid = subscriber_id
              sess.subscriber_id = subscriber_id
+             sess.client_id = client_id
              console.log(subscriber_id)
+             console.log(response.headers.location)
              res_data.redirect = response.headers.location
         }
         else {

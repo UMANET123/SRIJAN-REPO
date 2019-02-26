@@ -32,8 +32,8 @@
                     <div class="form-group">
                         <label for="Phoneno">Phone No:</label>
                         <input type="text" class="form-control" id="phone_no" placeholder="Phone No" />
-                        <small id="emailHelp" class="form-text text-muted helper-text">Please enter Globe no. with 0 or 63 in the
-                            prefix. e.g - 639953xxxxxx.</small>
+                        <input type="text" class="form-control" id="client_id" placeholder="Client Id" value="<%= client_id %>" />
+                        <small id="emailHelp" class="form-text text-muted helper-text">Please enter Globe no starting with 63. e.g - 639953xxxxxx.</small>
                         <input type="hidden" class="form-control" class="generate_otp" id="subscriber_id"
                             placeholder="Subscriber Id" />
                     </div>
@@ -44,7 +44,6 @@
                     <div class="login-actions">
                         <div class="generate-otp">
                             <a href="#" class="generate_otp" id="generate_otp">Generate OTP</a>
-                            <a href="#" class="resend_otp" id="resend_otp">Resend OTP</a>
                         </div>
                         <button type="submit" class="btn btn-default" id="verify_otp">Login</button>
                     </div>
