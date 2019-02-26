@@ -20,9 +20,11 @@ const APIGEE_CREDS = {
 const APIGEE_ENDPOINTS = {
     generateOTP : "dashboard/v1/generate/otp",
     verifyOTP: "dashboard/v1/verify/otp",
-    consentList: "dashboard/v1/consent",
+    consentApps: "dashboard/v1/consent",
     refreshToken: "dashboard/v1/refresh/token",
-    revokeApp: "dashboard/v1/revoke/:client_id",
+    revokeApp: "dashboard/v1/revoke",
+    revokeAllApps: "dashboard/v1/revoke/all",
+    blacklist: "dashboard/v1//blacklist/:app_id",
 
 }
 

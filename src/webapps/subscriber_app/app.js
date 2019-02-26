@@ -24,18 +24,21 @@ router.use(function (req, res, next) {
 	console.log("/" + req.method);
 	next();
 });
-
+app.use(cookieParser());
 app.use(session({
-	secret: 'wakanda-subscriberapp', 
-	resave: true
-	}
+	secret: 'wakanda-subscriberapp',
+	resave: true,
+	saveUninitialized: true,
+	name: 'wakanda',
+	cookie: { maxAge: null, path: '/'}
+}
 ));
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
-  });
+});
 
 app.use("/", router);
 
