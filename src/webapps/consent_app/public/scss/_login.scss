@@ -1,4 +1,5 @@
 @import "var";
+@import "mixins";
 
 main {
     background: url('../images/login-bg.png') no-repeat scroll 0 0 transparent;
@@ -7,12 +8,15 @@ main {
 .login-form-container {
     padding: 5em 5em 3em;
     display: flex;
-    min-height: calc(100vh - 90px);
+    // min-height: calc(100vh - 90px);
     justify-content: space-between;
+    @include mobile {
+        justify-content: center;
+        padding: 2em 1em;
+    }
     .login-form {
         background: $white;
-        width: 40%;
-        height: 410px;
+        min-height: 410px;
         max-width: 300px;
         border-top-left-radius: 35px;
         border-bottom-right-radius: 35px;
@@ -28,7 +32,11 @@ main {
     .login-form-image {
         width: 50%;
         background: url('../images/login-image.png') no-repeat scroll center center transparent;
-        background-size: 60%;
+        background-size: 75%;
+        @include mobile {
+            background: none;
+            display: none;
+        }
     }
     button {
         width: 100%;
