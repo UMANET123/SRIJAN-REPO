@@ -43,6 +43,25 @@ $(document).ready(function () {
           btnClass: 'btn-blue',
           keys: ['enter', 'shift'],
           action: function () {
+            $.ajax({
+              type : "POST",
+              contentType : "application/json",
+              url : "/api/revokeallapps",
+              data : '',
+              dataType : 'json',
+              success : function(response) {
+                console.log(response)
+                if(subsciber['statusCode'] == 200){
+                  window.location.href = window.location.href
+                } else {
+                  $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
+                }
+                
+              },
+              error : function(e) {
+                console.log("ERROR: ", e);
+              }
+            });
           }
         },
         cancel: function () {
@@ -79,7 +98,7 @@ $(document).ready(function () {
               success : function(response) {
                 console.log(response)
                 if(subsciber['statusCode'] == 200){
-                  location.reload();
+                  window.location.href = window.location.href
                 } else {
                   $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
                 }
@@ -97,7 +116,7 @@ $(document).ready(function () {
     });
   }
 
-  function dialogBlacklist() {
+  function dialogBlacklist(dev_id,app_id,appname) {
     $.confirm({
       escapeKey: 'cancel',
       title: 'Blacklist App',
@@ -109,6 +128,10 @@ $(document).ready(function () {
           btnClass: 'btn-blue',
           keys: ['enter', 'shift'],
           action: function () {
+            var paramsdata = {
+              app_id : app_id,
+              developer_id : dev_id
+            }
             $.ajax({
               type : "POST",
               contentType : "application/json",
@@ -118,7 +141,7 @@ $(document).ready(function () {
               success : function(response) {
                 console.log(response)
                 if(subsciber['statusCode'] == 200){
-                  location.reload();
+                  window.location.href = window.location.href
                 } else {
                   $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
                 }
@@ -135,51 +158,52 @@ $(document).ready(function () {
     });
   }
   /**
-   * Autocomplete States
+   * Autocomplete Apps
    */
+  function getApps(request, response){
+    var all_apps = []
+   $.ajax({
+    //  type: "GET",
+    //  contentType: "application/json",
+      url: "/api/search",
+      dataType: 'json',
+      success: function (success) {
+          // DO POST
+        all_apps = success['appname']
+        
+        
+
+        
+
+         
+        //   response($.map(success, function(item) {
+        //     console.log(item.value)
+        //     return {
+        //         label: item.value,//text comes from a collection of mongo
+        //         value: item
+        //     };
+        // }));
+      },
+      error: function (e) {
+          console.log("ERROR: ", e);
+      }
+
+  });
+    
+    return all_apps;
+  }
   function acSubscriberApps() {
+    
+    
+   $("#subscriber_apps").autocomplete({
+      source: function (req,res){
+        getApps()
+      },
+      minLength: 3
+      
 
-    var states = [
-      'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
-      'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia',
-      'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
-      'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland',
-      'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi',
-      'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
-      'New Jersey', 'New Mexico', 'New York', 'North Carolina',
-      'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania',
-      'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee',
-      'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
-      'West Virginia', 'Wisconsin', 'Wyoming'
-    ];
-
-    $("#subscriber_apps").autocomplete({
-      source: [states]
     });
 
   }
-  // getAllApps()
-
-  // function getAllApps() {
-
-
-  //     // $.ajax({
-  //     //     type: "GET",
-  //     //     contentType: "application/json",
-  //     //     url: window.location + "api/validateMobileNo",
-  //     //     data: { phone_no: phone_no },
-  //     //     dataType: 'json',
-  //     //     success: function (success) {
-  //     //         // DO POST
-  //     //         console.log(success)
-  //     //     },
-  //     //     error: function (e) {
-
-  //     //         $("#postResultDiv").html("<p class='error'>" +
-  //     //             "Invalid Phone No/OTP<br>")
-  //     //         console.log("ERROR: ", e);
-  //     //     }
-  //     // });
-
-  // }
+  
 });

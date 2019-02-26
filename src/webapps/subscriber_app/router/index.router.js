@@ -10,12 +10,14 @@ const revokeAppController = require('../controllers/revoke.controller');
 const revokeAllAppsController = require('../controllers/revoke-all.controller');
 const blacklistController = require('../controllers/blacklist.controller');
 const consentList = require('../controllers/app-listing.controller')
+const searchApps = require('../controllers/search-apps.controller')
 // Search will go here
 router.post('/api/generate/otp', generateTotpController);
 router.post('/api/verify/otp', verifyTotpController);
 router.post('/api/revokeapp', revokeAppController);
-//router.post('/api/revokeallapps', revokeAllAppsController);
-// router.post('/api/blacklist', blacklistController);
+router.post('/api/revokeallapps', revokeAllAppsController);
+router.post('/api/blacklist', blacklistController);
+router.get('/api/search', searchApps);
 
 
 router.get("/", function (req, res) {
@@ -33,14 +35,15 @@ router.get("/dashboard", async (req, res, next) => {
 	sess = req.session;
 	console.log({ sess })
 	if (req.session.sessionid) {
-
+		console.log(sess.access_token)
 		const getData = await consentList(req, res, sess.access_token)
+		console.log({getData})
 		try {
 			if (typeof getData !== 'undefined') {
 				itemCount = getData.resultcount
 				var pageCount;
 				var page_no, limit;
-				limit = 10
+				limit = 5
 				var appname = req.query.appname
 				if (!appname) appname = ''
 				itemCount = getData.resultcount

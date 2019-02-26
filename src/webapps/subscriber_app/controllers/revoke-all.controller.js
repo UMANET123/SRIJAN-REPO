@@ -1,17 +1,18 @@
 
 
-const { NODE_SETTINGS, APIGEE_CREDS: { apigeeBaseURL }, APIGEE_CREDS: {  }, APIGEE_CREDS: { clientSecret }, APIGEE_ENDPOINTS: { revokeAllApps } } = require("../config/environment")
+const { NODE_SETTINGS, APIGEE_CREDS: { apigeeBaseURL }, APIGEE_CREDS: { }, APIGEE_CREDS: { clientSecret }, APIGEE_ENDPOINTS: { revokeAllApps } } = require("../config/environment")
 
 var request = require('request');
 var session = require("express-session")
 module.exports = function (req, res, next) {
-    let { app_id, otp, subscriber_id } = req.body;
+    session = req.session
     let sub_access_token = session.access_token
-    let otp = req.body.otp;
+    let subscriber_id = session.subscriber_id
+
     //  var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
-    let app_id = req.body.app_id
+
     // var authorizationHeaderString = 'Basic ' + encodedData;
-    var authorizationHeaderString = 'Basic ' + sub_access_token;
+    var authorizationHeaderString = 'Bearer ' + sub_access_token;
     console.log(authorizationHeaderString);
     var options = {
         method: 'DELETE',
@@ -21,7 +22,11 @@ module.exports = function (req, res, next) {
             'cache-control': 'no-cache',
             Authorization: authorizationHeaderString,
             'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        },
+        qs:
+        {
+            subscriber_id: subscriber_id
+        },
     };
     request(options, function (error, response, body) {
         if (error) throw new Error(error);
