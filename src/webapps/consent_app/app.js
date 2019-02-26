@@ -19,36 +19,15 @@ router.use(function (req, res, next) {
 	next();
 });
 
-// app.get("/", function (req, res) {
-// 	res.sendFile(path + "index.html");
-// });
 
-// app.post("/api/generate/otp", function (req, res) {
-// 	console.log('TOTP generation ' + JSON.parse(req.body));
-// 	var subsciber = {};
-// 	subsciber.phone_no = req.body.phone_no;
-
-
-// 	subscribers.push(subsciber);
-
-// 	return res.send(subsciber);
-// });
-
-// // Verify Otp
-// app.post("/api/verify/otp", function (req, res) {
-// 	console.log('TOTP verification ' + JSON.stringify(req.body));
-// 	var subsciber = {};
-// 	subsciber.subscriber_id = req.body.subscriber_id;
-// 	subsciber.otp = req.body.otp;
-
-// 	subscribers.push(subsciber);
-
-// 	return res.send(subsciber);
-// });
+app.use(cookieParser());
 app.use(session({
-	secret: 'wakanda', 
-	resave: true
-	}
+	secret: 'wakanda-subscriberapp',
+	resave: true,
+	saveUninitialized: true,
+	name: 'wakanda',
+	cookie: { maxAge: null, path: '/'}
+}
 ));
 
 app.use("/", router);

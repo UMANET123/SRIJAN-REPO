@@ -8,7 +8,7 @@ module.exports = function (req, res, next) {
     console.log('subscriber id - ')
     console.log(sess.subscriber_id)
     let scopes = req.body.scopes
-    
+    let client_id = sess.client_id
     var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
     var authorizationHeaderString = 'Basic ' + encodedData;
     console.log(authorizationHeaderString);
@@ -26,9 +26,11 @@ module.exports = function (req, res, next) {
           //  subscriber_consent: '["LOCATION"]',
             subscriber_consent: scopes,
             response_type: 'code',
-            redirect_uri: sess.redirect_uri
+            redirect_uri: sess.redirect_uri,
+            transaction_id: sess.transaction_id
 
-        }
+        },
+        qs: { client_id: client_id }
     };
     console.log(options)
     request(options, function (error, response, body) {
