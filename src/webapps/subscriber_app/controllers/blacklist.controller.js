@@ -10,7 +10,7 @@ module.exports = function (req, res, next) {
     sess = req.session;
     let sub_access_token = sess.access_token
     // var authorizationHeaderString = 'Basic ' + encodedData;
-    var authorizationHeaderString = 'Basic ' + sub_access_token;
+    var authorizationHeaderString = 'Bearer ' + sub_access_token;
     console.log(authorizationHeaderString);
     var options = {
         method: 'DELETE',
@@ -18,8 +18,8 @@ module.exports = function (req, res, next) {
         headers:
         {
             'cache-control': 'no-cache',
-            Authorization: authorizationHeaderString,
-            'Content-Type': 'application/x-www-form-urlencoded'
+             Authorization: authorizationHeaderString,
+            'Content-Type': 'application/json'
         },
         qs:
         {
@@ -27,6 +27,7 @@ module.exports = function (req, res, next) {
             developer_id: developer_id
         },
     };
+    console.log(options)
     request(options, function (error, response, body) {
         if (error) throw new Error(error);
         console.log(response.statusCode)

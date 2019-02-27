@@ -24,7 +24,8 @@ const APIGEE_ENDPOINTS = {
     refreshToken: "dashboard/v1/refresh/token",
     revokeApp: "dashboard/v1/revoke",
     revokeAllApps: "dashboard/v1/revoke/all",
-    blacklist: "dashboard/v1//blacklist/:app_id",
+    blacklist: "dashboard/v1/blacklist",
+    searchApps: "dashboard/v1/search"
 
 }
 

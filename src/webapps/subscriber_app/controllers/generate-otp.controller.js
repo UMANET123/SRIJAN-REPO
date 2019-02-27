@@ -30,6 +30,7 @@ module.exports = function (req, res, next) {
         if (response.statusCode == 201) {
             res_data.message = 'OTP has send to your mobile successfully.'
             res_data.subscriber_id = body_data['subscriber_id']
+            res_data.otp = body_data['otp']
             
         }
         else {
