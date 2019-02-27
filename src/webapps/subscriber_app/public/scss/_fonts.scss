@@ -1,0 +1,44 @@
+$base-font-path: "../fonts";
+@font-face {
+    font-family: 'Roboto-Regular';
+    // src : url('#{$base-font-path}/FSAlbertArabic.eot');
+    // src : url('#{$base-font-path}/FSAlbertArabic.eot#iefix') format('embedded-opentype'),
+    src: url('#{$base-font-path}/Roboto-Regular.ttf') format('truetype');
+    // url('#{$base-font-path}/FSAlbertArabic.woff') format('woff'),
+    // url('#{$base-font-path}/FSAlbertArabic.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto-Light';
+    // src : url('#{$base-font-path}/FSAlbertArabic.eot');
+    // src : url('#{$base-font-path}/FSAlbertArabic.eot#iefix') format('embedded-opentype'),
+    src: url('#{$base-font-path}/Roboto-Light.ttf') format('truetype');
+    // url('#{$base-font-path}/FSAlbertArabic.woff') format('woff'),
+    // url('#{$base-font-path}/FSAlbertArabic.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto-Bold';
+    // src : url('#{$base-font-path}/FSAlbertArabic.eot');
+    // src : url('#{$base-font-path}/FSAlbertArabic.eot#iefix') format('embedded-opentype'),
+    src: url('#{$base-font-path}/Roboto-Bold.ttf') format('truetype');
+    // url('#{$base-font-path}/FSAlbertArabic.woff') format('woff'),
+    // url('#{$base-font-path}/FSAlbertArabic.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto-Medium';
+    // src : url('#{$base-font-path}/FSAlbertArabic.eot');
+    // src : url('#{$base-font-path}/FSAlbertArabic.eot#iefix') format('embedded-opentype'),
+    src: url('#{$base-font-path}/Roboto-Bold.ttf') format('truetype');
+    // url('#{$base-font-path}/FSAlbertArabic.woff') format('woff'),
+    // url('#{$base-font-path}/FSAlbertArabic.svg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

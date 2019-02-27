@@ -1,0 +1,90 @@
+@import "var";
+
+.manage-permission {
+    background: $manage-permission;
+    min-height: 410px;
+    width: 70%;
+    max-width: 600px;
+    border-top-left-radius: 35px;
+    border-bottom-right-radius: 35px;
+    input {
+        width: 100%;
+    }
+    h3 {
+        color: $form_labels;
+        margin-top: 0;
+        font-size: 15px;
+        font-family: $roboto-medium;
+        padding: 1.5em 1.5em 0;
+    }
+    .form-group {
+        margin-bottom: 0;
+        .subscribers_apps {
+
+        }
+    }
+    .search-container {
+        margin-bottom: 1em;
+        padding: 0 1.5em;
+        input {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid lighten($grey, 20%);
+            margin-bottom: 0 !important;
+        }
+        .autocomplete {
+            margin-bottom: 0.6em;
+        }
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+    }
+    button {
+        width: auto;
+        border-radius: 8px;
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+    .subscribers_apps {
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+        border-top: 3px solid $blue;
+        margin-bottom: 1em;
+        .subscribers {
+            padding: 2em 1em;
+        }
+        .action-buttons {
+            padding: 1em;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid darken($header-bg, 10%);
+        }
+        button {
+            margin-right: 1em;
+            padding-left: 1.5em;
+            padding-right: 1.5em;
+        }
+        .app_id {
+            color: $dark_blue;
+            font-size: 14px;
+            font-family: $roboto-medium;
+        }
+        .scopes_list {
+            ul {
+                margin: 1.7em 0 0 0;
+            }
+            li {
+                margin-bottom: 1em;
+                text-transform: capitalize;
+            }
+        }
+    }
+}
+.subscribers_apps-wrapper {
+    height: 300px;
+    overflow: scroll;
+    padding: 0 1.5em;
+}
+.manage-permission-wrapper {
+    justify-content: center;
+}
