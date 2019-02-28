@@ -1,0 +1,31 @@
+@import "var";
+
+.footer-menu {
+    padding: 1em 1em 3em;
+    ul {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        color: $white;
+        align-items: center;
+        justify-content: center;
+        list-style: none;
+        flex-wrap: wrap;
+    }
+    li {
+        padding: 0 1.7em;
+        position: relative;
+        margin: 0.5em 0;
+        &:not(:last-child) {
+            &:after {
+                content: "|";
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+        }
+        a {
+            color: $white;
+        }
+    }
+}

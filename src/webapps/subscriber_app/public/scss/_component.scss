@@ -1,0 +1,20 @@
+@import "var";
+
+button {
+    background: $links;
+    padding: 0.6em 2em;
+    border-radius: 5px;
+    border: none;
+    color: $white;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: $roboto-regular;
+    &:focus {
+        outline: none;
+    }
+    &.cancel {
+        background: $white;
+        color: $form_labels;
+        border: 1px solid $grey;
+    }
+}

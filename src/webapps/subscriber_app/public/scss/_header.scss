@@ -1,0 +1,21 @@
+@import "var";
+
+* {
+    box-sizing: border-box;
+}
+
+header {
+    background: $header-bg;
+}
+
+.logo img {
+    height: 40px;
+    width: auto;
+}
+
+.header-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.4em 1em;
+}
