@@ -1,4 +1,4 @@
-const {generateTOtp} = require('../models/otp.model');
+const {generateTOtp, generateTOTP} = require('../models/otp.model');
 const subscriberNumber = require('../helpers/subscriber');
 
 module.exports = function (req, res) {
@@ -17,14 +17,20 @@ module.exports = function (req, res) {
           });
     }
     //  generate otp
+    // generateTOTP()
     generateTOtp(msisdn, app_id, blacklist , (...args)=>{
         let [otp, secret, status ] = args;
-        console.log({otp, secret, status});
         //  is app blacklisted
         if (status === 403) {
-            res.status(403).send({
+            return res.status(403).send({
                 "error_code": "Forbidden",
                 "error_message": "App is blacklisted"
+              });
+        }
+        if (status === 401) {
+            return res.status(403).send({
+                "error_code": "Account Blocked",
+                "error_message": "Account Blocked, please try in 30 mins"
               });
         }
         //  response success
