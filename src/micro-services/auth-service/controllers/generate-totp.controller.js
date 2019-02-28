@@ -28,8 +28,8 @@ module.exports = function (req, res) {
               });
         }
         if (status === 401) {
-            return res.status(403).send({
-                "error_code": "Account Blocked",
+            return res.status(401).send({
+                "error_code": "Unauthorized",
                 "error_message": "Account Blocked, please try in 30 mins"
               });
         }

@@ -78,33 +78,6 @@ function generateTOtp(...args) {
       });
 }
 
-/**
- * 
- * @param {Mobile Number : string} msisdn 
- * @param {Application ID : string} app_id 
- * @param {Blacklist : boolean} blacklist 
- * @param {Call back} callback 
- */
-function generateTOTP(msisdn, app_id, blacklist, callback){
-  /**
-   * Fix Mobile number formatting
-   * Check if app is black listed
-   * Check if OTP already present based on APP ID and MSISDN
-   *    - If present, fetch flood control table, check if retry count is < 3 and status != 1
-   *    - If status == 1 and retry count >= 3 the return bad response
-   *    - If status !=1 and retry count < 3, delete the row and generate a new OTP and new Flood control row
-   */
-  msisdn = updatePhoneNo(msisdn);       // This will update the phone number and fix any formatting issues
-  setOtpSettings();                     // This will set the OTPLIB window and step timer
-
-  if(blacklist){
-    
-  }
-
-}
-
-
-
 //  verify OTP
 function verifyTOtp({subscriber_id, otp, app_id }, callback) {
     (async () => {
@@ -130,7 +103,7 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
                   await client.query(`UPDATE flood_control SET Status=1 WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
                 }
                 return callback({
-                  "error_code": "Account Blocked",
+                  "error_code": "Unauthorized",
                   "error_message": "Account Blocked, please try after 30 mins"
                 }, 401)
               } else {
