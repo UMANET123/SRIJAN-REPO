@@ -13,3 +13,10 @@ otp varchar,
 expiration timestamp,
 status int);
 
+create table flood_control (id serial, 
+uuid varchar, 
+app_id varchar,
+created_at timestamp DEFAULT NOW(),
+status int DEFAULT 0,
+retry int DEFAULT 0);
+
