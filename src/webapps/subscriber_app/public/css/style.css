@@ -344,14 +344,24 @@ header {
       border: 1px solid #cccccc;
       margin-bottom: 0 !important; }
     .manage-permission .search-container .autocomplete {
-      margin-bottom: 0.6em; }
+      margin-bottom: 0.6em;
+      position: relative; }
+      .manage-permission .search-container .autocomplete:after {
+        content: '\1F50D';
+        position: absolute;
+        right: 10px;
+        top: 15%;
+        z-index: 1; }
     .manage-permission .search-container .actions {
       display: -webkit-box;
       display: -ms-flexbox;
       display: flex;
       -webkit-box-pack: end;
       -ms-flex-pack: end;
-      justify-content: flex-end; }
+      justify-content: flex-end;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center; }
   .manage-permission button {
     width: auto;
     border-radius: 8px;
@@ -384,11 +394,67 @@ header {
     .manage-permission .subscribers_apps .scopes_list ul {
       margin: 1.7em 0 0 0; }
     .manage-permission .subscribers_apps .scopes_list li {
-      margin-bottom: 1em;
       text-transform: capitalize; }
+      .manage-permission .subscribers_apps .scopes_list li:not(:last-child) {
+        margin-bottom: 1em; }
+
+.order-asc-desc {
+  margin-right: 1em; }
+
+.jconfirm .jconfirm-holder {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0; }
+
+.jconfirm.jconfirm-light .jconfirm-bg {
+  opacity: .7;
+  background: #000; }
+
+.jconfirm .jconfirm-title {
+  font-size: 19px; }
+
+.jconfirm .jconfirm-content p {
+  font-size: 13px; }
+
+.pagination {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin: 0;
+  list-style: none;
+  padding: 1.5em 1em;
+  -webkit-box-shadow: 0 -4px 14px -5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 -4px 14px -5px rgba(0, 0, 0, 0.5); }
+  .pagination .active span {
+    background: #00afec;
+    color: #fff;
+    width: 25px;
+    height: 25px;
+    border-radius: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center; }
+    .pagination .active span.sr-only {
+      display: none; }
+  .pagination li {
+    margin-right: 1em; }
+    .pagination li a {
+      color: #151515; }
 
 .subscribers_apps-wrapper {
-  height: 300px;
+  height: 330px;
   overflow: scroll;
   padding: 0 1.5em; }
 

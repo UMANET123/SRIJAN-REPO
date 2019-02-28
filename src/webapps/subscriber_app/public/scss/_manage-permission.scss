@@ -34,10 +34,19 @@
         }
         .autocomplete {
             margin-bottom: 0.6em;
+            position: relative;
+            &:after {
+                content: '\1F50D';
+                position: absolute;
+                right: 10px;
+                top: 15%;
+                z-index: 1;
+            }
         }
         .actions {
             display: flex;
             justify-content: flex-end;
+            align-items: center;
         }
     }
     button {
@@ -74,14 +83,72 @@
                 margin: 1.7em 0 0 0;
             }
             li {
-                margin-bottom: 1em;
                 text-transform: capitalize;
+                &:not(:last-child) {
+                    margin-bottom: 1em;
+                }
             }
         }
     }
 }
+
+.order-asc-desc {
+    margin-right: 1em;
+}
+
+.jconfirm {
+    .jconfirm-holder {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 0;
+    }
+    &.jconfirm-light .jconfirm-bg {
+        opacity: .7;
+        background: $black;
+    }
+    .jconfirm-title {
+        font-size: 19px;
+    }
+    .jconfirm-content {
+        p {
+            font-size: 13px;
+        }
+    }
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    list-style: none;
+    padding: 1.5em 1em;
+    box-shadow: 0 -4px 14px -5px rgba(0,0,0,0.5);
+    .active {
+        span {
+            background: $links;
+            color: $white;
+            width: 25px;
+            height: 25px;
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            &.sr-only {
+                display: none;
+            }
+        }
+    }
+    li {
+        margin-right: 1em;
+        a {
+            color: $form_labels;
+        }
+    }
+}
+
 .subscribers_apps-wrapper {
-    height: 300px;
+    height: 330px;
     overflow: scroll;
     padding: 0 1.5em;
 }
