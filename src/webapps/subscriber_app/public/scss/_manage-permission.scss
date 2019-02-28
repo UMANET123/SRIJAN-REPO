@@ -1,0 +1,157 @@
+@import "var";
+
+.manage-permission {
+    background: $manage-permission;
+    min-height: 410px;
+    width: 70%;
+    max-width: 600px;
+    border-top-left-radius: 35px;
+    border-bottom-right-radius: 35px;
+    input {
+        width: 100%;
+    }
+    h3 {
+        color: $form_labels;
+        margin-top: 0;
+        font-size: 15px;
+        font-family: $roboto-medium;
+        padding: 1.5em 1.5em 0;
+    }
+    .form-group {
+        margin-bottom: 0;
+        .subscribers_apps {
+
+        }
+    }
+    .search-container {
+        margin-bottom: 1em;
+        padding: 0 1.5em;
+        input {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid lighten($grey, 20%);
+            margin-bottom: 0 !important;
+        }
+        .autocomplete {
+            margin-bottom: 0.6em;
+            position: relative;
+            &:after {
+                content: '\1F50D';
+                position: absolute;
+                right: 10px;
+                top: 15%;
+                z-index: 1;
+            }
+        }
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+    }
+    button {
+        width: auto;
+        border-radius: 8px;
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+    .subscribers_apps {
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
+        border-top: 3px solid $blue;
+        margin-bottom: 1em;
+        .subscribers {
+            padding: 2em 1em;
+        }
+        .action-buttons {
+            padding: 1em;
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid darken($header-bg, 10%);
+        }
+        button {
+            margin-right: 1em;
+            padding-left: 1.5em;
+            padding-right: 1.5em;
+        }
+        .app_id {
+            color: $dark_blue;
+            font-size: 14px;
+            font-family: $roboto-medium;
+        }
+        .scopes_list {
+            ul {
+                margin: 1.7em 0 0 0;
+            }
+            li {
+                text-transform: capitalize;
+                &:not(:last-child) {
+                    margin-bottom: 1em;
+                }
+            }
+        }
+    }
+}
+
+.order-asc-desc {
+    margin-right: 1em;
+}
+
+.jconfirm {
+    .jconfirm-holder {
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 0;
+    }
+    &.jconfirm-light .jconfirm-bg {
+        opacity: .7;
+        background: $black;
+    }
+    .jconfirm-title {
+        font-size: 19px;
+    }
+    .jconfirm-content {
+        p {
+            font-size: 13px;
+        }
+    }
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    list-style: none;
+    padding: 1.5em 1em;
+    box-shadow: 0 -4px 14px -5px rgba(0,0,0,0.5);
+    .active {
+        span {
+            background: $links;
+            color: $white;
+            width: 25px;
+            height: 25px;
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            &.sr-only {
+                display: none;
+            }
+        }
+    }
+    li {
+        margin-right: 1em;
+        a {
+            color: $form_labels;
+        }
+    }
+}
+
+.subscribers_apps-wrapper {
+    height: 330px;
+    overflow: scroll;
+    padding: 0 1.5em;
+}
+.manage-permission-wrapper {
+    justify-content: center;
+}
