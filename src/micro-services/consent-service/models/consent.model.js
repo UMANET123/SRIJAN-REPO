@@ -14,7 +14,7 @@ function createConsent(...args) {
         try {
           //  create a record entry for subscriber consent
           let consent_table =`subscriber_consent`;
-          let record =  await client.query(`select * from ${consent_table} where uuid=($1) and app_id=($2) and developer_id=($3) and status=($4)`,[subscriber_id, app_id, developer_id, 0]);
+          let record =  await client.query(`select * from ${consent_table} where uuid=($1) and app_id=($2) and developer_id=($3)`,[subscriber_id, app_id, developer_id]);
           let createdDate = new Date();
           //  check record exists
           if ( record.rows[0]) {
@@ -23,18 +23,11 @@ function createConsent(...args) {
               // console.log("code passing");
              return callback(302, { "status" : "Record already Exists!"});
             } else {
-                  let old_token = await client.query(`UPDATE ${consent_table} SET scopes=($1), updated=($2), status=($6) WHERE  uuid=($3) and app_id=($4) and developer_id=($5)  RETURNING (SELECT access_token FROM ${consent_table} WHERE uuid=($3) and app_id=($4) and developer_id=($5))`, [JSON.stringify(scopes), createdDate, subscriber_id, app_id, developer_id, 0]);
-                  if (old_token.rows[0].access_token) {
-                    callback(200, {
-                      "old_token": true,
-                      "old_token_value": old_token.rows[0].access_token
-                    });
-                  } else {
-                    callback(200, {
-                      "old_token": false,
-                      "old_token_value": ""
-                    });
-                  }
+                  await client.query(`UPDATE ${consent_table} SET scopes=($1), updated=($2) WHERE  uuid=($3) and app_id=($4) and developer_id=($5)`, [JSON.stringify(scopes), createdDate, subscriber_id, app_id, developer_id]);
+                  callback(200, {
+                    "old_token": false,
+                    "old_token_value": ""
+                  });
                  
             }      
           } else {
