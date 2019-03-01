@@ -154,4 +154,4 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
 
 
 
-module.exports = {generateTOtp, verifyTOtp, generateTOTP};
+module.exports = {generateTOtp, verifyTOtp};
