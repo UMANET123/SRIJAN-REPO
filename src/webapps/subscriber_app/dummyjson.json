@@ -1,0 +1,120 @@
+{
+    "page": 0,
+    "limit": 10,
+    "resultcount": 12,
+    "apps": [
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Subscriber-Authentication",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION", "SMS"
+            ]
+        },
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Subscriber-Authentication",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        },
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Wather ",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        },
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Office",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        },
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Abc",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        }
+        ,{
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Subscriber-Authentication",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        },
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Subscriber-Authentication",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        },
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Subscriber-Authentication",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        },
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Subscriber-Authentication",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        },
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Wather ",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        },
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Office",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        },
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Abc",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        }
+        ,{
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Subscriber-Authentication",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        },
+        {
+            "app_id": "7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21",
+            "appname": "Subscriber-Authentication",
+            "developer_id": "aswin.segu",
+            "scopes": [
+                "LOCATION"
+            ]
+        }
+    ]
+}
+
