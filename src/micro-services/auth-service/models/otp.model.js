@@ -32,7 +32,8 @@ function generateTOtp(...args) {
                let {otp, uuid} = res.rows[0];
                if (otp && uuid) {
                 //  update the record
-                let accountBlockedCheck = await client.query(`SELECT * FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[uuid,app_id])
+                // let accountBlockedCheck = await client.query(`SELECT * FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[uuid,app_id])
+                let accountBlockedCheck = await client.query(`SELECT * FROM flood_control WHERE uuid=($1)`,[uuid])
                 
                 if (accountBlockedCheck.rowCount != 0){
                   if(accountBlockedCheck.rows[0].status==1){
@@ -40,8 +41,10 @@ function generateTOtp(...args) {
                     let current_time = new Date().getTime();
                     let difference = Math.round(((current_time - created_at )/1000)/60);
                     if(difference >= 30){
-                      await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[uuid,app_id])
-                      await client.query(`INSERT INTO flood_control(uuid, app_id) VALUES($1,$2)`,[uuid, app_id])
+                      // await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[uuid,app_id])
+                      // await client.query(`INSERT INTO flood_control(uuid, app_id) VALUES($1,$2)`,[uuid, app_id])
+                      await client.query(`DELETE FROM flood_control WHERE uuid=($1)`,[uuid])
+                      await client.query(`INSERT INTO flood_control(uuid) VALUES($1)`,[uuid])
                     } else {
                       callback({
                         "error_code": "Unauthorized",
@@ -50,7 +53,8 @@ function generateTOtp(...args) {
                     }
                   }
                 } else {
-                  await client.query(`INSERT INTO flood_control(uuid, app_id) VALUES($1,$2)`,[uuid, app_id])
+                  // await client.query(`INSERT INTO flood_control(uuid, app_id) VALUES($1,$2)`,[uuid, app_id])
+                  await client.query(`INSERT INTO flood_control(uuid) VALUES($1)`,[uuid])
                 }
                 let newOtp = getNewOtp(uuid);
                 await client.query(`UPDATE subscriber_otps SET otp=($1), expiration=($2) WHERE uuid=($3) and app_id=($4)`, 
@@ -104,9 +108,8 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
 
           // check if account is blocked
           const blockedOTP = await client.query(`SELECT * FROM flood_control 
-                                                WHERE uuid=($1)
-                                                AND app_id=($2)`,
-                                                [subscriber_id, app_id]);
+                                                WHERE uuid=($1)`,
+                                                [subscriber_id]);
           if(blockedOTP.rowCount != 0) {
             if(blockedOTP.rows[0].retry >= 3){
               let created_at = new Date(blockedOTP.rows[0].created_at).getTime();
@@ -114,21 +117,24 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
               let difference = Math.round(((current_time - created_at )/1000)/60);
               if(difference < 30){
                 if(blockedOTP.rows[0].status == 0){
-                  await client.query(`UPDATE flood_control SET Status=1 WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
+                  // await client.query(`UPDATE flood_control SET Status=1 WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
+                  await client.query(`UPDATE flood_control SET Status=1 WHERE uuid=($1)`,[subscriber_id])
                 }
                 return callback({
                   "error_code": "Unauthorized",
                   "error_message": "Account Blocked, please try after 30 mins"
                 }, 403)
               } else {
-                await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
+                // await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
+                await client.query(`DELETE FROM flood_control WHERE uuid=($1)`,[subscriber_id])
               }
             }
           }
           //  check for valid otp
           if (otpRes.rows[0]) {
               // create a transaction
-              await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
+              // await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
+              await client.query(`DELETE FROM flood_control WHERE uuid=($1)`,[subscriber_id])
               createTransaction(null, subscriber_id, app_id,currentDate, 0, txnId => {
                 callback( {transaction_id: txnId} ,200);
               });
@@ -144,7 +150,8 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
                * 
                * unblock after 30 mins
                */
-              await client.query(`UPDATE flood_control SET Retry=Retry+1 WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
+              // await client.query(`UPDATE flood_control SET Retry=Retry+1 WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
+              await client.query(`UPDATE flood_control SET Retry=Retry+1 WHERE uuid=($1)`,[subscriber_id])
 
               return callback({
                 "error_code": "Unauthorized",
