@@ -160,48 +160,51 @@ $(document).ready(function () {
   /**
    * Autocomplete Apps
    */
-  function getApps(request, response){
-    var all_apps = []
-   $.ajax({
-    //  type: "GET",
-    //  contentType: "application/json",
-      url: "/api/search",
-      dataType: 'json',
-      success: function (success) {
-          // DO POST
-        all_apps = success['appname']
-        
-        
+  // function getApps(request, response){
+  //   var all_apps = []
+  //  $.ajax({
+  //     url: "/api/search",
+  //     success: function (appData) {
+  //       allApps = appData['appname'];
+  //       console.log(allApps);
+  //       response(allApps);
 
         
 
          
-        //   response($.map(success, function(item) {
-        //     console.log(item.value)
-        //     return {
-        //         label: item.value,//text comes from a collection of mongo
-        //         value: item
-        //     };
-        // }));
-      },
-      error: function (e) {
-          console.log("ERROR: ", e);
-      }
+  //       //   response($.map(success, function(item) {
+  //       //     console.log(item.value)
+  //       //     return {
+  //       //         label: item.value,//text comes from a collection of mongo
+  //       //         value: item
+  //       //     };
+  //       // }));
+  //     },
+  //     error: function (e) {
+  //         console.log("ERROR: ", e);
+  //     }
 
-  });
+  // });
     
-    return all_apps;
-  }
+  //   return all_apps;
+  // }
   function acSubscriberApps() {
     
     
    $("#subscriber_apps").autocomplete({
-      source: function (req,res){
-        getApps()
-      },
-      minLength: 3
-      
-
+      minLength: 1,
+      source: function (req, res){
+        $.ajax({
+          url: "/api/search",
+          success: function (appData) {
+            res(appData['appname']);
+          },
+          error: function (e) {
+              console.log("ERROR: ", e);
+          }
+    
+      });
+      }
     });
 
   }

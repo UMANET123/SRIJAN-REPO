@@ -11,8 +11,8 @@ const NODE_SETTINGS = {
 
 //  node server settings
 const APIGEE_CREDS = {
-    clientID : ENV.CLIENT_ID || 3000,
-    clientSecret : ENV.SECRET || 'dev',
+    clientID : ENV.CLIENT_ID,
+    clientSecret : ENV.SECRET ,
     apigeeBaseURL : ENV.APIGEE_BASE_URL
 }
 
@@ -30,4 +30,4 @@ const APIGEE_ENDPOINTS = {
 }
 
 
-module.exports = { NODE_SETTINGS,APIGEE_CREDS, APIGEE_ENDPOINTS};
+module.exports = { NODE_SETTINGS, APIGEE_CREDS, APIGEE_ENDPOINTS};
