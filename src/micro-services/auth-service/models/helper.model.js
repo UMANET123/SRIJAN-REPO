@@ -47,8 +47,10 @@ function insertOtpRecord({secret, otp, msisdn, app_id}) {
 
            await client.query(`INSERT INTO subscriber_otps(uuid, app_id, otp, expiration,                    status) values($1, $2, $3, $4, $5)`,
             [secret, app_id, otp, addMinToDate(currentDate, 5), 0]);
-            await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[secret,app_id]);
-            await client.query(`INSERT INTO flood_control(uuid, app_id) values($1, $2)`,[secret,app_id]);
+            // await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[secret,app_id]);
+            // await client.query(`INSERT INTO flood_control(uuid, app_id) values($1, $2)`,[secret,app_id]);
+            await client.query(`DELETE FROM flood_control WHERE uuid=($1)`,[secret]);
+            await client.query(`INSERT INTO flood_control(uuid) values($1)`,[secret]);
 
         } finally {
             client.release();
