@@ -15,3 +15,6 @@ src/micro-services/consent-service/postgres-data
 
 src/micro-services/auth-service/.env
 src/micro-services/consent-service/.env
+
+src/webapps/**/.env
+src/webapps/consent_app/.env
