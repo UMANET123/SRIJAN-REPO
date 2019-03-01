@@ -173,7 +173,19 @@ $(document).ready(function () {
           }
     
       });
-      }
+      },
+      select: (e, item) => {
+        if (item) {
+          let app_name = item.item.value;
+          let current_url = window.location.href;
+          if (current_url.includes('?')) {
+            current_url = current_url.split('?')[0];
+          }
+          window.location.href = `${current_url}?appname=${app_name}`;
+        }
+
+
+    }
     });
 
   }
