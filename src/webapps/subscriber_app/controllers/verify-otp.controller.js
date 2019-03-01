@@ -44,6 +44,7 @@ module.exports = function (req, res, next) {
              sess.refresh_token = body_data['refresh_token']
              sess.refresh_token_expires_in = body_data['refresh_token_expires_in']
              sess.subscriber_id = subscriber_id
+             res_data.message = 'Success'
              req.session.save(function(){
                 res.send(res_data)
              });

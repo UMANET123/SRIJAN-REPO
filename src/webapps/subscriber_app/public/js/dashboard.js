@@ -10,23 +10,17 @@ $(document).ready(function () {
   $('.revoke_app').click(function (event) {
 
    // var parent = $(this).closest('.subscribers_apps');
-    var dev_id = $(this).closest('.developer_id').attr('id');
-    console.log(dev_id)
-    var app_id =  $(this).closest('.developer_id').find('.app_id').attr('id');
-    console.log(app_id)
-    var appname =  $(this).closest('.developer_id').find('.app_id').text()
-    console.log(appname)
+    var dev_id = $(this).closest('.subscribers_apps').find('.developer_id').attr('id');
+    var app_id =  $(this).closest('.subscribers_apps').find('.app_id').attr('id');
+    var appname =  $(this).closest('.subscribers_apps').find('.app_id').text()
     event.preventDefault();
     dialogRevokeApp(dev_id,app_id,appname)
   });
   $('.blacklist_app').click(function (event) {
     // var parent = $(this).closest('.subscribers_apps');
-    var dev_id = $(this).closest('.developer_id').attr('id');
-    console.log(dev_id)
-    var app_id =  $(this).closest('.developer_id').find('.app_id').attr('id');
-    console.log(app_id)
-    var appname =  $(this).closest('.developer_id').find('.app_id').text()
-    console.log(appname)
+    var dev_id = $(this).closest('.subscribers_apps').find('.developer_id').attr('id');
+    var app_id =  $(this).closest('.subscribers_apps').find('.app_id').attr('id');
+    var appname =  $(this).closest('.subscribers_apps').find('.app_id').text()
     event.preventDefault();
     dialogBlacklist(dev_id,app_id,appname)
   });
@@ -158,36 +152,8 @@ $(document).ready(function () {
     });
   }
   /**
-   * Autocomplete Apps
+   * Autocomplete search
    */
-  // function getApps(request, response){
-  //   var all_apps = []
-  //  $.ajax({
-  //     url: "/api/search",
-  //     success: function (appData) {
-  //       allApps = appData['appname'];
-  //       console.log(allApps);
-  //       response(allApps);
-
-        
-
-         
-  //       //   response($.map(success, function(item) {
-  //       //     console.log(item.value)
-  //       //     return {
-  //       //         label: item.value,//text comes from a collection of mongo
-  //       //         value: item
-  //       //     };
-  //       // }));
-  //     },
-  //     error: function (e) {
-  //         console.log("ERROR: ", e);
-  //     }
-
-  // });
-    
-  //   return all_apps;
-  // }
   function acSubscriberApps() {
     
     

@@ -1,6 +1,5 @@
 $( document ).ready(function() {
 		
-		$("#resend_otp").hide()
 	// SUBMIT FORM
     $("#verify_otp").click(function(event) {
 		// Prevent the form from submitting via the browser.
@@ -14,18 +13,16 @@ $( document ).ready(function() {
 	});
 
 	
-    $(".generate_otp").click(function(event) {
+	$(".generate_otp").click(function (event) {
 		// Prevent the form from submitting via the browser.
-		if($("#phone_no").val() == ''){
-			$("#postResultDiv").html("<p class='error'>" + 
-						"Please enter your valid Globe Mobile no<br>");
+		if ($("#phone_no").val() == '') {
+			$("#postResultDiv").html("<p class='error'>" +
+				"Please enter your valid Globe Mobile no<br>");
 		} else {
-			
-			$("#generate_otp").hide()
-			$("#resend_otp").show()
+
 			event.preventDefault();
 			// Validate the phone no
-			$("#generate_otp").val("Resend OTP");
+			$("#generate_otp").text("Resend OTP");
 			generateOTP();
 		}
 	});
@@ -40,7 +37,7 @@ $( document ).ready(function() {
 			$.ajax({
 				type : "GET",
 				contentType : "application/json",
-				url : window.location + "api/validateMobileNo",
+				url : "/api/validateMobileNo",
 				data : {phone_no: phone_no},
 				dataType : 'json',
 				success : function(subsciber) {
@@ -48,7 +45,7 @@ $( document ).ready(function() {
 					$.ajax({
 						type : "POST",
 						contentType : "application/json",
-						url : window.location + "api/generate/otp",
+						url : "/api/generate/otp",
 						data : JSON.stringify(formData),
 						dataType : 'json',
 						success : function(subsciber) {
@@ -93,7 +90,7 @@ $( document ).ready(function() {
     	$.ajax({
 			type : "POST",
 			contentType : "application/json",
-			url : window.location + "api/verify/otp",
+			url : "/api/verify/otp",
 			data : JSON.stringify(formData),
 			dataType : 'json',
 			success : function(subsciber) {

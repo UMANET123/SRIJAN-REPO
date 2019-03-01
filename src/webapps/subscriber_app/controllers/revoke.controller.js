@@ -33,19 +33,19 @@ module.exports = function (req, res, next) {
         console.log(response.statusCode)
         console.log()
 
-        var res_data = {}
-        sess = req.session
-        res_data.statusCode = response.statusCode
-        console.log(response.body)
-        if (response.statusCode == 200) {
+        // var res_data = {}
+        // sess = req.session
+        // res_data.statusCode = response.statusCode
+        // console.log(response.body)
+        // if (response.statusCode == 200) {
 
-            res_data.status = response.body.status
-            sess.message = "App has been successfully revoked."
-        }
-        else {
-            res_data.error_message = 'There are some error during perform operations.'
-        }
-        res.send(res_data)
+        //     res_data.status = response.body.status
+        //     sess.message = "App has been successfully revoked."
+        // }
+        // else {
+        //     res_data.error_message = 'There are some error during perform operations.'
+        // }
+        res.send(response)
 
     });
 
