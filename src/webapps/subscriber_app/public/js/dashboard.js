@@ -45,8 +45,10 @@ $(document).ready(function () {
               dataType : 'json',
               success : function(response) {
                 console.log(response)
-                if(subsciber['statusCode'] == 200){
-                  window.location.href = window.location.href
+                if(response['statusCode'] == 200){
+                  // window.location.href = window.location.href
+                  // console.log();
+                  console.log({status: response['statusCode'] });
                 } else {
                   $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
                 }
@@ -91,8 +93,9 @@ $(document).ready(function () {
               dataType : 'json',
               success : function(response) {
                 console.log(response)
-                if(subsciber['statusCode'] == 200){
-                  window.location.href = window.location.href
+                if(response['statusCode'] == 200){
+                  // window.location.href = window.location.href
+                  console.log({status: response['statusCode'] });
                 } else {
                   $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
                 }
@@ -134,8 +137,8 @@ $(document).ready(function () {
               dataType : 'json',
               success : function(response) {
                 console.log(response)
-                if(subsciber['statusCode'] == 200){
-                  window.location.href = window.location.href
+                if(response['statusCode'] == 200){
+                  console.log({status: response['statusCode'] });
                 } else {
                   $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
                 }
