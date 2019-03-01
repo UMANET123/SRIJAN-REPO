@@ -119,7 +119,7 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
                 return callback({
                   "error_code": "Unauthorized",
                   "error_message": "Account Blocked, please try after 30 mins"
-                }, 401)
+                }, 403)
               } else {
                 await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
               }
@@ -159,7 +159,7 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
         return callback(    {
           "error_code": "BadRequest",
           "error_message": "Bad Request"
-        });
+        },400);
     
       } );
 }
