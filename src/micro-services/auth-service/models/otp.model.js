@@ -43,7 +43,10 @@ function generateTOtp(...args) {
                       await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[uuid,app_id])
                       await client.query(`INSERT INTO flood_control(uuid, app_id) VALUES($1,$2)`,[uuid, app_id])
                     } else {
-                      callback(null, null, 401 )
+                      callback({
+                        "error_code": "Unauthorized",
+                        "error_message": "Account Blocked, please try in 30 mins"
+                    }, 403 )
                     }
                   }
                 } else {
@@ -52,7 +55,13 @@ function generateTOtp(...args) {
                 let newOtp = getNewOtp(uuid);
                 await client.query(`UPDATE subscriber_otps SET otp=($1), expiration=($2) WHERE uuid=($3) and app_id=($4)`, 
                 [newOtp, addMinToDate(new Date(), 5) , uuid, app_id]);
-                callback(newOtp, uuid, 200);
+                callback({
+                  "subscriber_id": uuid,
+                  "otp": newOtp, 
+                  "app_id": app_id
+                }, 200);
+
+                
               } 
            
           }  else {
@@ -64,17 +73,22 @@ function generateTOtp(...args) {
             let otp = getNewOtp(secret);
             //  insert records to the table
             insertOtpRecord({otp, secret, msisdn, app_id});
-            callback(otp, secret, 201);
+            
+            callback({
+              "subscriber_id": secret,
+              "otp": otp, 
+              "app_id": app_id
+            },201);
           }
         } finally {
           client.release();
         }
       })().catch(e => {
         console.log(e.stack)
-       callback(    {
+       callback({
           "error_code": "BadRequest",
           "error_message": "Bad Request"
-        });
+        },400);
       });
 }
 
@@ -154,4 +168,4 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
 
 
 
-module.exports = {generateTOtp, verifyTOtp, generateTOTP};
+module.exports = {generateTOtp, verifyTOtp};

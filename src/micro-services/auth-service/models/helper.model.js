@@ -72,7 +72,11 @@ function  checkBlackListApp({msisdn, app_id}, callback) {
             axios.get(reqUrl)
                 .then(({data}) =>{
                    if (data) {
-                      return callback(null, null, 403); 
+                      return callback({
+                        "error_code": "Forbidden",
+                        "error_message": "App is blacklisted"
+                      },
+                       403); 
                    } 
                 })
                 .catch(function (error) {
