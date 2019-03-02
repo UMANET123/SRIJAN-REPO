@@ -33,7 +33,10 @@ module.exports = function (req, res, next) {
             res_data.otp = body_data['otp']
             
         }
-        else {
+        else if(response.statusCode == 403) {
+            res_data.error_code = body_data.error_code
+            res_data.error_message = body_data.error_message
+        } else {
             res_data.error_code = body_data.error_code
             res_data.error_message = 'Kindly check the phone no.'
         }

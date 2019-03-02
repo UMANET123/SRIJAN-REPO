@@ -2,7 +2,7 @@
 const { NODE_SETTINGS, APIGEE_CREDS: { apigeeBaseURL }, APIGEE_CREDS: { clientID }, APIGEE_CREDS: { clientSecret }, APIGEE_ENDPOINTS: { verifyOTP } } = require("../config/environment")
 
 var request = require('request');
-var generate_key = function() {
+var generate_key = function () {
     var sha = crypto.createHash('sha256');
     sha.update(Math.random().toString());
     return sha.digest('hex');
@@ -32,7 +32,7 @@ module.exports = function (req, res, next) {
     request(options, function (error, response, body) {
         if (error) throw new Error(error);
         console.log(response.statusCode)
-        var res_data = {} 
+        var res_data = {}
         res_data.statusCode = response.statusCode
         if (response.statusCode == 201) {
              sess = req.session;
@@ -47,15 +47,19 @@ module.exports = function (req, res, next) {
              res_data.message = 'Success'
              req.session.save(function(){
                 res.send(res_data)
-             });
+            });
         }
-        else {
-             
-             res_data.error_message = 'Invalid OTP.'
-             res.send(res_data)
-        
-         }
-        
+
+        else if (response.statusCode == 403) {
+            res_data.error_code = body_data.error_code
+            res_data.error_message = body_data.error_message
+        } else {
+
+            res_data.error_message = 'Invalid OTP.'
+            res.send(res_data)
+
+        }
+
     });
 }
 
