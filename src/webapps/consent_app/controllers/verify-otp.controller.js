@@ -35,9 +35,12 @@ module.exports = function (req, res, next) {
              sess.sessionid = subscriber_id
              sess.subscriber_id = subscriber_id
              sess.client_id = client_id
-             console.log(subscriber_id)
-             console.log(response.headers.location)
+             console.log(subscriber_id, response.headers.location);
              res_data.redirect = response.headers.location
+            //   for local only  ------- ************
+            // res_data.redirect = response.headers.location.replace("13.232.77.36","localhost");
+            // //   for local only  ------- ************
+            console.log(res_data.redirect);
         }
         else {
              

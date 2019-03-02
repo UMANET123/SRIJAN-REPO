@@ -167,9 +167,7 @@ $(document).ready(function () {
    * Autocomplete search
    */
   function acSubscriberApps() {
-    
-    
-   $("#subscriber_apps").autocomplete({
+    $("#subscriber_apps").autocomplete({
       minLength: 1,
       source: function (req, res){
         $.ajax({
