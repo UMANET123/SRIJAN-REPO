@@ -27,6 +27,7 @@ $(document).ready(function () {
 
   function dialogRevokeAll() {
     $.confirm({
+      backgroundDismiss: true,
       escapeKey: 'cancel',
       title: 'Revoke All apps!',
       content: '<p>This action will revoke the permissions from all installed apps.</p>' +
@@ -37,6 +38,7 @@ $(document).ready(function () {
           btnClass: 'btn-blue',
           keys: ['enter', 'shift'],
           action: function () {
+            let self = this;
             $.ajax({
               type : "POST",
               contentType : "application/json",
@@ -46,18 +48,18 @@ $(document).ready(function () {
               success : function(response) {
                 console.log(response)
                 if(response['statusCode'] == 200){
-                  // window.location.href = window.location.href
-                  // console.log();
                   console.log({status: response['statusCode'] });
+                  self.setContentPrepend('<p class="success">Apps have been revoked successfully.</p>');
                 } else {
-                  $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
+                  self.setContentPrepend('<p class="error">There is an error occured during the operation.</p>');
                 }
-                
+                setTimeout(() => {window.location.reload();},1000);
               },
               error : function(e) {
                 console.log("ERROR: ", e);
               }
             });
+            return false;
           }
         },
         cancel: function () {
@@ -68,6 +70,7 @@ $(document).ready(function () {
 
   function dialogRevokeApp(dev_id,app_id,appname) {
     $.confirm({
+      backgroundDismiss: true,
       escapeKey: 'cancel',
       title: 'Revoke App',
       content: '<p>This action will revoke all the permissions from this app</p>' +
@@ -83,8 +86,8 @@ $(document).ready(function () {
               app_id : app_id,
               developer_id : dev_id
             }
-            console.log(paramsdata)
             // Ajax here 
+            let self = this;
             $.ajax({
               type : "POST",
               contentType : "application/json",
@@ -94,17 +97,18 @@ $(document).ready(function () {
               success : function(response) {
                 console.log(response)
                 if(response['statusCode'] == 200){
-                  // window.location.href = window.location.href
                   console.log({status: response['statusCode'] });
+                  self.setContentPrepend('<p class="success">App has been revoked successfully.</p>');
                 } else {
-                  $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
+                  self.setContentPrepend('<p class="error">There is an error occured during the operation.</p>');
                 }
-                
+                setTimeout(() => {window.location.reload();},1000);
               },
               error : function(e) {
                 console.log("ERROR: ", e);
               }
             });
+            return false;
           }
         },
         cancel: function () {
@@ -115,6 +119,7 @@ $(document).ready(function () {
 
   function dialogBlacklist(dev_id,app_id,appname) {
     $.confirm({
+      backgroundDismiss: true,
       escapeKey: 'cancel',
       title: 'Blacklist App',
       content: '<p>This action will revoke all the app permissions and put it in blacklist.</p>' +
@@ -129,6 +134,7 @@ $(document).ready(function () {
               app_id : app_id,
               developer_id : dev_id
             }
+            let self = this;
             $.ajax({
               type : "POST",
               contentType : "application/json",
@@ -139,14 +145,17 @@ $(document).ready(function () {
                 console.log(response)
                 if(response['statusCode'] == 200){
                   console.log({status: response['statusCode'] });
+                  self.setContentPrepend('<p class="success">App has been blacklisted successfully.</p>');
                 } else {
-                  $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
+                  self.setContentPrepend('<p class="error">There is an error occured during the operation.</p>');
                 }
+                setTimeout(() => {window.location.reload();},1000);
               },
               error : function(e) {
                 console.log("ERROR: ", e);
               }
             });
+            return false;
           }
         },
         cancel: function () {
