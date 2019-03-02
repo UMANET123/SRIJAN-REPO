@@ -1,7 +1,6 @@
-const express = require('express')
+const express = require('express');
 let router = express.Router();
 const paginate = require('express-paginate');
-const axios = require('axios')
 
 var subscriberUtil = require('../utility/subscriber');
 const generateTotpController = require('../controllers/generate-otp.controller');
@@ -9,13 +8,15 @@ const verifyTotpController = require('../controllers/verify-otp.controller');
 const revokeAppController = require('../controllers/revoke.controller');
 const revokeAllAppsController = require('../controllers/revoke-all.controller');
 const blacklistController = require('../controllers/blacklist.controller');
-const consentList = require('../controllers/app-listing.controller')
-const searchApps = require('../controllers/search-apps.controller')
+const consentList = require('../controllers/app-listing.controller');
+const searchApps = require('../controllers/search-apps.controller');
 // Search will go here
 router.post('/api/generate/otp', generateTotpController);
 router.post('/api/verify/otp', verifyTotpController);
 
+router.post('/api/revokeapp', revokeAppController);
 router.post('/api/revokeallapps', revokeAllAppsController);
+
 router.post('/api/blacklist', blacklistController);
 router.get('/api/search', searchApps);
 
