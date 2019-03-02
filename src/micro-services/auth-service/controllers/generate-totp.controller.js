@@ -18,27 +18,8 @@ module.exports = function (req, res) {
     }
     //  generate otp
     // generateTOTP()
-    generateTOtp(msisdn, app_id, blacklist , (...args)=>{
-        let [otp, secret, status ] = args;
-        //  is app blacklisted
-        if (status === 403) {
-            return res.status(403).send({
-                "error_code": "Forbidden",
-                "error_message": "App is blacklisted"
-              });
-        }
-        if (status === 401) {
-            return res.status(401).send({
-                "error_code": "Unauthorized",
-                "error_message": "Account Blocked, please try in 30 mins"
-              });
-        }
-        //  response success
-        return res.status(status).send({
-            subscriber_id: secret,
-            otp: otp, 
-            app_id: app_id
-        });
+    generateTOtp(msisdn, app_id, blacklist , (responseBody, status)=>{
+        return res.status(status).send(responseBody)
     });
   
 }
