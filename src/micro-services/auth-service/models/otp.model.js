@@ -156,7 +156,7 @@ function verifyTOtp({subscriber_id, otp, app_id }, callback) {
               return callback({
                 "error_code": "Unauthorized",
                 "error_message": "OTP Verification Failed"
-              }, 401);
+              }, 403);
             }
         } finally {
           client.release();
