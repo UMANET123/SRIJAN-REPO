@@ -14,7 +14,7 @@ const searchApps = require('../controllers/search-apps.controller')
 // Search will go here
 router.post('/api/generate/otp', generateTotpController);
 router.post('/api/verify/otp', verifyTotpController);
-router.post('/api/revokeapp', revokeAppController);
+
 router.post('/api/revokeallapps', revokeAllAppsController);
 router.post('/api/blacklist', blacklistController);
 router.get('/api/search', searchApps);
@@ -30,6 +30,7 @@ router.get("/", function (req, res) {
 		// res.sendFile(viewspath + "index.html");
 	}
 });
+
 
 router.get("/dashboard", async (req, res, next) => {
 	sess = req.session;

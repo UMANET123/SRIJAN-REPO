@@ -30,6 +30,8 @@
         <div class="login-form-container container manage-permission-wrapper">
             <div class="manage-permission">
                 <h3>Manage App Permission</h3>
+                <div id="postResultDiv">
+                </div>
                 <div class="search-container">
                     <div class="autocomplete">
                         <input class="form-control autocomplete" id="subscriber_apps" name="subscriber_apps"
@@ -43,10 +45,9 @@
                         <button type="button" class="cancel" id="revoke_all">Revoke All</button>
                     </div>
                 </div>
-                <div id="postResultDiv">
-                </div>
-                <div class="form-group subscribers_apps-wrapper">
-                    <% if (itemCount > 1) { %>
+                
+                <div class="subscribers_apps-wrapper">
+                    <% if (itemCount > 0) { %>
                     <% apps.forEach(function(app){ %>
                     <div class="list-group subscribers_apps">
                         <div class="developer_id subscribers" id="<%= app.developer_id%>">
@@ -76,7 +77,7 @@
                 <% if (pageCount > 1) { %>
                 <ul class="pagination">
                     <% if (currentPage > 1) { %>
-                    <li><a href="/dashboard?page=1&limit=<%= limit %>&appname=<%= appname %>">&laquo;</a></li>
+                    <li><a href="/dashboard?page=1&limit=<%= limit %>&appname=<%= appname %>">Prev</a></li>
                     <% } %>
                     <% var i = 1;
                             if (currentPage > 5) {
@@ -96,7 +97,7 @@
                     <% break; } %>
                     <% } %>
                     <% if (currentPage != pageCount) { %>
-                    <li><a href="/dashboard?page=<%= pageCount %>&limit=<%= limit %>&appname=<%= appname %>">&raquo;</a>
+                    <li><a href="/dashboard?page=<%= pageCount %>&limit=<%= limit %>&appname=<%= appname %>">Next</a>
                     </li>
                     <% } %>
                 </ul>

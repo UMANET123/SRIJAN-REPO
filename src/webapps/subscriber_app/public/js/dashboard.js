@@ -10,29 +10,24 @@ $(document).ready(function () {
   $('.revoke_app').click(function (event) {
 
    // var parent = $(this).closest('.subscribers_apps');
-    var dev_id = $(this).closest('.developer_id').attr('id');
-    console.log(dev_id)
-    var app_id =  $(this).closest('.developer_id').find('.app_id').attr('id');
-    console.log(app_id)
-    var appname =  $(this).closest('.developer_id').find('.app_id').text()
-    console.log(appname)
+    var dev_id = $(this).closest('.subscribers_apps').find('.developer_id').attr('id');
+    var app_id =  $(this).closest('.subscribers_apps').find('.app_id').attr('id');
+    var appname =  $(this).closest('.subscribers_apps').find('.app_id').text()
     event.preventDefault();
     dialogRevokeApp(dev_id,app_id,appname)
   });
   $('.blacklist_app').click(function (event) {
     // var parent = $(this).closest('.subscribers_apps');
-    var dev_id = $(this).closest('.developer_id').attr('id');
-    console.log(dev_id)
-    var app_id =  $(this).closest('.developer_id').find('.app_id').attr('id');
-    console.log(app_id)
-    var appname =  $(this).closest('.developer_id').find('.app_id').text()
-    console.log(appname)
+    var dev_id = $(this).closest('.subscribers_apps').find('.developer_id').attr('id');
+    var app_id =  $(this).closest('.subscribers_apps').find('.app_id').attr('id');
+    var appname =  $(this).closest('.subscribers_apps').find('.app_id').text()
     event.preventDefault();
     dialogBlacklist(dev_id,app_id,appname)
   });
 
   function dialogRevokeAll() {
     $.confirm({
+      backgroundDismiss: true,
       escapeKey: 'cancel',
       title: 'Revoke All apps!',
       content: '<p>This action will revoke the permissions from all installed apps.</p>' +
@@ -43,6 +38,7 @@ $(document).ready(function () {
           btnClass: 'btn-blue',
           keys: ['enter', 'shift'],
           action: function () {
+            let self = this;
             $.ajax({
               type : "POST",
               contentType : "application/json",
@@ -51,17 +47,19 @@ $(document).ready(function () {
               dataType : 'json',
               success : function(response) {
                 console.log(response)
-                if(subsciber['statusCode'] == 200){
-                  window.location.href = window.location.href
+                if(response['statusCode'] == 200){
+                  console.log({status: response['statusCode'] });
+                  self.setContentPrepend('<p class="success">Apps have been revoked successfully.</p>');
                 } else {
-                  $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
+                  self.setContentPrepend('<p class="error">There is an error occured during the operation.</p>');
                 }
-                
+                setTimeout(() => {window.location.reload();},1000);
               },
               error : function(e) {
                 console.log("ERROR: ", e);
               }
             });
+            return false;
           }
         },
         cancel: function () {
@@ -72,6 +70,7 @@ $(document).ready(function () {
 
   function dialogRevokeApp(dev_id,app_id,appname) {
     $.confirm({
+      backgroundDismiss: true,
       escapeKey: 'cancel',
       title: 'Revoke App',
       content: '<p>This action will revoke all the permissions from this app</p>' +
@@ -87,8 +86,8 @@ $(document).ready(function () {
               app_id : app_id,
               developer_id : dev_id
             }
-            console.log(paramsdata)
             // Ajax here 
+            let self = this;
             $.ajax({
               type : "POST",
               contentType : "application/json",
@@ -97,17 +96,19 @@ $(document).ready(function () {
               dataType : 'json',
               success : function(response) {
                 console.log(response)
-                if(subsciber['statusCode'] == 200){
-                  window.location.href = window.location.href
+                if(response['statusCode'] == 200){
+                  console.log({status: response['statusCode'] });
+                  self.setContentPrepend('<p class="success">App has been revoked successfully.</p>');
                 } else {
-                  $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
+                  self.setContentPrepend('<p class="error">There is an error occured during the operation.</p>');
                 }
-                
+                setTimeout(() => {window.location.reload();},1000);
               },
               error : function(e) {
                 console.log("ERROR: ", e);
               }
             });
+            return false;
           }
         },
         cancel: function () {
@@ -118,6 +119,7 @@ $(document).ready(function () {
 
   function dialogBlacklist(dev_id,app_id,appname) {
     $.confirm({
+      backgroundDismiss: true,
       escapeKey: 'cancel',
       title: 'Blacklist App',
       content: '<p>This action will revoke all the app permissions and put it in blacklist.</p>' +
@@ -132,6 +134,7 @@ $(document).ready(function () {
               app_id : app_id,
               developer_id : dev_id
             }
+            let self = this;
             $.ajax({
               type : "POST",
               contentType : "application/json",
@@ -140,16 +143,19 @@ $(document).ready(function () {
               dataType : 'json',
               success : function(response) {
                 console.log(response)
-                if(subsciber['statusCode'] == 200){
-                  window.location.href = window.location.href
+                if(response['statusCode'] == 200){
+                  console.log({status: response['statusCode'] });
+                  self.setContentPrepend('<p class="success">App has been blacklisted successfully.</p>');
                 } else {
-                  $("#postResultDiv").html("<p class='error'>There is an error occured during the operation.</p>")
+                  self.setContentPrepend('<p class="error">There is an error occured during the operation.</p>');
                 }
+                setTimeout(() => {window.location.reload();},1000);
               },
               error : function(e) {
                 console.log("ERROR: ", e);
               }
             });
+            return false;
           }
         },
         cancel: function () {
@@ -158,36 +164,8 @@ $(document).ready(function () {
     });
   }
   /**
-   * Autocomplete Apps
+   * Autocomplete search
    */
-  // function getApps(request, response){
-  //   var all_apps = []
-  //  $.ajax({
-  //     url: "/api/search",
-  //     success: function (appData) {
-  //       allApps = appData['appname'];
-  //       console.log(allApps);
-  //       response(allApps);
-
-        
-
-         
-  //       //   response($.map(success, function(item) {
-  //       //     console.log(item.value)
-  //       //     return {
-  //       //         label: item.value,//text comes from a collection of mongo
-  //       //         value: item
-  //       //     };
-  //       // }));
-  //     },
-  //     error: function (e) {
-  //         console.log("ERROR: ", e);
-  //     }
-
-  // });
-    
-  //   return all_apps;
-  // }
   function acSubscriberApps() {
     
     
@@ -204,7 +182,19 @@ $(document).ready(function () {
           }
     
       });
-      }
+      },
+      select: (e, item) => {
+        if (item) {
+          let app_name = item.item.value;
+          let current_url = window.location.href;
+          if (current_url.includes('?')) {
+            current_url = current_url.split('?')[0];
+          }
+          window.location.href = `${current_url}?appname=${app_name}`;
+        }
+
+
+    }
     });
 
   }

@@ -35,16 +35,17 @@ module.exports = function (req, res, next) {
         var res_data = {}
         res_data.statusCode = response.statusCode
         if (response.statusCode == 201) {
-            sess = req.session;
-            body_data = JSON.parse(body)
-            sess.sessionid = subscriber_id + body_data['expires_in']
-            sess.access_token = body_data['access_token']
-            sess.token_type = body_data['token_type']
-            sess.expires_in = body_data['expires_in']
-            sess.refresh_token = body_data['refresh_token']
-            sess.refresh_token_expires_in = body_data['refresh_token_expires_in']
-            sess.subscriber_id = subscriber_id
-            req.session.save(function () {
+             sess = req.session;
+             body_data = JSON.parse(body)  
+             sess.sessionid = subscriber_id + body_data['expires_in']
+             sess.access_token = body_data['access_token']
+             sess.token_type = body_data['token_type']
+             sess.expires_in = body_data['expires_in']
+             sess.refresh_token = body_data['refresh_token']
+             sess.refresh_token_expires_in = body_data['refresh_token_expires_in']
+             sess.subscriber_id = subscriber_id
+             res_data.message = 'Success'
+             req.session.save(function(){
                 res.send(res_data)
             });
         }
