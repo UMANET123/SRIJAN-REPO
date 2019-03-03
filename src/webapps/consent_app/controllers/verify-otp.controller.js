@@ -35,7 +35,12 @@ module.exports = function (req, res, next) {
             console.log(subscriber_id)
             console.log(response.headers.location)
             res_data.redirect = response.headers.location
-        }
+	    //   for local only  ------- ************
+            // res_data.redirect = response.headers.location.replace("13.232.77.36","localhost");
+            // //   for local only  ------- ************
+            console.log(res_data.redirect);
+		        
+}
         else if (response.statusCode == 403) {
             res_data.error_code = body_data.error_code
             res_data.error_message = body_data.error_message

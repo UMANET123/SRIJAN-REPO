@@ -1,6 +1,6 @@
 
 
-const { NODE_SETTINGS, APIGEE_CREDS: { apigeeBaseURL }, APIGEE_CREDS: { clientID }, APIGEE_CREDS: { clientSecret }, APIGEE_ENDPOINTS: { revokeApp } } = require("../config/environment")
+const { APIGEE_CREDS: { apigeeBaseURL }, APIGEE_ENDPOINTS: { revokeApp } } = require("../config/environment")
 
 var request = require('request');
 var session = require("express-session")
@@ -12,7 +12,6 @@ module.exports = function (req, res, next) {
     let sub_access_token = sess.access_token
     // var authorizationHeaderString = 'Basic ' + encodedData;
     var authorizationHeaderString = 'Bearer ' + sub_access_token;
-    console.log(authorizationHeaderString);
     var options = {
         method: 'DELETE',
         url: `${apigeeBaseURL}/${revokeApp}`,

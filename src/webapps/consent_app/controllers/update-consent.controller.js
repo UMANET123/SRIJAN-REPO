@@ -35,7 +35,7 @@ module.exports = function (req, res, next) {
     console.log(options)
     request(options, function (error, response, body) {
         if (error) throw new Error(error);
-        console.log(response.statusCode)
+        console.log(response.statusCode, response.headers.location);
 
         var res_data = {}
         res_data.statusCode = response.statusCode
@@ -43,7 +43,10 @@ module.exports = function (req, res, next) {
         if (response.statusCode == 302) {
             // res.redirect(302, sess.redirect_uri)
             res_data.redirect_uri = sess.redirect_uri
-             res.send(res_data)
+            //   for local only  ------- ************
+            // res_data.redirect_uri = sess.redirect_uri.replace("13.232.77.36","localhost");
+            //   for local only  ------- ************
+            res.send(res_data)
         }
         else {
              res_data.error_message = 'Invalid request'

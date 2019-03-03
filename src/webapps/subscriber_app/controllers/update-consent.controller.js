@@ -33,9 +33,9 @@ module.exports = function (req, res, next) {
     console.log(options)
     request(options, function (error, response, body) {
         if (error) throw new Error(error);
-        console.log(response.statusCode)
+        console.log(response.headers);
 
-        var res_data = {}
+        var res_data = {};
         res_data.statusCode = response.statusCode
         
         if (response.statusCode == 302) {
