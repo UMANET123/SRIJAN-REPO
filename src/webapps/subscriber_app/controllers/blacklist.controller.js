@@ -4,9 +4,11 @@ const { NODE_SETTINGS, APIGEE_CREDS: { apigeeBaseURL }, APIGEE_CREDS: { clientID
 var request = require('request');
 var session = require("express-session")
 module.exports = function (req, res, next) {
-    console.log(req.body)
+    // console.log(req.body)
     let { app_id, developer_id } = req.body;
-    console.log({ app_id }, { developer_id })
+    console.log({ app_id }, { developer_id }, {session});
+
+    let subscriber_id = session.subscriber_id
     sess = req.session;
     let sub_access_token = sess.access_token
     // var authorizationHeaderString = 'Basic ' + encodedData;
@@ -23,8 +25,9 @@ module.exports = function (req, res, next) {
         },
         qs:
         {
-            app_id: app_id,
-            developer_id: developer_id
+            app_id,
+            developer_id,
+            subscriber_id
         },
     };
     console.log(options)
