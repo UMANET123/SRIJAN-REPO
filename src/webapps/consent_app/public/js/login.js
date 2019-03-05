@@ -34,18 +34,18 @@ $(document).ready(function () {
     return match && decodeURIComponent(match[1].replace(/\+/g, " "));
 }
 	var raw = 'http://localhost:5560/?client_id=dNBhms6AvdY6LKw1To1vLW5232HghPiD#'
-	console.log(qs(raw));
+	// console.log(qs(raw));
 	function generateOTP() {
 		$("#postResultDiv").html('')
 		// PREPARE FORM DATA
 		var phone_no = $("#phone_no").val();
 		var client_id = $("#client_id").val();
-		console.log(phone_no)
+		// console.log(phone_no)
 		var formData = {
 			phone_no: phone_no,
 			client_id: client_id
 		}
-		console.log(formData)
+		// console.log(formData)
 		$.ajax({
 			type: "GET",
 			contentType: "application/json",
@@ -98,7 +98,7 @@ $(document).ready(function () {
 			client_id:  $("#client_id").val(),
 			otp: $("#otp").val()
 		}
-		console.log(formData)
+		// console.log(formData)
 		// DO POST
 		$.ajax({
 			type: "POST",
