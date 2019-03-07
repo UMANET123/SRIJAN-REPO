@@ -1,5 +1,5 @@
 const sequelize = require("./orm.database");
-const { DATE, STRING, INTEGER, NOW } = require("sequelize");
+const { DATE, STRING, INTEGER, NOW , Op} = require("sequelize");
 
 const SubscriberDataMask = sequelize.define(
   "subscriber_data_mask",
@@ -82,4 +82,6 @@ const FloodControl = sequelize.define(
   }
 );
 
-module.exports = { SubscriberDataMask, SubscriberOTP, FloodControl };
+
+
+module.exports = { SubscriberDataMask, SubscriberOTP, FloodControl, Op };
