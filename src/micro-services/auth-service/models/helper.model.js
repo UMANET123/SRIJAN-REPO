@@ -45,19 +45,16 @@ function checkBlackListApp({ msisdn, app_id }, callback) {
       axios
         .get(reqUrl)
         .then(({ data }) => {
-          console.log({ data });
           if (data) {
             return callback(true);
-          } else {
-            return callback(false);
           }
+          return callback(false);
         })
         .catch(function(error) {
           console.log(error);
         });
-    } else {
-      return callback(false);
     }
+    return callback(false);
   });
 }
 

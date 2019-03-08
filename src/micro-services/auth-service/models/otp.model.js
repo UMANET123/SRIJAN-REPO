@@ -26,7 +26,9 @@ const updatePhoneNo = require("../helpers/mobile-number.modify");
  * Constants
  */
 
+//  User Block limit in mins
 const BLOCK_USER_LIMIT = 30;
+//  OTP exipiry time in mins
 const OTP_EXPIRY_TIME = 5;
 
 /**
@@ -36,7 +38,12 @@ const OTP_EXPIRY_TIME = 5;
  * @param {boolean} blacklist Blacklist Checking Requrement
  * @param {function} callback Callback Function
  * Main Parent Method For Generate OTP route
- *@returns {null}
+ * @returns {function} callback Function
+ * Execution Steps
+ * - update phone number with area code
+ * - Check blacklist app
+ *    -  Checks user is block
+ * - Return OTP
  */
 function generateTOtp(msisdn, app_id, blacklist, callback) {
   msisdn = updatePhoneNo(msisdn);
@@ -45,7 +52,6 @@ function generateTOtp(msisdn, app_id, blacklist, callback) {
   //  blacklist checking option is enabled
   if (blacklist) {
     checkBlackListApp({ msisdn, app_id }, isBlackListed => {
-      console.log({ isBlackListed });
       if (isBlackListed) {
         return callback(
           {
@@ -67,11 +73,12 @@ function generateTOtp(msisdn, app_id, blacklist, callback) {
 }
 /**
  *
- * @param {string} msisdn
- * @param {string} app_id
- * @param {function} callback
- * @returns(callback)
- *
+ * @param {string} msisdn Mobile Number
+ * @param {string} app_id App ID
+ * @param {function} callback  Callback Function
+ * @returns(function) callback Callback Function
+ * It will Check user is not blocked and always create OTP
+ * and return as callback
  */
 function alwaysCreateOTP(msisdn, app_id, callback) {
   verifyUser(msisdn, null, response => {
@@ -91,7 +98,7 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
             403
           );
         } else {
-          //  not blocked
+          //  user not blocked
           //  check any record exists with same app_id, uuid
           SubscriberOTP.findOne({
             where: { uuid, app_id },
@@ -99,9 +106,9 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
             status: 0
           }).then(oldOtp => {
             if (oldOtp && oldOtp.otp) {
-              //  record exists
+              //  previously OTP exists
               let newOtp = getNewOtp(uuid);
-              //  update otp records
+              //  update with new OTP
               SubscriberOTP.update(
                 {
                   otp: newOtp,
@@ -110,6 +117,7 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                 { where: { uuid, app_id } }
               )
                 .then(result =>
+                  //  return OTP response with callback
                   callback({
                     subscriber_id: uuid,
                     otp: newOtp,
@@ -118,6 +126,7 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                 )
                 .catch(err => console.log(err));
             } else {
+              //  No record exists with requested uuid, app_id
               //  create new OTP record
               insertOtpRecord(msisdn, app_id, response => {
                 return callback(response);
@@ -129,6 +138,8 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
       //  create new OTP
       //  update OTP
     } else {
+      //  No record exists with requested uuid, app_id
+      //  create new OTP record
       insertOtpRecord(msisdn, app_id, response => {
         return callback(response);
       });
@@ -140,9 +151,10 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
 //  check Flood Control
 /**
  *
- * @param {string} uuid
- * @param {function} callback
- * @returns {funciton} callback with boolean true = not blocked , false = to block user
+ * @param {string} uuid Subscriber ID
+ * @param {function} callback Callback Function
+ * @returns {funciton} callback
+ *  after blocked condition satisfy, it will return true and else false in the callback
  */
 function processFloodControl(uuid, callback) {
   //  query to find the user
@@ -154,13 +166,14 @@ function processFloodControl(uuid, callback) {
       // console.log({ created });
       if (!created) {
         //  record already exists
-        //  check time validity
+        //  flood control record is blocked === 1 check
         if (floodControl.status === parseInt(1)) {
+          //  check time validity
           let difference = floodControlTimeValidity(
             new Date(floodControl.created_at),
             new Date()
           );
-          // console.log({ difference });
+          //  check time difference with block limit time
           if (difference >= BLOCK_USER_LIMIT) {
             // unblock it / reset the record
             //  delete the record
@@ -170,6 +183,7 @@ function processFloodControl(uuid, callback) {
               }
             })
               .then(() =>
+                //  create a record for the user
                 FloodControl.create({
                   uuid
                 })
@@ -178,7 +192,7 @@ function processFloodControl(uuid, callback) {
               )
               .catch(e => console.log(e));
           } else {
-            //  block it
+            //  block it isBlocked === true
             return callback(true);
           }
         }
@@ -193,11 +207,11 @@ function processFloodControl(uuid, callback) {
 }
 /**
  *
- * @param {date} createdDate
- * @param {date} currentDate
+ * @param {date} createdDate Create_At (Date/Time)
+ * @param {date} currentDate Now (Date/Time)
+ * @returns {integer} Number Difference between two times
  */
 function floodControlTimeValidity(createdDate, currentDate) {
-  // console.log({ createdDate, currentDate });
   return Math.round((currentDate - createdDate) / 1000 / 60);
 }
 
@@ -207,6 +221,9 @@ function floodControlTimeValidity(createdDate, currentDate) {
  * @param {string} msisdn Mobile Number
  * @param {string} app_id App ID
  * @param {function} callback Function Callback
+ * @returns {callback}
+ * It insert OTP records in the  subcriber otp and mask
+ * table
  */
 function insertOtpRecord(msisdn, app_id, callback) {
   //  insert flood control record
@@ -344,7 +361,5 @@ function verifyTOtp({ subscriber_id, otp, app_id }, callback) {
     );
   });
 }
-
-//  get user subscriber_id or phone no
 
 module.exports = { generateTOtp, verifyTOtp };
