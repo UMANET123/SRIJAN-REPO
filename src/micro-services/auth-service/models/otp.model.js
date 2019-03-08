@@ -27,7 +27,7 @@ const updatePhoneNo = require("../helpers/mobile-number.modify");
  * Constants
  */
 
-const BLOCK_USER_LIMIT = 30;
+const BLOCK_USER_LIMIT = 1;
 const OTP_EXPIRY_TIME = 5;
 
 /**
@@ -106,7 +106,8 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
               SubscriberOTP.update(
                 {
                   otp: newOtp,
-                  expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME)
+                  expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
+                  status: 0
                 },
                 { where: { uuid, app_id } }
               )
@@ -115,13 +116,13 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                     subscriber_id: uuid,
                     otp: newOtp,
                     app_id: app_id
-                  })
+                  },201)
                 )
                 .catch(err => console.log(err));
             } else {
               //  create new OTP record
-              insertOtpRecord(msisdn, app_id, response => {
-                return callback(response);
+              insertOtpRecord(msisdn, app_id, (response, status) => {
+                return callback(response, status);
               });
             }
           });
@@ -130,8 +131,8 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
       //  create new OTP
       //  update OTP
     } else {
-      insertOtpRecord(msisdn, app_id, response => {
-        return callback(response);
+      return insertOtpRecord(msisdn, app_id, (response, status) => {
+        return callback(response, status);
       });
       //  insert the user
     }
@@ -237,7 +238,7 @@ function insertOtpRecord(msisdn, app_id, callback) {
           otp,
           app_id
         },
-        "200"
+        201
       );
     });
   });
@@ -271,23 +272,40 @@ function verifyTOtp({ subscriber_id, otp, app_id }, callback) {
           "otp",
           "expiration",
           "status"
-        ]
+        ],
+        raw: true
       }).then(result => {
-        console.log(result)
+        console.log("RESULT : ", result);
         if (result) {
-          // Delete the flood control
-          // Create a transaction and send
-          FloodControl.destroy({ where: { uuid: subscriber_id } });
-          createTransaction(
-            null,
-            subscriber_id,
-            app_id,
-            new Date(),
-            0,
-            txnId => {
-              callback({ transaction_id: txnId }, 200);
-            }
-          );
+          if (result.status == 0) {
+            // Delete the flood control
+            // Create a transaction and send
+
+            FloodControl.destroy({ where: { uuid: subscriber_id } }).then(
+              () => {
+                invalidateOTP(subscriber_id, app_id, () => {
+                  createTransaction(
+                    null,
+                    subscriber_id,
+                    app_id,
+                    new Date(),
+                    0,
+                    txnId => {
+                      callback({ transaction_id: txnId }, 200);
+                    }
+                  );
+                });
+              }
+            );
+          } else {
+            return callback(
+              {
+                error_code: "InvalidOTP",
+                error_message: "OTP Invalid, Please Generate a new one"
+              },
+              400
+            );
+          }
         } else {
           // Update FloodControl to incrememnt retry
           // If Retry is > 3 block account
@@ -296,9 +314,9 @@ function verifyTOtp({ subscriber_id, otp, app_id }, callback) {
             where: {
               uuid: subscriber_id
             },
-            attributes: ['retry', 'created_at'],
-            raw:true
-          }).then((floodControl) => {
+            attributes: ["retry", "created_at"],
+            raw: true
+          }).then(floodControl => {
             if (floodControl.retry >= 3) {
               /**
                * THERE SEEMS TO BE A PROBLEM HERE
@@ -309,14 +327,15 @@ function verifyTOtp({ subscriber_id, otp, app_id }, callback) {
                 { status: 1 },
                 { where: { uuid: subscriber_id } }
               ).then(() => {
-
-                return callback(
-                  {
-                    error_code: "Unauthorized",
-                    error_message: "Account Blocked, please try in 30 mins"
-                  },
-                  403
-                );
+                invalidateOTP(subscriber_id, app_id, () => {
+                  return callback(
+                    {
+                      error_code: "Unauthorized",
+                      error_message: "Account Blocked, please try in 30 mins"
+                    },
+                    403
+                  );
+                });
               });
             } else {
               return callback(
@@ -332,106 +351,21 @@ function verifyTOtp({ subscriber_id, otp, app_id }, callback) {
       });
     }
   });
-  // (async () => {
-  //   const client = await pool.connect();
-  //   let currentDate = new Date();
-  //   try {
-  //     //  get valid otp with  given params {subscriber_id, otp, app_id}
-  //     const otpRes = await client.query(
-  //       `SELECT * FROM subscriber_otps
-  //         where otp=($1) and uuid=($2) and ($3) < expiration and app_id=($4)`,
-  //       [otp, subscriber_id, currentDate, app_id]
-  //     );
+}
 
-  //     // check if account is blocked
-  //     const blockedOTP = await client.query(
-  //       `SELECT * FROM flood_control WHERE uuid=($1)`,
-  //       [subscriber_id]
-  //     );
-  //     if (blockedOTP.rowCount != 0) {
-  //       if (blockedOTP.rows[0].retry >= 3) {
-  //         let created_at = new Date(blockedOTP.rows[0].created_at).getTime();
-  //         let current_time = new Date().getTime();
-  //         let difference = Math.round((current_time - created_at) / 1000 / 60);
-  //         if (difference < 30) {
-  //           if (blockedOTP.rows[0].status == 0) {
-  //             // await client.query(`UPDATE flood_control SET Status=1 WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
-  //             await client.query(
-  //               `UPDATE flood_control SET Status=1 WHERE uuid=($1)`,
-  //               [subscriber_id]
-  //             );
-  //           }
-  //           return callback(
-  //             {
-  //               error_code: "Unauthorized",
-  //               error_message: "Account Blocked, please try after 30 mins"
-  //             },
-  //             403
-  //           );
-  //         } else {
-  //           // await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
-  //           await client.query(`DELETE FROM flood_control WHERE uuid=($1)`, [
-  //             subscriber_id
-  //           ]);
-  //         }
-  //       }
-  //     }
-  //     //  check for valid otp
-  //     if (otpRes.rows[0]) {
-  //       // create a transaction
-  //       // await client.query(`DELETE FROM flood_control WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
-  //       await client.query(`DELETE FROM flood_control WHERE uuid=($1)`, [
-  //         subscriber_id
-  //       ]);
-  //       createTransaction(
-  //         null,
-  //         subscriber_id,
-  //         app_id,
-  //         currentDate,
-  //         0,
-  //         txnId => {
-  //           callback({ transaction_id: txnId }, 200);
-  //         }
-  //       );
-  //     } else {
-  //       // add retry counter
-  //       /**
-  //        * ID
-  //        * UUID
-  //        * APP_ID
-  //        * CREATED_AT
-  //        * STATUS, default 0 = unblocked, 1 = blocked,
-  //        * RETRY, default 0 +1 , ==3 set STATUS to 1
-  //        *
-  //        * unblock after 30 mins
-  //        */
-  //       // await client.query(`UPDATE flood_control SET Retry=Retry+1 WHERE uuid=($1) AND app_id=($2)`,[subscriber_id,app_id])
-  //       await client.query(
-  //         `UPDATE flood_control SET Retry=Retry+1 WHERE uuid=($1)`,
-  //         [subscriber_id]
-  //       );
-
-  //       return callback(
-  //         {
-  //           error_code: "Unauthorized",
-  //           error_message: "OTP Verification Failed"
-  //         },
-  //         403
-  //       );
-  //     }
-  //   } finally {
-  //     client.release();
-  //   }
-  // })().catch(e => {
-  //   console.log(e.stack);
-  //   return callback(
-  //     {
-  //       error_code: "BadRequest",
-  //       error_message: "Bad Request"
-  //     },
-  //     400
-  //   );
-  // });
+function invalidateOTP(subscriber_id, app_id, callback) {
+  SubscriberOTP.update(
+    { status: 1 },
+    {
+      where: {
+        uuid: subscriber_id,
+        app_id: app_id,
+        status: 0
+      }
+    }
+  ).then(() => {
+    return callback(true);
+  });
 }
 
 //  get user subscriber_id or phone no

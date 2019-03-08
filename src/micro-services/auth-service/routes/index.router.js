@@ -20,38 +20,6 @@ router.post(`/verify/hotp`, verifyHotpController);
 router.post(`/verify/totp`, verifyTotpController);
 router.post(`/verify/user`, verifyUserController);
 
-router.get("/test/orm/", (req, res) => {
-  // SubscriberDataMask.create({valye})
-  // SubscriberDataMask.findAll().then(result => {
-  //   console.log(result.length);
-  // });
-
-  // SubscriberOTP.findAll().then(result => console.log(result.length));
-  SubscriberOTP.create({
-    uuid: "sdsdsdr4grgdfdfdfdf",
-    app_id: "343ddsddfsfdfd",
-    otp: 343232,
-    expiration: new Date(),
-    status: 0
-  })
-    .then(otpRecord => {
-      console.log({ otpRecord });
-    })
-    .catch(err => console.log(err));
-  // FloodControl.findAll().then(result => console.log(result.length));
-  // FloodControl.findOrCreate({
-  //   where: { uuid: "890a4001ef92d2326ead83413b7xxx43b" },
-  //   attributes: ["status", "created_at"]
-  // })
-  //   .spread((flowControl, created) =>
-  //     console.log(flowControl.get("status"), created)
-  //   )
-  //   .catch(err => console.log(err));
-  res.status(200).send({
-    message: "hello"
-  });
-});
-
 router.get(
   `/transaction/:transaction_id/:subscriber_id/:app_id`,
   validateTransaction

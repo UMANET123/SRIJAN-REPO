@@ -18,7 +18,7 @@ module.exports = function(req, res) {
     });
   }
   //  generate otp model call
-  generateTOtp(msisdn, app_id, blacklist, (responseBody, status = 201) => {
+  generateTOtp(msisdn, app_id, blacklist, (responseBody, status) => {
     console.log({ responseBody, status });
     return res.status(status).send(responseBody);
   });

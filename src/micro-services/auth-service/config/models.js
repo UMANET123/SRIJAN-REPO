@@ -1,5 +1,5 @@
 const sequelize = require("./orm.database");
-const { DATE, STRING, INTEGER, NOW , Op} = require("sequelize");
+const { DATE, STRING, INTEGER, NOW, Op } = require("sequelize");
 
 const SubscriberDataMask = sequelize.define(
   "subscriber_data_mask",
@@ -63,8 +63,8 @@ const FloodControl = sequelize.define(
       type: STRING
     },
     created_at: {
-        type:DATE,
-        defaultValue: NOW()
+      type: DATE,
+      defaultValue: NOW()
     },
     status: {
       type: INTEGER,
@@ -82,6 +82,20 @@ const FloodControl = sequelize.define(
   }
 );
 
+const TransactionData = sequelize.define(
+  "transaction_data",
+  {
+    transaction_id: { type: STRING },
+    uuid: { type: STRING },
+    app_id: { type: STRING },
+    created: { type: DATE },
+    status: { type: STRING }
+  },
+  {
+    freezeTableName: true,
+    tableName: "transaction_data",
+    timestamps: false
+  }
+);
 
-
-module.exports = { SubscriberDataMask, SubscriberOTP, FloodControl, Op };
+module.exports = { SubscriberDataMask, SubscriberOTP, FloodControl, TransactionData, Op };
