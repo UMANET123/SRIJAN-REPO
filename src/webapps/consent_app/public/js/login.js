@@ -24,6 +24,8 @@ $(document).ready(function () {
 			event.preventDefault();
 			// Validate the phone no
 			$("#generate_otp").text("Resend OTP");
+			$('#otp_form_group').css('display','flex');
+			$('#verify_otp').css('display','block');
 			generateOTP();
 		}
 	});
