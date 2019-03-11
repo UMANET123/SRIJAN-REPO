@@ -35,7 +35,8 @@ function invalidateTransaction(...args) {
       where: {
         transaction_id: transaction_id,
         uuid: subscriber_id,
-        app_id: app_id
+        app_id: app_id,
+        status:0
       }
     }
   ).then(result => {
