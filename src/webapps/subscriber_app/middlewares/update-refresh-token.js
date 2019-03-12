@@ -28,7 +28,6 @@ function checkAndUpdateToken(req, res, next) {
       let user_logged = Math.floor(
         (new Date().getTime() - req.session.login_utc_time) / 1000
       );
-      console.log({ user_logged });
       let {
         expires_in,
         refresh_token_expires_in,
@@ -38,8 +37,8 @@ function checkAndUpdateToken(req, res, next) {
       /**
        * local  development start
        */
-      expires_in = 50 || parseInt(expires_in);
-      refresh_token_expires_in = 100 || parseInt(refresh_token_expires_in);
+      expires_in = 10 || parseInt(expires_in);
+      refresh_token_expires_in = 20 || parseInt(refresh_token_expires_in);
       /**
        * local  development end
        */
@@ -52,42 +51,47 @@ function checkAndUpdateToken(req, res, next) {
        *  check access token time in between access_token expiry
        *  and refresh_token expiry
        */
-      console.log({ expires_in, refresh_token_expires_in, user_logged });
-      if (expires_in && refresh_token_expires_in && expires_in <= user_logged) {
+      if (expires_in <= user_logged && user_logged < refresh_token_expires_in) {
         /*
          * access token expires
          * check user login time is lesser than ...
          * refresh token
          */
-        if (user_logged < refresh_token_expires_in) {
-          //   hit the api
-          console.log("Refresh token API hit");
-          //    get request parameters
-          let req_options = getReqOptions(refresh_token);
+        //   hit the api
+        console.log("======= Refresh token API hit =============");
+        //    get request parameters
+        let req_options = getReqOptions(refresh_token);
 
-          request(req_options, (err, response, body) => {
-            if (err) throw Error(err);
-            //  for Suceess response update timer, tokens
-            if (response.statusCode === 201) {
-              //    parse response body
-              body = JSON.parse(body);
-              //    updating sessions
-              console.log({ oldSession: req.session, newSession: body });
-              // update login user utc to current date
-              req.session.login_utc_time = new Date().getTime();
-              //  update access token, expires, refresh token
-              req.session.access_token = body.access_token;
-              req.session.expires_in = body.expires_in;
-              req.session.refresh_token = body.refresh_token;
-              req.session.refresh_token_expires_in =
-                body.refresh_token_expires_in;
-              // updating sessions done
-              console.log({ UpdatedSession: req.session });
-            }
-          });
-        } else {
-          //  user is not allowed to be logged in
+        request(req_options, (err, response, body) => {
+          if (err) throw Error(err);
+          //  for Suceess response update timer, tokens
+          if (response.statusCode === 201) {
+            //    parse response body
+            body = JSON.parse(body);
+            //    updating sessions
+            console.log({ oldSession: req.session, newSession: body });
+
+            //  update access token, expires, refresh token
+            req.session.access_token = body.access_token;
+            req.session.expires_in = body.expires_in;
+            req.session.refresh_token = body.refresh_token;
+            req.session.refresh_token_expires_in =
+              body.refresh_token_expires_in;
+            // updating sessions done
+            // update login user utc to current date
+            console.log({
+              diff_utc: new Date().getTime() - req.session.login_utc_time
+            });
+            req.session.login_utc_time = new Date().getTime();
+            console.log({ UpdatedSession: req.session });
+          }
+        });
+      } else if (user_logged >= refresh_token_expires_in) {
+        //  user is not allowed to be logged in
+        if (!req.session.hasOwnProperty("logged_out")) {
+          req.session.logged_out = true;
           res.redirect("/logout");
+          return;
         }
       }
     }
