@@ -46,9 +46,9 @@ $(document).ready(function () {
               data : '',
               dataType : 'json',
               success : function(response) {
-                console.log(response)
+                // console.log(response)
                 if(response['statusCode'] == 200){
-                  console.log({status: response['statusCode'] });
+                  // console.log({status: response['statusCode'] });
                   self.setContentPrepend('<p class="success">Apps have been revoked successfully.</p>');
                 } else {
                   self.setContentPrepend('<p class="error">There is an error occured during the operation.</p>');
@@ -95,9 +95,9 @@ $(document).ready(function () {
               data : JSON.stringify(paramsdata),
               dataType : 'json',
               success : function(response) {
-                console.log(response)
+                // console.log(response)
                 if(response['statusCode'] == 200){
-                  console.log({status: response['statusCode'] });
+                  // console.log({status: response['statusCode'] });
                   self.setContentPrepend('<p class="success">App has been revoked successfully.</p>');
                 } else {
                   self.setContentPrepend('<p class="error">There is an error occured during the operation.</p>');
@@ -142,9 +142,9 @@ $(document).ready(function () {
               data : JSON.stringify(paramsdata),
               dataType : 'json',
               success : function(response) {
-                console.log(response)
+                // console.log(response)
                 if(response['statusCode'] == 200){
-                  console.log({status: response['statusCode'] });
+                  // console.log({status: response['statusCode'] });
                   self.setContentPrepend('<p class="success">App has been blacklisted successfully.</p>');
                 } else {
                   self.setContentPrepend('<p class="error">There is an error occured during the operation.</p>');

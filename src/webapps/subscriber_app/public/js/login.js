@@ -85,7 +85,7 @@ $( document ).ready(function() {
 				subscriber_id : $("#subscriber_id").val(),
 				otp: $("#otp").val()
 			}
-			console.log(formData)
+			// console.log(formData)
     	// DO POST
     	$.ajax({
 			type : "POST",
