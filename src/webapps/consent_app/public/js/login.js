@@ -64,11 +64,11 @@ $(document).ready(function() {
           dataType: "json",
           success: function(subsciber) {
             if (
-              subsciber["statusCode"] == 200 ||
-              subsciber["statusCode"] == 201
+              subsciber.statusCode == 200 ||
+              subsciber.statusCode == 201
             ) {
               $("#postResultDiv").html(
-                "<p class='success'>" + subsciber["message"] + "</p>"
+                "<p class='success'>" + subsciber.message + "</p>"
               );
               $("#subscriber_id").val(subsciber["subscriber_id"]);
               $("#generate_otp").removeClass("generate_otp");
@@ -76,7 +76,7 @@ $(document).ready(function() {
               $("#verify_otp").css("display", "block");
             } else {
               $("#postResultDiv").html(
-                "<p class='error'>" + subsciber["error_message"] + "</p>"
+                "<p class='error'>" + subsciber.error_message + "</p>"
               );
             }
           },
@@ -115,14 +115,14 @@ $(document).ready(function() {
       data: JSON.stringify(formData),
       dataType: "json",
       success: function(subsciber) {
-        if (subsciber["statusCode"] == 302) {
+        if (subsciber.statusCode == 302) {
           window.location.href = subsciber["redirect"];
           $("#postResultDiv").html(
-            "<p class='success'>" + subsciber["message"] + "</p>"
+            "<p class='success'>" + subsciber.message + "</p>"
           );
         } else {
           $("#postResultDiv").html(
-            "<p class='error'>" + subsciber["error_message"] + "</p>"
+            "<p class='error'>" + subsciber.error_message + "</p>"
           );
         }
       },
