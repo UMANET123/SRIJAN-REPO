@@ -17,6 +17,7 @@ const request = require("request");
  * it will hit refresh token api and update token and expiry
  */
 function checkAndUpdateToken(req, res, next) {
+  console.log({ session: req.session });
   //  session has access token
   if (req.session.hasOwnProperty("access_token")) {
     //   set user login time
@@ -24,10 +25,10 @@ function checkAndUpdateToken(req, res, next) {
       req.session.login_utc_time = new Date().getTime();
     } else {
       //  let user login time in seconds
-      let user_logged_time = Math.floor(
+      let user_logged = Math.floor(
         (new Date().getTime() - req.session.login_utc_time) / 1000
       );
-      console.log({ user_logged_time });
+      console.log({ user_logged });
       let {
         expires_in,
         refresh_token_expires_in,
@@ -37,32 +38,28 @@ function checkAndUpdateToken(req, res, next) {
       /**
        * local  development start
        */
-      //   expires_in = 10 || parseInt(expires_in);
-      //   refresh_token_expires_in = 5004 || parseInt(refresh_token_expires_in);
+      expires_in = 50 || parseInt(expires_in);
+      refresh_token_expires_in = 100 || parseInt(refresh_token_expires_in);
       /**
        * local  development end
        */
 
       //    convert times to intergers
-      expires_in = parseInt(expires_in);
-      refresh_token_expires_in = parseInt(refresh_token_expires_in);
+      // expires_in = parseInt(expires_in);
+      // refresh_token_expires_in = parseInt(refresh_token_expires_in);
       // execute only expire, refresh token validity exists
       /*
        *  check access token time in between access_token expiry
        *  and refresh_token expiry
        */
-      console.log({ expires_in, refresh_token_expires_in, user_logged_time });
-      if (
-        expires_in &&
-        refresh_token_expires_in &&
-        expires_in <= user_logged_time
-      ) {
+      console.log({ expires_in, refresh_token_expires_in, user_logged });
+      if (expires_in && refresh_token_expires_in && expires_in <= user_logged) {
         /*
          * access token expires
          * check user login time is lesser than ...
          * refresh token
          */
-        if (user_logged_time < refresh_token_expires_in) {
+        if (user_logged < refresh_token_expires_in) {
           //   hit the api
           console.log("Refresh token API hit");
           //    get request parameters
@@ -76,6 +73,9 @@ function checkAndUpdateToken(req, res, next) {
               body = JSON.parse(body);
               //    updating sessions
               console.log({ oldSession: req.session, newSession: body });
+              // update login user utc to current date
+              req.session.login_utc_time = new Date().getTime();
+              //  update access token, expires, refresh token
               req.session.access_token = body.access_token;
               req.session.expires_in = body.expires_in;
               req.session.refresh_token = body.refresh_token;
@@ -85,6 +85,9 @@ function checkAndUpdateToken(req, res, next) {
               console.log({ UpdatedSession: req.session });
             }
           });
+        } else {
+          //  user is not allowed to be logged in
+          res.redirect("/logout");
         }
       }
     }
