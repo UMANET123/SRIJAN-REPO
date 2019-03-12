@@ -94,7 +94,7 @@ function updateConsent(...args) {
 
 }
 
-function getConsentList(subscriber_id, limit=10, page=0, appname=null, callback){
+function getConsentList(subscriber_id, limit=10, page=0, appname=null, order, callback){
 //  create transaction
     (async () => {
       const client = await pool.connect();
@@ -102,21 +102,22 @@ function getConsentList(subscriber_id, limit=10, page=0, appname=null, callback)
           let offset = (page * limit);
           let record = null;
           let totalRecords = null;
+          let desc = 'desc' || order
           if (appname) {
             // Total Records
-             totalRecords = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
+             totalRecords = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes  FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
              and appname like ($2) and status=($3) and scopes IS NOT NULL`, [subscriber_id, '%'+appname+'%', 0]);
             
             //  get consent app list query by appname
             record = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
-            and appname like ($2) and status=($3) and scopes IS NOT NULL LIMIT ($4) OFFSET ($5)`, [subscriber_id, '%'+appname+'%', 0, limit, offset]);
+            and appname like ($2) and status=($3) and scopes IS NOT NULL order by consent.created ${desc} LIMIT ($4) OFFSET ($5)`, [subscriber_id, '%'+appname+'%', 0, limit, offset]);
           } else {
              totalRecords = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
              and status=($2) and scopes IS NOT NULL`, [subscriber_id, 0]);
             
             //  get consent app list query without appname
-            record = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
-            and status=($2) and scopes IS NOT NULL LIMIT ($3) OFFSET ($4)`, [subscriber_id, 0, limit, offset]);
+            record = await client.query(`SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent as consent inner join apps_metadata as app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
+            and status=($2) and scopes IS NOT NULL order by consent.created ${desc} LIMIT ($3) OFFSET ($4)`, [subscriber_id, 0, limit, offset]);
           
           }
           if (record.rows[0]) {
