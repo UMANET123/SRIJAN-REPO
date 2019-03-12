@@ -1,6 +1,21 @@
 const pool = require("../config/db");
 const { TransactionData } = require("../config/models");
 //  validate a transaction
+/**
+ *
+ *
+ * @param {array} args Following Arguments are needed to pass
+ * - reqParams {object} Path params
+ *   - transaction_id Transaction Id
+ *   - subscriber_id Subscriber Id
+ *   - app_id App Id
+ * - callback Callback Function
+ *
+ * @returns {callback} Callback Function
+ *
+ * It will validate transaction and return callback
+ * with passing boolean value
+ */
 function validateTransaction(...args) {
   let [reqParams, callback] = args;
   let { transaction_id, subscriber_id, app_id } = reqParams;
@@ -22,6 +37,22 @@ function validateTransaction(...args) {
 }
 
 //  invalidate a transaction
+/**
+ *
+ *
+ * @param {array} args Following Arguments are needed to pass
+ * - reqParams {object} Path params
+ *   - transaction_id Transaction Id
+ * - reqBody {object} Body
+ *   - subscriber_id Subscriber Id
+ *   - app_id App Id
+ * - callback Callback Function
+ * @returns {function} callback callback function
+ *
+ * invalidate a transaction and then
+ * invoke callback
+ *
+ */
 function invalidateTransaction(...args) {
   let [reqParams, reqBody, callback] = args;
   let { transaction_id } = reqParams;
@@ -36,7 +67,7 @@ function invalidateTransaction(...args) {
         transaction_id: transaction_id,
         uuid: subscriber_id,
         app_id: app_id,
-        status:0
+        status: 0
       }
     }
   ).then(result => {
