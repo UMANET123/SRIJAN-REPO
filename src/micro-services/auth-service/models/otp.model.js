@@ -15,7 +15,7 @@ const pool = require("../config/db");
 const addMinToDate = require("../helpers/add-minute-to-date");
 const { createTransaction } = require("./_transaction.util");
 const {
-  setOtpSettings,
+  configureOTP,
   getNewOtp,
   getNewSecret,
   checkBlackListApp
@@ -49,7 +49,7 @@ const OTP_EXPIRY_TIME = 5;
 function generateTOtp(msisdn, app_id, blacklist, callback) {
   msisdn = updatePhoneNo(msisdn);
   //  update otp settings
-  setOtpSettings();
+  configureOTP();
   //  blacklist checking option is enabled
   if (blacklist) {
     checkBlackListApp({ msisdn, app_id }, isBlackListed => {
@@ -120,11 +120,14 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
               )
                 .then(result =>
                   //  return OTP response with callback
-                  callback({
-                    subscriber_id: uuid,
-                    otp: newOtp,
-                    app_id: app_id
-                  },201)
+                  callback(
+                    {
+                      subscriber_id: uuid,
+                      otp: newOtp,
+                      app_id: app_id
+                    },
+                    201
+                  )
                 )
                 .catch(err => console.log(err));
             } else {

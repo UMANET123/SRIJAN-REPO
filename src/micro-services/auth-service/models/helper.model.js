@@ -10,14 +10,32 @@ const { verifyUser } = require("./auth.model");
 const pool = require("../config/db");
 const addMinToDate = require("../helpers/add-minute-to-date");
 //  create new otp
+/**
+ *
+ *
+ * @param {string} secret Hash string
+ * @returns {number} OTP number 6 digit
+ * It will take a hash and return
+ * OTP
+ */
 function getNewOtp(secret) {
   return otplib.authenticator.generate(secret);
 }
 // create new secret
-function getNewSecret(msisdn) {
+/**
+ *
+ *
+ * @param {number} key Unique Key to generate HASH
+ * @returns {string} Hash String
+ *
+ * It will take a key and create a HASH
+ * and will return it
+ *
+ */
+function getNewSecret(key) {
   return crypto
     .createHash("md5")
-    .update(msisdn)
+    .update(key)
     .digest("hex");
 }
 
@@ -25,7 +43,11 @@ function getNewSecret(msisdn) {
  * Todo
  * - Better naming convention
  */
-function setOtpSettings() {
+/**
+ *  Update OTP configurations
+ *  with step, window
+ */
+function configureOTP() {
   otplib.totp.options = {
     step: step,
     window: timer
@@ -33,6 +55,15 @@ function setOtpSettings() {
 }
 
 //  check app-subsubser blacklisted
+/**
+ *
+ *
+ * @param {string} { msisdn, app_id } Mobile Number, App Id
+ * @param {Function} callback Callback Function
+ * @returns {Function} Callback function with boolean function
+ *
+ * Check IF User App  is blacklisted
+ */
 function checkBlackListApp({ msisdn, app_id }, callback) {
   let consent_base_url = process.env.CONSENT_SERVICE_BASEPATH;
   // get uuid from phone
@@ -61,6 +92,6 @@ function checkBlackListApp({ msisdn, app_id }, callback) {
 module.exports = {
   getNewOtp,
   getNewSecret,
-  setOtpSettings,
+  configureOTP,
   checkBlackListApp
 };
