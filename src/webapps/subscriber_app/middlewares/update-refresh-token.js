@@ -37,15 +37,15 @@ function checkAndUpdateToken(req, res, next) {
       /**
        * local  development start
        */
-      expires_in = 10 || parseInt(expires_in);
-      refresh_token_expires_in = 20 || parseInt(refresh_token_expires_in);
+      // expires_in = 10 || parseInt(expires_in);
+      // refresh_token_expires_in = 20 || parseInt(refresh_token_expires_in);
       /**
        * local  development end
        */
 
       //    convert times to intergers
-      // expires_in = parseInt(expires_in);
-      // refresh_token_expires_in = parseInt(refresh_token_expires_in);
+      expires_in = parseInt(expires_in);
+      refresh_token_expires_in = parseInt(refresh_token_expires_in);
       // execute only expire, refresh token validity exists
       /*
        *  check access token time in between access_token expiry
