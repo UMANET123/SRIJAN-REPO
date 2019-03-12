@@ -49,14 +49,15 @@ $(document).ready(function() {
           data: JSON.stringify(formData),
           dataType: "json",
           success: function(subsciber) {
+            console.log(subsciber);
             if (
-              subsciber["statusCode"] == 200 ||
-              subsciber["statusCode"] == 201
+              subsciber.statusCode == 200 ||
+              subsciber.statusCode == 201
             ) {
               $("#postResultDiv").html(
-                "<p class='success'>" + subsciber["message"] + "</p>"
+                "<p class='success'>" + subsciber.message + "</p>"
               );
-              $("#subscriber_id").val(subsciber["subscriber_id"]);
+              $("#subscriber_id").val(subsciber.subscriber_id);
               $("#generate_otp").removeClass("generate_otp");
               $("#otp_form_group").css("display", "flex");
               $("#verify_otp").css("display", "block");
@@ -77,9 +78,8 @@ $(document).ready(function() {
       },
       error: function(e) {
         $("#postResultDiv").html(
-          "<p class='error'>" + "Invalid Phone No/OTP<br>"
+          "<p class='error'>" + e.responseJSON.error_message +"<br>"
         );
-        console.log("ERROR: ", e);
       }
     });
   }
@@ -100,22 +100,22 @@ $(document).ready(function() {
       data: JSON.stringify(formData),
       dataType: "json",
       success: function(subsciber) {
-        if (subsciber["statusCode"] == 201) {
+        if (subsciber.statusCode == 201) {
           window.location.href = window.location.href;
           $("#postResultDiv").html(
-            "<p class='success'>" + subsciber["message"] + "</p>"
+            "<p class='success'>" + subsciber.message + "</p>"
           );
         } else {
+          console.log(subsciber)
           $("#postResultDiv").html(
             "<p class='error'>" + subsciber["error_message"] + "</p>"
           );
         }
       },
-      error: function(e) {
+      error: function(e) {        
         $("#postResultDiv").html(
           "<p class='error'>" + "Error! Invalid OTP.<br>"
         );
-        console.log("ERROR: ", e);
       }
     });
   }
