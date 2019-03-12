@@ -2,22 +2,19 @@
 const pool = require("../config/db");
 const { getNewSecret } = require("./helper.model");
 const { TransactionData } = require("../config/models");
-//  create a transaction
-/**
- *
- *
- * @param {} args must contain following list of params
- * - txnId  {string} Transaction Id
- * - subscriberId {string}  Subscriber Id
- * - appId {string} App Id
- * - currentDate {Date} Current Date/Time
- * - status {number} Status of the Transaction
- *
- * Function will create Transaction record and after success invoke
- * the callback with passing the txnId
- */
-function createTransaction(...args) {
-  let [txnId, subscriberId, appId, currentDate, status, callback] = args;
+
+ /**
+  * Function will create Transaction record and after success invoke
+  * the callback with passing the txnId
+  * @param {string} txnId Transaction ID
+  * @param {string} subscriberId Subscriber ID
+  * @param {string} appId App ID
+  * @param {Date} currentDate Current Date/Time
+  * @param {number} status Status of the Transaction
+  * @param {function} callback Callback after success/fail
+  * @returns {boolean} returns true/false via the callback
+  */
+function createTransaction(txnId, subscriberId, appId, currentDate, status, callback) {
   if (!txnId) {
     // create secret key for txnId
     let secret_key = subscriberId + appId + currentDate.getTime();

@@ -7,31 +7,20 @@ const {
   OTP_SETTINGS: { timer, step }
 } = require("../config/environment");
 const { verifyUser } = require("./auth.model");
-const pool = require("../config/db");
-const addMinToDate = require("../helpers/add-minute-to-date");
-//  create new otp
-/**
- *
- *
- * @param {string} secret Hash string
- * @returns {number} OTP number 6 digit
- * It will take a hash and return
- * OTP
- */
+ /**
+  * This function will generate an OTP using a secret
+  * @param {string} secret Secret Hash String
+  * @returns {number} 6 digit OTP number
+  */
 function getNewOtp(secret) {
   return otplib.authenticator.generate(secret);
 }
-// create new secret
-/**
- *
- *
- * @param {number} key Unique Key to generate HASH
- * @returns {string} Hash String
- *
- * It will take a key and create a HASH
- * and will return it
- *
- */
+
+ /**
+  * Takes a key in and generates a string hash
+  * @param {number} key Unqiue key to generate a Hash
+  * @returns {string} Hash String
+  */
 function getNewSecret(key) {
   return crypto
     .createHash("md5")
@@ -40,12 +29,7 @@ function getNewSecret(key) {
 }
 
 /**
- * Todo
- * - Better naming convention
- */
-/**
- *  Update OTP configurations
- *  with step, window
+ * Updates OTP Configurations of the lib
  */
 function configureOTP() {
   otplib.totp.options = {
@@ -54,17 +38,14 @@ function configureOTP() {
   };
 }
 
-//  check app-subsubser blacklisted
 /**
- *
- *
- * @param {string} { msisdn, app_id } Mobile Number, App Id
- * @param {Function} callback Callback Function
- * @returns {Function} Callback function with boolean function
- *
- * Check IF User App  is blacklisted
+ * Checks if a user app is blacklisted
+ * @param {string} msisdn Mobile Number
+ * @param {string} app_id App ID
+ * @param {Function} callback 
+ * @returns {Function} returns callback with boolean value
  */
-function checkBlackListApp({ msisdn, app_id }, callback) {
+function checkBlackListApp(msisdn, app_id, callback) {
   let consent_base_url = process.env.CONSENT_SERVICE_BASEPATH;
   // get uuid from phone
   verifyUser(msisdn, null, response => {

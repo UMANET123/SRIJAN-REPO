@@ -3,7 +3,6 @@
  * MAJOR TODO
  * - Write test cases for each and every case
  * - Write error handlers for every possible condition
- * - Move towards a pure function approach
  */
 const {
   FloodControl,
@@ -32,27 +31,21 @@ const BLOCK_USER_LIMIT = 1;
 //  OTP exipiry time in mins
 const OTP_EXPIRY_TIME = 5;
 
-/**
- *
- * @param {string} msisdn Mobile No
- * @param {string} app_id App ID
- * @param {boolean} blacklist Blacklist Checking Requrement
- * @param {function} callback Callback Function
- * Main Parent Method For Generate OTP route
- * @returns {function} callback Function
- * Execution Steps
- * - update phone number with area code
- * - Check blacklist app
- *    -  Checks user is block
- * - Return OTP
- */
+ /**
+  * Generate TOTP
+  * @param {string} msisdn Mobile Number
+  * @param {string} app_id App ID
+  * @param {boolean} blacklist Blacklist condition
+  * @param {function} callback Callback on return
+  * @returns {function} Call back with message and status
+  */
 function generateTOtp(msisdn, app_id, blacklist, callback) {
   msisdn = updatePhoneNo(msisdn);
   //  update otp settings
   configureOTP();
   //  blacklist checking option is enabled
   if (blacklist) {
-    checkBlackListApp({ msisdn, app_id }, isBlackListed => {
+    checkBlackListApp( msisdn, app_id , isBlackListed => {
       if (isBlackListed) {
         return callback(
           {
@@ -72,14 +65,13 @@ function generateTOtp(msisdn, app_id, blacklist, callback) {
   }
   //  get uuid by phone number
 }
+
 /**
- *
+ * Generate OTP based on verification of user and adding data to flood control ( retry logic )
  * @param {string} msisdn Mobile Number
  * @param {string} app_id App ID
  * @param {function} callback  Callback Function
  * @returns(function) callback Callback Function
- * It will Check user is not blocked and always create OTP
- * and return as callback
  */
 function alwaysCreateOTP(msisdn, app_id, callback) {
   verifyUser(msisdn, null, response => {
@@ -153,13 +145,11 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
   });
 }
 
-//  check Flood Control
 /**
- *
+ * Flood Control Processor
  * @param {string} uuid Subscriber ID
  * @param {function} callback Callback Function
  * @returns {funciton} callback
- *  after blocked condition satisfy, it will return true and else false in the callback
  */
 function processFloodControl(uuid, callback) {
   //  query to find the user
@@ -211,24 +201,21 @@ function processFloodControl(uuid, callback) {
     });
 }
 /**
- *
- * @param {date} createdDate Create_At (Date/Time)
- * @param {date} currentDate Now (Date/Time)
- * @returns {integer} Number Difference between two times
+ * Returns difference between two datetime inputs
+ * @param {Date} createdDate Create_At (Date/Time)
+ * @param {Date} currentDate Now (Date/Time)
+ * @returns {number} difference between the two datetimes
  */
 function floodControlTimeValidity(createdDate, currentDate) {
   return Math.round((currentDate - createdDate) / 1000 / 60);
 }
 
-// insert query transaction for totp for /generate/totp endpoint
 /**
- *
+ * Insert OTP into subscriber_otps and subscriber_mask table
  * @param {string} msisdn Mobile Number
  * @param {string} app_id App ID
  * @param {function} callback Function Callback
- * @returns {callback}
- * It insert OTP records in the  subcriber otp and mask
- * table
+ * @returns {callback} returns created record along with status
  */
 function insertOtpRecord(msisdn, app_id, callback) {
   //  insert flood control record
@@ -264,7 +251,15 @@ function insertOtpRecord(msisdn, app_id, callback) {
   });
 }
 //  verify OTP
-function verifyTOtp({ subscriber_id, otp, app_id }, callback) {
+/**
+ * Verify supplied OTP 
+ * @param {string} subscriber_id Subscriber ID or UUID
+ * @param {string} otp 6 digit OTP number
+ * @param {string} app_id App ID
+ * @param {function} callback returns message and status code
+ * @returns {function} returns message and status code
+ */
+function verifyTOtp(subscriber_id, otp, app_id, callback) {
   processFloodControl(subscriber_id, isBlocked => {
     if (isBlocked) {
       return callback(
@@ -339,9 +334,7 @@ function verifyTOtp({ subscriber_id, otp, app_id }, callback) {
           }).then(floodControl => {
             if (floodControl.retry >= 3) {
               /**
-               * THERE SEEMS TO BE A PROBLEM HERE
-               *  What happens when an account is past 30 mins and passes the same OTP? Shouldn't the OTP be deleted?
-               *  This will save a lot of effort passing flow control around
+               * Invalidate OTP here
                */
               FloodControl.update(
                 { status: 1 },
@@ -373,6 +366,13 @@ function verifyTOtp({ subscriber_id, otp, app_id }, callback) {
   });
 }
 
+/**
+ * Invalidated an OTP after it has been verified/blocked
+ * @param {string} subscriber_id Subscriber ID
+ * @param {string} app_id App ID
+ * @param {function} callback returns a boolean value
+ * @returns {function} returns a boolean value as a function argument
+ */
 function invalidateOTP(subscriber_id, app_id, callback) {
   SubscriberOTP.update(
     { status: 1 },

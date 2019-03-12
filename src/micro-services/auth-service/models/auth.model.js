@@ -2,10 +2,11 @@
 const { SubscriberDataMask } = require("../config/models");
 const updatePhoneNo = require("../helpers/mobile-number.modify");
 /**
- *
+ * Returns UUID of a user if exists else null
  * @param {string} phone_no  User msisdn
  * @param {string} uuid  User Subscriber Id
  * @param {function} callback Callback Function
+ * @returns {function} (data, statusCode)
  */
 function verifyUser(phone_no, uuid, callback) {
   if (phone_no) {
