@@ -5,7 +5,7 @@ if (!subscriber_id || !otp || !app_id) return res.status(400).send({
     "error_code": "BadRequest",
     "error_message": "Bad Request"
   });
-verifyTOtp(req.body, (response, status) => {
+verifyTOtp(subscriber_id, otp, app_id, (response, status) => {
         return res.status(status).send(response);
     });
 }
