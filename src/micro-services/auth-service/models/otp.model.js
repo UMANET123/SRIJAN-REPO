@@ -10,7 +10,6 @@ const {
   SubscriberOTP,
   Op
 } = require("../config/models");
-const pool = require("../config/db");
 const addMinToDate = require("../helpers/add-minute-to-date");
 const { createTransaction } = require("./_transaction.util");
 const {
@@ -30,22 +29,22 @@ const updatePhoneNo = require("../helpers/mobile-number.modify");
 const BLOCK_USER_LIMIT = 1;
 //  OTP exipiry time in mins
 const OTP_EXPIRY_TIME = 5;
-
- /**
-  * Generate TOTP
-  * @param {string} msisdn Mobile Number
-  * @param {string} app_id App ID
-  * @param {boolean} blacklist Blacklist condition
-  * @param {function} callback Callback on return
-  * @returns {function} Call back with message and status
-  */
+var i = 0
+/**
+ * Generate TOTP
+ * @param {string} msisdn Mobile Number
+ * @param {string} app_id App ID
+ * @param {boolean} blacklist Blacklist condition
+ * @param {function} callback Callback on return
+ * @returns {function} Call back with message and status
+ */
 function generateTOtp(msisdn, app_id, blacklist, callback) {
   msisdn = updatePhoneNo(msisdn);
   //  update otp settings
   configureOTP();
   //  blacklist checking option is enabled
   if (blacklist) {
-    checkBlackListApp( msisdn, app_id , isBlackListed => {
+    checkBlackListApp(msisdn, app_id, isBlackListed => {
       if (isBlackListed) {
         return callback(
           {
@@ -56,12 +55,12 @@ function generateTOtp(msisdn, app_id, blacklist, callback) {
         );
       } else {
         //  generate OTP
-        alwaysCreateOTP(msisdn, app_id, callback);
+        return alwaysCreateOTP(msisdn, app_id, callback);
       }
     });
   } else {
     //  generate OTP when blacklist check = false
-    alwaysCreateOTP(msisdn, app_id, callback);
+    return alwaysCreateOTP(msisdn, app_id, callback);
   }
   //  get uuid by phone number
 }
@@ -74,13 +73,13 @@ function generateTOtp(msisdn, app_id, blacklist, callback) {
  * @returns(function) callback Callback Function
  */
 function alwaysCreateOTP(msisdn, app_id, callback) {
-  verifyUser(msisdn, null, response => {
+  return verifyUser(msisdn, null, response => {
     if (response && response.subscriber_id) {
       //   user exists
       let uuid = response.subscriber_id;
 
       //  check flood control
-      processFloodControl(uuid, isBlocked => {
+      return processFloodControl(uuid, isBlocked => {
         // user is blocked
         if (isBlocked) {
           return callback(
@@ -93,7 +92,7 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
         } else {
           //  user not blocked
           //  check any record exists with same app_id, uuid
-          SubscriberOTP.findOne({
+          return SubscriberOTP.findOne({
             where: { uuid, app_id },
             attributes: ["otp"],
             status: 0
@@ -102,7 +101,7 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
               //  previously OTP exists
               let newOtp = getNewOtp(uuid);
               //  update with new OTP
-              SubscriberOTP.update(
+              return SubscriberOTP.update(
                 {
                   otp: newOtp,
                   expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
@@ -110,18 +109,21 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                 },
                 { where: { uuid, app_id } }
               )
-                .then(result =>
+                .then(() =>
                   //  return OTP response with callback
-                  callback(
-                    {
-                      subscriber_id: uuid,
-                      otp: newOtp,
-                      app_id: app_id
-                    },
-                    201
-                  )
+                  {
+                    return callback(
+                      {
+                        subscriber_id: uuid,
+                        otp: newOtp,
+                        app_id: app_id
+                      },
+                      201
+                    );
+                  }
                 )
                 .catch(err => console.log(err));
+                
             } else {
               //  No record exists with requested uuid, app_id
               //  create new OTP record
@@ -172,7 +174,7 @@ function processFloodControl(uuid, callback) {
           if (difference >= BLOCK_USER_LIMIT) {
             // unblock it / reset the record
             //  delete the record
-            FloodControl.destroy({
+            return FloodControl.destroy({
               where: {
                 uuid
               }
@@ -228,7 +230,7 @@ function insertOtpRecord(msisdn, app_id, callback) {
   let currentDate = new Date();
   //  query to find the user
   //  insert record to subscriber data mask
-  SubscriberDataMask.findOrCreate({
+  return SubscriberDataMask.findOrCreate({
     where: { uuid, phone_no: msisdn, created: currentDate, status: 0 },
     attributes: ["uuid"]
   }).spread((mask, created) => {
@@ -252,7 +254,7 @@ function insertOtpRecord(msisdn, app_id, callback) {
 }
 //  verify OTP
 /**
- * Verify supplied OTP 
+ * Verify supplied OTP
  * @param {string} subscriber_id Subscriber ID or UUID
  * @param {string} otp 6 digit OTP number
  * @param {string} app_id App ID

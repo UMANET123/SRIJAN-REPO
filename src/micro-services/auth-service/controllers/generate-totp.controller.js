@@ -1,7 +1,7 @@
-const { generateTOtp, generateTOTP } = require("../models/otp.model");
+const { generateTOtp } = require("../models/otp.model");
 const subscriberNumber = require("../helpers/subscriber");
 
-module.exports = function(req, res) {
+module.exports = function(req, res, next) {
   let { app_id, msisdn, blacklist } = req.body;
   //  check for  {app_id, msisdn, blacklist} exists
   if (!app_id || !msisdn || typeof blacklist != "boolean")
@@ -18,7 +18,7 @@ module.exports = function(req, res) {
     });
   }
   //  generate otp model call
-  generateTOtp(msisdn, app_id, blacklist, (responseBody, status) => {
-    return res.status(status).send(responseBody);
+  return generateTOtp(msisdn, app_id, blacklist, (responseBody, status) => {
+    res.status(status).send(responseBody);
   });
 };
