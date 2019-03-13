@@ -1,0 +1,537 @@
+newman
+
+Globe Wakanda Micro Services
+
+❏ Auth Micro Service / Generate TOTP
+↳ Successfully Generate TOTP
+  POST localhost:3001/auth/v1/generate/totp [201 Created, 334B, 1939ms]
+  ✓  Status code is 201
+
+↳ Fail to Generate OTP, Wrong Mobile No.
+  POST localhost:3001/auth/v1/generate/totp [400 Bad Request, 278B, 8ms]
+  ✓  Status code is 400
+  ✓  Should contain BadRequest in Error Code
+
+↳ Fail to Generate OTP, NO Mobile No.
+  POST localhost:3001/auth/v1/generate/totp [400 Bad Request, 278B, 6ms]
+  ✓  Status code is 400
+  ✓  Should contain BadRequest in Error Code
+
+↳ Fail to Generate OTP, NO APP ID
+  POST localhost:3001/auth/v1/generate/totp [400 Bad Request, 278B, 7ms]
+  ✓  Status code is 400
+  ✓  Should contain BadRequest in Error Code
+
+↳ Fail to Generate OTP, NO Blacklist
+  POST localhost:3001/auth/v1/generate/totp [400 Bad Request, 278B, 6ms]
+  ✓  Status code is 400
+  ✓  Should contain BadRequest in Error Code
+
+↳ Fail to Generate OTP, App Blacklisted
+  POST localhost:3001/auth/v1/generate/totp [403 Forbidden, 282B, 318ms]
+  ✓  Status code is 403
+  ✓  Should contain Forbidden in error_code
+
+↳ Fail to Generate OTP, Account is blocked
+  POST localhost:3001/auth/v1/generate/totp [201 Created, 329B, 1112ms]
+  ┌
+  │ { subscriber_id: 'a2dbae3a1ba374ad7df6c02abcbaa033',
+  │   otp: '805910',
+  │   app_id: 'c8b37b4f08b02dac715e64cf162964f8' }
+  └
+  POST localhost:3001/auth/v1/verify/totp   POST localhost:3001/auth/v1/verify/totp   POST localhost:3001/auth/v1/verify/totp   POST localhost:3001/auth/v1/verify/totp [403 Forbidden, 290B, 741ms]
+  ┌
+  │ null
+  │ { id: '774c77f2-9932-4ee9-ae99-c3ece98df28f',
+  │   status: 'Forbidden',
+  │   code: 403,
+  │   header: 
+  │    [ { key: 'X-Powered-By', value: 'Express' },
+  │      { key: 'Content-Type',
+  │        value: 'application/json; charset=utf-8' },
+  │      { key: 'Content-Length', value: '71' },
+  │      { key: 'ETag',
+  │        value: 'W/"47-6FSFrn7d1GjPLM/BCubefDtFU7g"' },
+  │      { key: 'Date',
+  │        value: 'Wed, 13 Mar 2019 17:37:37 GMT' },
+  │      { key: 'Connection', value: 'keep-alive' } ],
+  │   stream: 
+  │    { type: 'Buffer',
+  │      data: 
+  │       [ 123,
+  │         34,
+  │         101,
+  │         114,
+  │         114,
+  │         111,
+  │         114,
+  │         95,
+  │         99,
+  │         111,
+  │         100,
+  │         101,
+  │         34,
+  │         58,
+  │         34,
+  │         85,
+  │         110,
+  │         97,
+  │         117,
+  │         116,
+  │         104,
+  │         111,
+  │         114,
+  │         105,
+  │         122,
+  │         101,
+  │         100,
+  │         34,
+  │         44,
+  │         34,
+  │         101,
+  │         114,
+  │         114,
+  │         111,
+  │         114,
+  │         95,
+  │         109,
+  │         101,
+  │         115,
+  │         115,
+  │         97,
+  │         103,
+  │         101,
+  │         34,
+  │         58,
+  │         34,
+  │         79,
+  │         84,
+  │         80,
+  │         32,
+  │         86,
+  │         101,
+  │         114,
+  │         105,
+  │         102,
+  │         105,
+  │         99,
+  │         97,
+  │         116,
+  │         105,
+  │         111,
+  │         110,
+  │         32,
+  │         70,
+  │         97,
+  │         105,
+  │         108,
+  │         101,
+  │         100,
+  │         34,
+  │         125 ] },
+  │   cookie: [],
+  │   responseTime: 741,
+  │   responseSize: 71 }
+  └
+[403 Forbidden, 290B, 930ms]
+  ┌
+  │ null
+  │ { id: '48bae866-f0ab-46bf-9d8a-53a347fdeb07',
+  │   status: 'Forbidden',
+  │   code: 403,
+  │   header: 
+  │    [ { key: 'X-Powered-By', value: 'Express' },
+  │      { key: 'Content-Type',
+  │        value: 'application/json; charset=utf-8' },
+  │      { key: 'Content-Length', value: '71' },
+  │      { key: 'ETag',
+  │        value: 'W/"47-6FSFrn7d1GjPLM/BCubefDtFU7g"' },
+  │      { key: 'Date',
+  │        value: 'Wed, 13 Mar 2019 17:37:38 GMT' },
+  │      { key: 'Connection', value: 'keep-alive' } ],
+  │   stream: 
+  │    { type: 'Buffer',
+  │      data: 
+  │       [ 123,
+  │         34,
+  │         101,
+  │         114,
+  │         114,
+  │         111,
+  │         114,
+  │         95,
+  │         99,
+  │         111,
+  │         100,
+  │         101,
+  │         34,
+  │         58,
+  │         34,
+  │         85,
+  │         110,
+  │         97,
+  │         117,
+  │         116,
+  │         104,
+  │         111,
+  │         114,
+  │         105,
+  │         122,
+  │         101,
+  │         100,
+  │         34,
+  │         44,
+  │         34,
+  │         101,
+  │         114,
+  │         114,
+  │         111,
+  │         114,
+  │         95,
+  │         109,
+  │         101,
+  │         115,
+  │         115,
+  │         97,
+  │         103,
+  │         101,
+  │         34,
+  │         58,
+  │         34,
+  │         79,
+  │         84,
+  │         80,
+  │         32,
+  │         86,
+  │         101,
+  │         114,
+  │         105,
+  │         102,
+  │         105,
+  │         99,
+  │         97,
+  │         116,
+  │         105,
+  │         111,
+  │         110,
+  │         32,
+  │         70,
+  │         97,
+  │         105,
+  │         108,
+  │         101,
+  │         100,
+  │         34,
+  │         125 ] },
+  │   cookie: [],
+  │   responseTime: 930,
+  │   responseSize: 71 }
+  └
+[403 Forbidden, 305B, 1202ms]
+  ┌
+  │ null
+  │ { id: '049a5ee9-ddcc-44f3-92dc-979616f8118b',
+  │   status: 'Forbidden',
+  │   code: 403,
+  │   header: 
+  │    [ { key: 'X-Powered-By', value: 'Express' },
+  │      { key: 'Content-Type',
+  │        value: 'application/json; charset=utf-8' },
+  │      { key: 'Content-Length', value: '86' },
+  │      { key: 'ETag',
+  │        value: 'W/"56-fFXX3gZmdDaBNf79jKck00Ugpqk"' },
+  │      { key: 'Date',
+  │        value: 'Wed, 13 Mar 2019 17:37:38 GMT' },
+  │      { key: 'Connection', value: 'keep-alive' } ],
+  │   stream: 
+  │    { type: 'Buffer',
+  │      data: 
+  │       [ 123,
+  │         34,
+  │         101,
+  │         114,
+  │         114,
+  │         111,
+  │         114,
+  │         95,
+  │         99,
+  │         111,
+  │         100,
+  │         101,
+  │         34,
+  │         58,
+  │         34,
+  │         85,
+  │         110,
+  │         97,
+  │         117,
+  │         116,
+  │         104,
+  │         111,
+  │         114,
+  │         105,
+  │         122,
+  │         101,
+  │         100,
+  │         34,
+  │         44,
+  │         34,
+  │         101,
+  │         114,
+  │         114,
+  │         111,
+  │         114,
+  │         95,
+  │         109,
+  │         101,
+  │         115,
+  │         115,
+  │         97,
+  │         103,
+  │         101,
+  │         34,
+  │         58,
+  │         34,
+  │         65,
+  │         99,
+  │         99,
+  │         111,
+  │         117,
+  │         110,
+  │         116,
+  │         32,
+  │         66,
+  │         108,
+  │         111,
+  │         99,
+  │         107,
+  │         101,
+  │         100,
+  │         44,
+  │         32,
+  │         112,
+  │         108,
+  │         101,
+  │         97,
+  │         115,
+  │         101,
+  │         32,
+  │         116,
+  │         114,
+  │         121,
+  │         32,
+  │         105,
+  │         110,
+  │         32,
+  │         51,
+  │         48,
+  │         32,
+  │         109,
+  │         105,
+  │         110,
+  │         115,
+  │         34,
+  │         125 ] },
+  │   cookie: [],
+  │   responseTime: 1202,
+  │   responseSize: 86 }
+  └
+[403 Forbidden, 305B, 1217ms]
+  ┌
+  │ null
+  │ { id: '794e9e73-919c-47db-88bf-4addadacaae8',
+  │   status: 'Forbidden',
+  │   code: 403,
+  │   header: 
+  │    [ { key: 'X-Powered-By', value: 'Express' },
+  │      { key: 'Content-Type',
+  │        value: 'application/json; charset=utf-8' },
+  │      { key: 'Content-Length', value: '86' },
+  │      { key: 'ETag',
+  │        value: 'W/"56-fFXX3gZmdDaBNf79jKck00Ugpqk"' },
+  │      { key: 'Date',
+  │        value: 'Wed, 13 Mar 2019 17:37:38 GMT' },
+  │      { key: 'Connection', value: 'keep-alive' } ],
+  │   stream: 
+  │    { type: 'Buffer',
+  │      data: 
+  │       [ 123,
+  │         34,
+  │         101,
+  │         114,
+  │         114,
+  │         111,
+  │         114,
+  │         95,
+  │         99,
+  │         111,
+  │         100,
+  │         101,
+  │         34,
+  │         58,
+  │         34,
+  │         85,
+  │         110,
+  │         97,
+  │         117,
+  │         116,
+  │         104,
+  │         111,
+  │         114,
+  │         105,
+  │         122,
+  │         101,
+  │         100,
+  │         34,
+  │         44,
+  │         34,
+  │         101,
+  │         114,
+  │         114,
+  │         111,
+  │         114,
+  │         95,
+  │         109,
+  │         101,
+  │         115,
+  │         115,
+  │         97,
+  │         103,
+  │         101,
+  │         34,
+  │         58,
+  │         34,
+  │         65,
+  │         99,
+  │         99,
+  │         111,
+  │         117,
+  │         110,
+  │         116,
+  │         32,
+  │         66,
+  │         108,
+  │         111,
+  │         99,
+  │         107,
+  │         101,
+  │         100,
+  │         44,
+  │         32,
+  │         112,
+  │         108,
+  │         101,
+  │         97,
+  │         115,
+  │         101,
+  │         32,
+  │         116,
+  │         114,
+  │         121,
+  │         32,
+  │         105,
+  │         110,
+  │         32,
+  │         51,
+  │         48,
+  │         32,
+  │         109,
+  │         105,
+  │         110,
+  │         115,
+  │         34,
+  │         125 ] },
+  │   cookie: [],
+  │   responseTime: 1217,
+  │   responseSize: 86 }
+  └
+  POST localhost:3001/auth/v1/generate/totp [403 Forbidden, 305B, 647ms]
+  ✓  Status code is 403
+  ✓  Should Contain Unauthorized in error code
+
+❏ Auth Micro Service / Verify TOTP
+↳ Successfully Verify TOTP
+  POST localhost:3001/auth/v1/verify/totp [200 OK, 265B, 714ms]
+  ✓  Status code is 200
+
+↳ Fail Verify TOTP, OTP wrong
+  POST localhost:3001/auth/v1/verify/totp [403 Forbidden, 290B, 591ms]
+  ✓  Status code is 403
+
+↳ Fail Verify TOTP, No App ID
+  POST localhost:3001/auth/v1/verify/totp [400 Bad Request, 278B, 8ms]
+  ✓  Status code is 400
+
+↳ Fail Verify TOTP, No OTP
+  POST localhost:3001/auth/v1/verify/totp [400 Bad Request, 278B, 13ms]
+  ✓  Status code is 400
+
+↳ Fail Verify TOTP, No Subscriber ID
+  POST localhost:3001/auth/v1/verify/totp [400 Bad Request, 278B, 9ms]
+  ✓  Status code is 400
+
+↳ Failed to  Verify TOTP, OTP already verified
+  POST localhost:3001/auth/v1/verify/totp [400 Bad Request, 305B, 401ms]
+  ✓  Status code is 400
+  ✓  Your test name
+
+↳ Fail to verify, Account Blocked
+  POST localhost:3001/auth/v1/verify/totp [403 Forbidden, 305B, 289ms]
+  ✓  Status code is 403
+  ✓  Should contain Unauthorized in response body
+
+❏ Auth Micro Service / Validate Transaction
+↳ Successfully Validate Transaction, true case
+  GET localhost:3001/auth/v1/transaction/b72746c288aff29b78cb6c7d23d03e79/3622235addff4c6155beaf9576b16509/a46fa81d-9941-42c1-8b47-c8d57be4acc24 [200 OK, 229B, 110ms]
+  ✓  Status code is 200
+  ✓  Your test name
+
+↳ Successfully Validate Transaction, False condition
+  PUT localhost:3001/auth/v1/transaction/b72746c288aff29b78cb6c7d23d03e79/invalidate [200 OK, 163B, 109ms]
+  ┌
+  │ { id: 'cf94e252-4d45-412a-8be9-df7ee669712a',
+  │   status: 'OK',
+  │   code: 200,
+  │   header: 
+  │    [ { key: 'X-Powered-By', value: 'Express' },
+  │      { key: 'Content-Length', value: '0' },
+  │      { key: 'ETag',
+  │        value: 'W/"0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"' },
+  │      { key: 'Date',
+  │        value: 'Wed, 13 Mar 2019 17:37:41 GMT' },
+  │      { key: 'Connection', value: 'keep-alive' } ],
+  │   stream: { type: 'Buffer', data: [] },
+  │   cookie: [],
+  │   responseTime: 109,
+  │   responseSize: 0 }
+  └
+  GET localhost:3001/auth/v1/transaction/b72746c288aff29b78cb6c7d23d03e79/3622235addff4c6155beaf9576b16509/a46fa81d-9941-42c1-8b47-c8d57be4acc24 [200 OK, 230B, 112ms]
+  ✓  Status code is 200
+  ✓  Your test name
+
+❏ Auth Micro Service / Invalidate Transaction
+↳ Successfully Invalidate Transaction
+  POST localhost:3001/auth/v1/generate/totp [201 Created, 329B, 970ms]
+  POST localhost:3001/auth/v1/verify/totp [200 OK, 265B, 657ms]
+  PUT localhost:3001/auth/v1/transaction/20e6627d5161669fee363c9a0b82865e/invalidate [200 OK, 163B, 120ms]
+  ✓  Status code is 200
+
+┌─────────────────────────┬────────────────────┬────────────────────┐
+│                         │           executed │             failed │
+├─────────────────────────┼────────────────────┼────────────────────┤
+│              iterations │                  1 │                  0 │
+├─────────────────────────┼────────────────────┼────────────────────┤
+│                requests │                 25 │                  0 │
+├─────────────────────────┼────────────────────┼────────────────────┤
+│            test-scripts │                 17 │                  0 │
+├─────────────────────────┼────────────────────┼────────────────────┤
+│      prerequest-scripts │                  3 │                  0 │
+├─────────────────────────┼────────────────────┼────────────────────┤
+│              assertions │                 27 │                  0 │
+├─────────────────────────┴────────────────────┴────────────────────┤
+│ total run duration: 10s                                           │
+├───────────────────────────────────────────────────────────────────┤
+│ total data received: 1.54KB (approx)                              │
+├───────────────────────────────────────────────────────────────────┤
+│ average response time: 489ms [min: 6ms, max: 1939ms, s.d.: 505ms] │
+└───────────────────────────────────────────────────────────────────┘
