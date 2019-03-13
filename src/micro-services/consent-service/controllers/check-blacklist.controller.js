@@ -4,7 +4,7 @@ const { checkBlacklist } = require("../models/blacklist.model");
  * CheckBlackList Controller
  * @param {object} req http request
  * @param {object} res http response
- * @returns {object} http response
+ * @returns {object}  http response
  */
 module.exports = (req, res) => {
   //  check app is blacklisted
