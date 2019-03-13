@@ -3,6 +3,7 @@
 *package-lock.json
 *.tar.gz
 src/micro-services/auth-service/yarn.lock
+src/micro-services/consent-service/yarn.lock
 # IDE - VSCode
 *.vscode/*
 *!.vscode/settings.json
