@@ -4,9 +4,8 @@ $(document).ready(function() {
   $(app_search_target)
     .off("keyup")
     .on("keyup", e => {
-      let search_element = e.target.value;
-      console.log({ search_element });
-      autoCompleteSearch(search_element);
+      // console.log({ search_element: e.target.value });
+      autoCompleteSearch(e.target.value);
     });
   $("#revoke_all").click(function(event) {
     event.preventDefault();
@@ -207,9 +206,9 @@ $(document).ready(function() {
    * Autocomplete search
    */
   function autoCompleteSearch(appname) {
-    // console.log('hi');
+    // console.log("auto-complete called");
     let reqUri = `/api/search`;
-    if (appname) reqUri = `/api/search?appname=${appname}`;
+    if (appname) reqUri = `/api/search?app_name=${appname}`;
 
     $("#subscriber_apps").autocomplete({
       minLength: 1,
