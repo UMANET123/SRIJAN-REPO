@@ -31,8 +31,8 @@ router.get("/", function(req, res) {
 
 router.get("/dashboard", async (req, res, next) => {
   sess = req.session;
-  console.log({ sess });
-  if (req.session.sessionid) {
+  // console.log({ sess });
+  if (req.session && req.session.sessionid) {
     console.log(sess.access_token);
     const getData = await consentList(req, res, sess.access_token);
     console.log({ getData });
@@ -56,7 +56,7 @@ router.get("/dashboard", async (req, res, next) => {
           page_no = parseInt(getData.page);
         }
         var currentPage = page_no + 1;
-        res.render("dashboard", {
+        return res.render("dashboard", {
           apps: getData.apps,
           pageCount,
           itemCount,
@@ -66,13 +66,13 @@ router.get("/dashboard", async (req, res, next) => {
           pages: paginate.getArrayPages(req)(3, pageCount, req.query.page)
         });
       } else {
-        res.render("badrequest");
+        return res.render("badrequest");
       }
     } catch (err) {
       next(err);
     }
   } else {
-    res.redirect("/logout");
+    return res.redirect("/logout");
   }
 });
 

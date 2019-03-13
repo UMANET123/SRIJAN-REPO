@@ -22,7 +22,7 @@ $(document).ready(function () {
 	});
 	$('#accept_consent').click(function () {
 		checked_cons = $(".consents:checked")
-		console.log(checked_cons)
+		// console.log(checked_cons)
 		if (checked_cons.length == 0) {
 			$("#postResultDiv").html("<p class='error'>You need to select atleast 1 service.</p>")
 		} else {
@@ -30,23 +30,23 @@ $(document).ready(function () {
 			checked_cons.map(function () {
 				scopes.push($(this).val());
 			});
-			console.log(scopes)
+			// console.log(scopes)
 			// var scopes_data = scopes.join('')
 			var scopes_data = JSON.stringify(scopes)
-			console.log({scopes_data})
+			// console.log({scopes_data})
 			// Get checked values
 			event.preventDefault();
 			updateConsent(scopes_data);
 		}
 		function updateConsent(scopes) {
 			$("#postResultDiv").html('')
-			console.log()
+			// console.log()
 			// PREPARE FORM DATA
 			var formData = {
 				scopes: scopes,
 				//	subsciber_id: subsciber_id
 			};
-			console.log(formData)
+			// console.log(formData)
 			// DO POST
 			$.ajax({
 				type: "POST",
