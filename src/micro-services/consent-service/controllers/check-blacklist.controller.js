@@ -1,3 +1,4 @@
+/* jshint esversion:6 */
 const { checkBlacklist } = require("../models/blacklist.model");
 /**
  *
