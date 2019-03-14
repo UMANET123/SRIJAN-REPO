@@ -63,10 +63,7 @@ $(document).ready(function() {
           data: JSON.stringify(formData),
           dataType: "json",
           success: function(subsciber) {
-            if (
-              subsciber.statusCode == 200 ||
-              subsciber.statusCode == 201
-            ) {
+            if (subsciber.statusCode == 200 || subsciber.statusCode == 201) {
               $("#postResultDiv").html(
                 "<p class='success'>" + subsciber.message + "</p>"
               );
@@ -115,6 +112,7 @@ $(document).ready(function() {
       data: JSON.stringify(formData),
       dataType: "json",
       success: function(subsciber) {
+        console.log("SUBSCRIBER ", subsciber);
         if (subsciber.statusCode == 302) {
           window.location.href = subsciber["redirect"];
           $("#postResultDiv").html(
@@ -127,10 +125,17 @@ $(document).ready(function() {
         }
       },
       error: function(e) {
-        $("#postResultDiv").html(
-          "<p class='error'>" + "Error! Invalid OTP.<br>"
-        );
-        console.log("ERROR: ", e);
+        let error = JSON.parse(e.responseText);
+        if (error.statusCode != 302) {
+          $("#postResultDiv").html(
+            "<p class='error'>" + error.error_message + "<br>"
+          );
+        } else {
+          window.location.href = error.redirect;
+          $("#postResultDiv").html(
+            "<p class='success'>" + error.message + "</p>"
+          );
+        }
       }
     });
   }

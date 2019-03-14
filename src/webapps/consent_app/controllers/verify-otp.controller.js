@@ -43,11 +43,12 @@ module.exports = function(req, res, next) {
       // //   for local only  ------- ************
       console.log(res_data.redirect);
     } else if (response.statusCode == 403) {
-      res_data.error_code = body_data.error_code;
-      res_data.error_message = body_data.error_message;
+      let errorResponseBody = response.body;
+      return res.status(response.statusCode).send(JSON.parse(errorResponseBody));
     } else {
       res_data.error_message = "Invalid OTP.";
     }
+    console.log(res_data);
     return res.status(response.statusCode).send(res_data);
   });
 };

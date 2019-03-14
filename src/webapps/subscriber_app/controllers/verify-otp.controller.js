@@ -36,12 +36,12 @@ module.exports = function(req, res, next) {
 
   request(options, function(error, response, body) {
     if (error) throw new Error(error);
-    console.log(response.statusCode);
+    
     var res_data = {};
     res_data.statusCode = response.statusCode;
+    body_data = JSON.parse(body);
     if (response.statusCode == 201) {
       sess = req.session;
-      body_data = JSON.parse(body);
       sess.sessionid = subscriber_id + body_data["expires_in"];
       sess.access_token = body_data["access_token"];
       sess.token_type = body_data["token_type"];
@@ -54,6 +54,7 @@ module.exports = function(req, res, next) {
         return res.status(response.statusCode).send(res_data);
       });
     } else if (response.statusCode == 403) {
+      console.log(response.statusCode);
       res_data.error_code = body_data.error_code;
       res_data.error_message = body_data.error_message;
     } else {
