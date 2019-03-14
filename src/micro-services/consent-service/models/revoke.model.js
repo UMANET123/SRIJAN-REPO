@@ -1,61 +1,85 @@
+/* jshint esversion:6 */
 
-const pool = require('../config/db');
+const { SubscriberConsent } = require("../config/models");
 //  revoke consent for a single record
-function revokeSingle({subscriber_id, app_id, developer_id}, callback) {
-    //  create transaction
-    (async () => {
-    const client = await pool.connect();
-    try {
-        let consentTable=`subscriber_consent`;
-        let record = await client.query(`UPDATE ${consentTable} SET scopes=($1), status=($2) WHERE uuid=($3) and app_id=($4) and developer_id=($5) and status=($6) RETURNING access_token`, [null, 1, subscriber_id, app_id, developer_id, 0 ]);
-        if (record.rows[0]) {
-          let {access_token} = record.rows[0];
-          if (!access_token)   return callback(403, {"status": "Forbidden"});
-          callback(200, {"revoked_tokens": [access_token]});  
-       } else {
-          callback(403, {"status": "Forbidden"});
-        }
-        return;
-    } finally {
-      client.release();
+/**
+ *
+ *
+ * @param {string} subscriber_id Subscriber Id
+ * @param {string} app_id App Id
+ * @param {string} developer_id Developer Id
+ * @param {function} callback Function Callback
+ * @returns {function} callback
+ *  Revoke Single app return callback with status and revoked token
+ *
+ */
+function revokeSingle(subscriber_id, app_id, developer_id, callback) {
+  //  get consent and update scopes to null , status to 1
+  SubscriberConsent.update(
+    {
+      scopes: null,
+      status: 1
+    },
+    {
+      returning: true,
+      where: { uuid: subscriber_id, app_id, developer_id, status: 0 }
     }
-  })().catch(e => {
-      console.log(e.stack)
-      throw e;
-    });
-}
-
-function revokeAll(subscriber_id, callback) {
-    //  create transaction
-    (async () => {
-      const client = await pool.connect();
-      try {
-          let consentTable=`subscriber_consent`;
-          let record = await client.query(`UPDATE ${consentTable} SET scopes=($1), status=($2) WHERE uuid=($3) and status=($4) RETURNING access_token`, [ null, 1, subscriber_id, 0]);
-          console.log({tes: record.rows});
-          console.log({tes: record.rows[0]});
-          if (record.rows[0]) {
-            let tokenArray = record.rows.map(({access_token}) => { if (access_token) return access_token;});
-            if(tokenArray) {
-              callback(200, {"revoked_tokens": tokenArray});  
-            } else {
-              callback(403, {"status": "Forbidden"});
-            }
-           
-          } else {
-            callback(403, {"status": "Forbidden"});
-          }
-        return;     
-      } finally {
-        client.release();
+  )
+    .then(updatedConsent => {
+      //  get updated Record
+      let [affectedRows, consent] = updatedConsent;
+      //  get access token from consent
+      if (consent[0]) {
+        let { access_token } = consent[0].dataValues;
+        //  for no access token make request forbidden
+        if (!access_token) return callback(403, { status: "Forbidden" });
+        // return access token with success response
+        return callback(201, { revoked_tokens: [access_token] });
+      } else {
+        //  no updated record, forbid it
+        return callback(403, { status: "Forbidden" });
       }
-    })().catch(e => {
-        console.log(e.stack)
-        callback(400, {
-          "error_code": "BadRequest",
-          "error_message": "Bad Request"
-        });
-      });
+    })
+    .catch(err => console.log(err));
 }
 
-module.exports = {revokeSingle, revokeAll};
+/**
+ *
+ *
+ * @param {string} subscriber_id Subscriber Id
+ * @param {function} callback Callback Function
+ * @returns {callback} Callback Function
+ * it revokes all consent record of a subscriber id and
+ * returns revoked token in an array
+ */
+function revokeAll(subscriber_id, callback) {
+  //  get consent and update scopes to null , status to 1
+  SubscriberConsent.update(
+    {
+      scopes: null,
+      status: 1
+    },
+    {
+      returning: true,
+      where: { uuid: subscriber_id, status: 0 }
+    }
+  )
+    .then(updatedConsents => {
+      //  get updated Record
+      let [affectedRows, consents] = updatedConsents;
+      //  get access token from consent
+      //  get all tokens from consents
+      let tokenArray = consents.map(({ access_token }) => {
+        if (access_token) return access_token;
+      });
+      if (tokenArray.length > 0) {
+        // success  with valid access token
+        callback(200, { revoked_tokens: tokenArray });
+      } else {
+        callback(403, { status: "Forbidden" });
+      }
+    })
+    .catch(err => console.log(err));
+}
+
+module.exports = { revokeSingle, revokeAll };

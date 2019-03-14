@@ -4,7 +4,7 @@ const {
   SubscriberConsent
 } = require("../config/models");
 //  need to remove after modification
-const pool = require("../config/db");
+// const pool = require("../config/db");
 /**
  *
  *

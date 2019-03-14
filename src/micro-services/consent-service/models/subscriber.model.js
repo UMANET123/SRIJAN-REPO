@@ -1,6 +1,6 @@
 /* jshint esversion:6 */
 const sequelize = require("../config/orm.database");
-const pool = require("../config/db");
+// const pool = require("../config/db");
 //  get subscriber apps
 /**
  *
