@@ -14,7 +14,8 @@ module.exports = function(req, res) {
     app_id,
     developer_id,
     scopes,
-    appname
+    appname,
+    access_token
   } = req.body;
   if (
     !subscriber_id ||
@@ -29,7 +30,16 @@ module.exports = function(req, res) {
       error_message: "Bad Request"
     });
   }
-  createConsent(req.body, (status, response) => {
-    return res.status(status).send(response);
-  });
+  createConsent(
+    subscriber_id,
+    transaction_id,
+    app_id,
+    developer_id,
+    scopes,
+    appname,
+    access_token,
+    (status, response) => {
+      return res.status(status).send(response);
+    }
+  );
 };

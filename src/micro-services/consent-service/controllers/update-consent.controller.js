@@ -11,6 +11,7 @@ const { updateConsent } = require("../models/consent.model");
 module.exports = function(req, res) {
   let {
     subscriber_id,
+    transaction_id,
     access_token,
     app_id,
     developer_id,
@@ -19,6 +20,7 @@ module.exports = function(req, res) {
   } = req.body;
   if (
     !access_token ||
+    !transaction_id ||
     !subscriber_id ||
     !app_id ||
     !developer_id ||
@@ -30,7 +32,16 @@ module.exports = function(req, res) {
       error_message: "Bad Request"
     });
   }
-  updateConsent(req.body, (status, response) => {
-    return res.status(status).send(response);
-  });
+  updateConsent(
+    subscriber_id,
+    transaction_id,
+    access_token,
+    app_id,
+    developer_id,
+    scopes,
+    appname,
+    (status, response) => {
+      return res.status(status).send(response);
+    }
+  );
 };

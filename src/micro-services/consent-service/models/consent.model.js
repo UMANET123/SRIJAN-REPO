@@ -4,20 +4,18 @@ const axios = require("axios");
 const { createAppMetaData } = require("./_util.model");
 const pool = require("../config/db");
 const { SubscriberConsent } = require("../config/models");
+const sequelize = require("../config/orm.database");
 /**
  *
  *
- * @param {*} args Arguements
- * - reqBody
- *  - {string} subscriber_id Subscriber Id
- *  - {string} transaction_id Transaction Id
- *  - {string} access_token Access Token
- *  - {string} app_id App Id
- *  - {string} developer_id Developer Id
- *  - {[]} scopes Scopes
- *  - {string} appname App Name
- *
- * - {function} callback Callback Function
+ * @param {string} subscriber_id Subscriber Id
+ * @param {string} transaction_id Transaction Id
+ * @param {string} access_token Access Token
+ * @param {string} app_id App Id
+ * @param {string} developer_id Developer Id
+ * @param {[]} scopes Scopes
+ * @param {string} appname App Name
+ * @param {function} callback Callback Function
  * Create a Consent,
  * Cases
  *  - If record exist with same subscriber_id, app_id, developer_id
@@ -27,18 +25,17 @@ const { SubscriberConsent } = require("../config/models");
  *  - else create a consent alongwith app metadata
  *
  */
-function createConsent(...args) {
+function createConsent(
+  subscriber_id,
+  transaction_id,
+  app_id,
+  developer_id,
+  scopes,
+  appname,
+  access_token,
+  callback
+) {
   let createdDate = new Date();
-  let [reqBody, callback] = args;
-  let {
-    subscriber_id,
-    transaction_id,
-    access_token,
-    app_id,
-    developer_id,
-    scopes,
-    appname
-  } = reqBody;
   // check isTransaction Valid
   isTransactionValid(subscriber_id, transaction_id, app_id, isTxnValid => {
     //  transaction is not valid
@@ -103,7 +100,10 @@ function createConsent(...args) {
           //  consent record is created
           //  create metadata
           createAppMetaData(
-            { app_id, developer_id, appname, createdDate },
+            app_id,
+            developer_id,
+            appname,
+            createdDate,
             isAppMetaCreated => {
               return callback(201, {
                 old_token: false,
@@ -111,134 +111,93 @@ function createConsent(...args) {
               });
             }
           );
-          //  return
         });
       }
     });
-
-    // (async () => {
-    //   validateRedirectTxn({ subscriber_id, transaction_id, app_id, callback });
-    //   const client = await pool.connect();
-    //   try {
-    //     //  create a record entry for subscriber consent
-    //     let consent_table = `subscriber_consent`;
-    //     let record = await client.query(
-    //       `select * from ${consent_table} where uuid=($1) and app_id=($2) and developer_id=($3)`,
-    //       [subscriber_id, app_id, developer_id]
-    //     );
-
-    //     //  check record exists
-    //     if (record.rows[0]) {
-    //       let scopeFound = record.rows[0].scopes;
-    //       if (JSON.stringify(scopeFound) == JSON.stringify(scopes)) {
-    //         // console.log("code passing");
-    //         return callback(302, { status: "Record already Exists!" });
-    //       } else {
-    //         await client.query(
-    //           `UPDATE ${consent_table} SET scopes=($1), updated=($2) WHERE  uuid=($3) and app_id=($4) and developer_id=($5)`,
-    //           [
-    //             JSON.stringify(scopes),
-    //             createdDate,
-    //             subscriber_id,
-    //             app_id,
-    //             developer_id
-    //           ]
-    //         );
-    //         callback(200, {
-    //           old_token: false,
-    //           old_token_value: ""
-    //         });
-    //       }
-    //     } else {
-    //       // create a consent
-    //       await client.query(
-    //         `INSERT INTO ${consent_table}(uuid, app_id, developer_id, scopes, access_token, created, status) values ($1, $2, $3, $4, $5, $6, $7)`,
-    //         [
-    //           subscriber_id,
-    //           app_id,
-    //           developer_id,
-    //           JSON.stringify(scopes),
-    //           access_token,
-    //           createdDate,
-    //           1
-    //         ]
-    //       );
-    //     }
-    //     //  create a record entry for app meta data
-
-    //   } finally {
-    //     client.release();
-    //   }
-    // })().catch(e => {
-    //   console.log(e.stack);
-    //   throw e;
-    // });
   });
 }
 
-function updateConsent(...args) {
-  let [reqBody, callback] = args;
-  let {
-    subscriber_id,
-    transaction_id,
-    access_token,
-    app_id,
-    developer_id,
-    scopes,
-    appname
-  } = reqBody;
-  //  create transaction
-  (async () => {
-    // check transaction id Exists
-    if (transaction_id)
-      validateRedirectTxn({ subscriber_id, transaction_id, app_id, callback });
-    const client = await pool.connect();
-    try {
-      let table = `subscriber_consent`;
-      let record = await client.query(
-        `UPDATE ${table} SET scopes=($1), access_token=($2), status=($7), updated=($3) WHERE uuid=($4) and app_id=($5) and developer_id=($6)  RETURNING (SELECT access_token FROM ${table} WHERE uuid=($4) and app_id=($5) and developer_id=($6) limit 1)`,
-        [
-          JSON.stringify(scopes),
-          access_token,
-          new Date(),
-          subscriber_id,
-          app_id,
-          developer_id,
-          0
-        ]
-      );
-      if (record.rows[0]) {
-        console.log("consent updated");
+/**
+ *
+ *
+ * @param {string} subscriber_id Subscriber Id
+ * @param {string} transaction_id Transaction Id
+ * @param {string} access_token Access Token
+ * @param {string} app_id App ID
+ * @param {string} developer_id Developer Id
+ * @param {[]} scopes Scopes Array
+ * @param {string} appname App Name
+ * @param {function} callback Callback Function
+ *
+ * Update consent with returing access token in callback
+ */
+
+function updateConsent(
+  subscriber_id,
+  transaction_id,
+  access_token,
+  app_id,
+  developer_id,
+  scopes,
+  appname,
+  callback
+) {
+  //  check transaction is valid then proceed
+  isTransactionValid(subscriber_id, transaction_id, app_id, isTxnValid => {
+    //  transaction is not valid
+    if (!isTxnValid) {
+      return callback(403, { status: "Transaction id is not valid" });
+    }
+    //  update query to run
+    let queryToRun = `UPDATE subscriber_consent SET scopes= :scopes, access_token= :access_token, status= :status, updated= :updated WHERE uuid= :uuid and app_id= :app_id and developer_id= :developer_id  RETURNING (SELECT access_token FROM subscriber_consent WHERE uuid= :uuid and app_id= :app_id and developer_id= :developer_id limit 1)`;
+    //  query values as object
+    let replacements = {
+      scopes: JSON.stringify(scopes),
+      access_token,
+      status: 0,
+      updated: new Date(),
+      uuid: subscriber_id,
+      app_id,
+      developer_id
+    };
+    // update consent
+    sequelize
+      .query(queryToRun, { replacements, type: sequelize.QueryTypes.UPDATE })
+      .then(consent => {
+        //  invalidate tranaction endpoint
         let invalidateTxnUrl = `${
           process.env.AUTH_SERVICE_BASEPATH
         }/transaction/${transaction_id}/invalidate`;
-        //   invalidate transaction after setting access token
-        let invalidateTxn = await axios.put(invalidateTxnUrl, {
-          subscriber_id,
-          app_id
-        });
-        console.log({ status: invalidateTxn.status });
-        let accessToken = record.rows[0].access_token;
-        if (accessToken) {
-          return callback(200, {
-            old_token: true,
-            old_token_value: accessToken
-          });
-        } else {
-          return callback(200, { old_token: false, old_token_value: "" });
-        }
-      } else {
-        return callback(400, {
-          error_code: "BadRequest",
-          error_message: "Bad Request"
-        });
-      }
-    } finally {
-      client.release();
-    }
-  })().catch(e => {
-    console.log(e.stack);
-    throw e;
+        // invoke  invalidate transaction after setting access token
+        axios
+          .put(invalidateTxnUrl, {
+            subscriber_id,
+            app_id
+          })
+          .then(() => {
+            let [tokenRecord, updated] = consent;
+            //  get old token from query response
+            if (tokenRecord[0].hasOwnProperty("access_token")) {
+              if (tokenRecord[0].access_token) {
+                // valid access token
+                return callback(200, {
+                  old_token: true,
+                  old_token_value: tokenRecord[0].access_token
+                });
+              } else {
+                //  invalid value as null/falsy value
+                return callback(200, {
+                  old_token: false,
+                  old_token_value: ""
+                });
+              }
+            } else {
+              return callback(403, { status: "Forbidden" });
+            }
+          })
+          .catch(e => console.log(e));
+      })
+      .catch(e => console.log(e));
   });
 }
 
@@ -306,6 +265,14 @@ function getConsentList(
   });
 }
 //  validate transaction
+/**
+ *
+ *
+ * @param {string} subscriber_id
+ * @param {string} transaction_id
+ * @param {string} app_id
+ * @param {function} callback
+ */
 function isTransactionValid(subscriber_id, transaction_id, app_id, callback) {
   let txnValidityUrl = `${
     process.env.AUTH_SERVICE_BASEPATH
@@ -315,10 +282,6 @@ function isTransactionValid(subscriber_id, transaction_id, app_id, callback) {
     .get(txnValidityUrl)
     .then(txn => callback(txn.data.is_valid))
     .catch(e => console.log(e));
-  // console.log({ txnValid: txnData.data.is_valid });
-  // if (!txnData.data.is_valid) {
-  //   return callback(403, { status: "Transaction id is not valid" });
-  // }
 }
 
 module.exports = { createConsent, updateConsent, getConsentList };
