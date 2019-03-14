@@ -1,8 +1,9 @@
+/* jshint esversion:6 */
 const express = require("express");
 let router = express.Router();
 const paginate = require("express-paginate");
-
-var subscriberUtil = require("../utility/subscriber");
+const request = require("request");
+const subscriberUtil = require("../utility/subscriber");
 const generateTotpController = require("../controllers/generate-otp.controller");
 const verifyTotpController = require("../controllers/verify-otp.controller");
 const revokeAppController = require("../controllers/revoke.controller");
@@ -10,6 +11,7 @@ const revokeAllAppsController = require("../controllers/revoke-all.controller");
 const blacklistController = require("../controllers/blacklist.controller");
 const consentList = require("../controllers/app-listing.controller");
 const searchApps = require("../controllers/search-apps.controller");
+const logoutController = require("../controllers/logout.controller");
 // Search will go here
 router.post("/api/generate/otp", generateTotpController);
 router.post("/api/verify/otp", verifyTotpController);
@@ -76,15 +78,7 @@ router.get("/dashboard", async (req, res, next) => {
   }
 });
 
-router.get("/logout", function(req, res) {
-  req.session.destroy(function(err) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.redirect("/");
-    }
-  });
-});
+router.get("/logout", logoutController);
 
 router.get("/api/validateMobileNo", function(req, res) {
   phone_no = req.query.phone_no;
