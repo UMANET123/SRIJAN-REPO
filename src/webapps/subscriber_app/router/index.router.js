@@ -78,7 +78,6 @@ router.get("/dashboard", async (req, res, next) => {
 
 router.get("/logout", function(req, res) {
   req.session.destroy(function(err) {
-    // console.log("session destroyed");
     if (err) {
       console.log(err);
     } else {
@@ -91,7 +90,8 @@ router.get("/api/validateMobileNo", function(req, res) {
   phone_no = req.query.phone_no;
   var number = subscriberUtil.getTelco(phone_no);
   res_data = {};
-  if (!number.valid || number.telco !== "globe") {
+  // if (!number.valid || number.telco !== 'globe') {
+  if (!number.valid) {
     res_data.error_code = "InvalidPhoneNo";
     res_data.error_message = "Invalid Phone No.";
     res.statusCode = 400;
