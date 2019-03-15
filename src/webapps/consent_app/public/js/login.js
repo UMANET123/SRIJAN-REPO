@@ -136,6 +136,9 @@ $(document).ready(function() {
             "<p class='success'>" + error.message + "</p>"
           );
         }
+      },
+      complete: function(data){
+        console.log(JSON.parse(data));
       }
     });
   }
