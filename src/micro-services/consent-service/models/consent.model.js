@@ -201,77 +201,93 @@ function updateConsent(
   });
 }
 
+/**
+ *
+ *
+ * @param {string} subscriber_id Subscriber Id
+ * @param {number} [limit=10] Limit  Number of Items default value 10
+ * @param {number} [page=0]  Page Page of Pagination default value 0
+ * @param {string} [appname=null] Appname default value null
+ * @param {string} order Order For Date Filter
+ * @param {function} callback Callback Function
+ * @returns {callback} callback Callback Function
+ *
+ * It queries for Consent and returns consents with pagination
+ * in the callback function
+ */
 function getConsentList(
   subscriber_id,
   limit = 10,
   page = 0,
   appname = null,
+  order,
   callback
 ) {
-  //  create transaction
-  (async () => {
-    const client = await pool.connect();
-    try {
-      let offset = page * limit;
-      let record = null;
-      let totalRecords = null;
-      if (appname) {
-        // Total Records
-        totalRecords = await client.query(
-          `SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
-             and appname like ($2) and status=($3) and scopes IS NOT NULL`,
-          [subscriber_id, "%" + appname + "%", 0]
-        );
+  //  callculate offset
+  let offset = page * limit;
+  //  without appname query string , replacements object
+  //  update query to run
+  let filterWithApp = ``;
+  //  query values as object
+  let queryData = {
+    uuid: subscriber_id,
+    status: 0,
+    limit,
+    offset
+  };
+  if (appname) {
+    //  add where clause  appnme filter
+    filterWithApp = `and appname ILIKE :appname`;
+    //  add appname in the query object
+    queryData.appname = `%${appname}%`;
+  }
+  console.log({ order });
+  //  query find appname, details from subscriber_consent and apps_metadata
+  let queryToRun = `SELECT consent.app_id, appname, consent.developer_id, scopes, count(*) OVER() AS total_rows FROM subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid= :uuid ${filterWithApp} and status= :status and scopes IS NOT NULL 
+  order by consent.created ${order} LIMIT :limit OFFSET :offset`;
 
-        //  get consent app list query by appname
-        record = await client.query(
-          `SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
-            and appname like ($2) and status=($3) and scopes IS NOT NULL LIMIT ($4) OFFSET ($5)`,
-          [subscriber_id, "%" + appname + "%", 0, limit, offset]
-        );
-      } else {
-        totalRecords = await client.query(
-          `SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
-             and status=($2) and scopes IS NOT NULL`,
-          [subscriber_id, 0]
-        );
-
-        //  get consent app list query without appname
-        record = await client.query(
-          `SELECT consent.app_id, appname, consent.developer_id, scopes FROM public.subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid=($1) 
-            and status=($2) and scopes IS NOT NULL LIMIT ($3) OFFSET ($4)`,
-          [subscriber_id, 0, limit, offset]
-        );
-      }
-      if (record.rows[0]) {
+  // execute query with data
+  sequelize
+    .query(queryToRun, {
+      replacements: queryData,
+      type: sequelize.QueryTypes.SELECT
+    })
+    .then(consents => {
+      //  consents array is not empty
+      if (consents.length > 0) {
+        //  get total rows
+        let totalRows = consents[0].total_rows;
+        // remove `total_rows` from consents object
+        let apps = consents.filter(consent => delete consent.total_rows);
+        //  return response
         return callback(200, {
           page,
           limit,
-          resultcount: totalRecords.rows.length,
-          apps: record.rows
+          resultcount: totalRows,
+          apps
         });
       } else {
+        //  return empty array, for empty response
         return callback(200, {
           resultcount: 0,
           apps: []
         });
       }
-    } finally {
-      client.release();
-    }
-  })().catch(e => {
-    console.log(e.stack);
-    throw e;
-  });
+    })
+    .catch(e => console.log(e));
 }
-//  validate transaction
+
 /**
  *
+ * validate transaction
+ * @param {string} subscriber_id Subscriber Id
+ * @param {string} transaction_id Transaction Id
+ * @param {string} app_id App Id
+ * @param {function} callback Callback Function
+ * @returns {boolean}
  *
- * @param {string} subscriber_id
- * @param {string} transaction_id
- * @param {string} app_id
- * @param {function} callback
+ * It checks a transaction is valid and return
+ * boolean
  */
 function isTransactionValid(subscriber_id, transaction_id, app_id, callback) {
   let txnValidityUrl = `${
