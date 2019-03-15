@@ -1,7 +1,7 @@
 /* jshint esversion:6 */
 
 const { AppMetaData } = require("../config/models");
-const pool = require("../config/db");
+// const pool = require("../config/db");
 /**
  *
  *@param {string} app_id App Id

@@ -2,7 +2,7 @@
 require("dotenv").config();
 const axios = require("axios");
 const { createAppMetaData } = require("./_util.model");
-const pool = require("../config/db");
+// const pool = require("../config/db");
 const { SubscriberConsent } = require("../config/models");
 const sequelize = require("../config/orm.database");
 /**
