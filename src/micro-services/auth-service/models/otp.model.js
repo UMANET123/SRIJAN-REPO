@@ -29,7 +29,7 @@ const updatePhoneNo = require("../helpers/mobile-number.modify");
 const BLOCK_USER_LIMIT = 1;
 //  OTP exipiry time in mins
 const OTP_EXPIRY_TIME = 5;
-var i = 0
+var i = 0;
 /**
  * Generate TOTP
  * @param {string} msisdn Mobile Number
@@ -89,49 +89,74 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
             },
             403
           );
-        } else {
+        } else if (!isBlocked && typeof isBlocked == "boolean") {
           //  user not blocked
           //  check any record exists with same app_id, uuid
           return SubscriberOTP.findOne({
             where: { uuid, app_id },
             attributes: ["otp"],
             status: 0
-          }).then(oldOtp => {
-            if (oldOtp && oldOtp.otp) {
-              //  previously OTP exists
-              let newOtp = getNewOtp(uuid);
-              //  update with new OTP
-              return SubscriberOTP.update(
-                {
-                  otp: newOtp,
-                  expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
-                  status: 0
-                },
-                { where: { uuid, app_id } }
-              )
-                .then(() =>
-                  //  return OTP response with callback
+          })
+            .then(oldOtp => {
+              if (oldOtp && oldOtp.otp) {
+                //  previously OTP exists
+                let newOtp = getNewOtp(uuid);
+                //  update with new OTP
+                return SubscriberOTP.update(
                   {
-                    return callback(
-                      {
-                        subscriber_id: uuid,
-                        otp: newOtp,
-                        app_id: app_id
-                      },
-                      201
-                    );
-                  }
+                    otp: newOtp,
+                    expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
+                    status: 0
+                  },
+                  { where: { uuid, app_id } }
                 )
-                .catch(err => console.log(err));
-                
-            } else {
-              //  No record exists with requested uuid, app_id
-              //  create new OTP record
-              return insertOtpRecord(msisdn, app_id, (response, status) => {
-                return callback(response, status);
-              });
-            }
-          });
+                  .then(() =>
+                    //  return OTP response with callback
+                    {
+                      return callback(
+                        {
+                          subscriber_id: uuid,
+                          otp: newOtp,
+                          app_id: app_id
+                        },
+                        201
+                      );
+                    }
+                  )
+                  .catch(err =>
+                    callback(
+                      {
+                        error_code: "InternalServerError",
+                        error_message: "Internal Server Error"
+                      },
+                      500
+                    )
+                  );
+              } else {
+                //  No record exists with requested uuid, app_id
+                //  create new OTP record
+                return insertOtpRecord(msisdn, app_id, (response, status) => {
+                  return callback(response, status);
+                });
+              }
+            })
+            .catch(error => {
+              return callback(
+                {
+                  error_code: "InternalServerError",
+                  error_message: "Internal Server Error"
+                },
+                500
+              );
+            });
+        } else {
+          return callback(
+            {
+              error_code: "InternalServerError",
+              error_message: "Internal Server Error"
+            },
+            500
+          );
         }
       });
       //  create new OTP
@@ -187,7 +212,7 @@ function processFloodControl(uuid, callback) {
                   .then(() => callback(false))
                   .catch(e => console.log(e))
               )
-              .catch(e => console.log(e));
+              .catch(e => callback(null));
           } else {
             //  block it isBlocked === true
             return callback(true);
@@ -199,7 +224,7 @@ function processFloodControl(uuid, callback) {
       }
     })
     .catch(err => {
-      console.log(err);
+      return callback(null);
     });
 }
 /**
@@ -240,16 +265,26 @@ function insertOtpRecord(msisdn, app_id, callback) {
       otp,
       expiration: addMinToDate(currentDate, OTP_EXPIRY_TIME),
       status: 0
-    }).then(otpRecord => {
-      return callback(
-        {
-          subscriber_id: uuid,
-          otp,
-          app_id
-        },
-        201
+    })
+      .then(otpRecord => {
+        return callback(
+          {
+            subscriber_id: uuid,
+            otp,
+            app_id
+          },
+          201
+        );
+      })
+      .catch(e =>
+        callback(
+          {
+            error_code: "InternalServerError",
+            error_message: "Internal Server Error"
+          },
+          500
+        )
       );
-    });
   });
 }
 //  verify OTP
@@ -271,9 +306,9 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
         },
         403
       );
-    } else {
+    } else if (!isBlocked && typeof isBlocked == "boolean") {
       // find OTP
-      SubscriberOTP.findOne({
+      return SubscriberOTP.findOne({
         where: {
           otp: otp,
           uuid: subscriber_id,
@@ -291,79 +326,119 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
           "status"
         ],
         raw: true
-      }).then(result => {
-        console.log("RESULT : ", result);
-        if (result) {
-          if (result.status == 0) {
-            // Delete the flood control
-            // Create a transaction and send
+      })
+        .then(result => {
+          if (result) {
+            if (result.status == 0) {
+              // Delete the flood control
+              // Create a transaction and send
 
-            FloodControl.destroy({ where: { uuid: subscriber_id } }).then(
-              () => {
-                invalidateOTP(subscriber_id, app_id, () => {
-                  createTransaction(
-                    null,
-                    subscriber_id,
-                    app_id,
-                    new Date(),
-                    0,
-                    txnId => {
-                      callback({ transaction_id: txnId }, 200);
-                    }
-                  );
-                });
-              }
-            );
-          } else {
-            return callback(
-              {
-                error_code: "InvalidOTP",
-                error_message: "OTP Invalid, Please Generate a new one"
-              },
-              400
-            );
-          }
-        } else {
-          // Update FloodControl to incrememnt retry
-          // If Retry is > 3 block account
-          FloodControl.increment("retry", { where: { uuid: subscriber_id } });
-          FloodControl.findOne({
-            where: {
-              uuid: subscriber_id
-            },
-            attributes: ["retry", "created_at"],
-            raw: true
-          }).then(floodControl => {
-            if (floodControl.retry >= 3) {
-              /**
-               * Invalidate OTP here
-               */
-              FloodControl.update(
-                { status: 1 },
-                { where: { uuid: subscriber_id } }
-              ).then(() => {
-                invalidateOTP(subscriber_id, app_id, () => {
-                  return callback(
+              return FloodControl.destroy({
+                where: { uuid: subscriber_id }
+              })
+                .then(() => {
+                  return invalidateOTP(subscriber_id, app_id, () => {
+                    return createTransaction(
+                      null,
+                      subscriber_id,
+                      app_id,
+                      new Date(),
+                      0,
+                      txnId => {
+                        return callback({ transaction_id: txnId }, 200);
+                      }
+                    );
+                  });
+                })
+                .catch(e =>
+                  callback(
                     {
-                      error_code: "Unauthorized",
-                      error_message: "Account Blocked, please try in 30 mins"
+                      error_code: "InternalServerError",
+                      error_message: "Internal Server Error"
                     },
-                    403
-                  );
-                });
-              });
+                    500
+                  )
+                );
             } else {
               return callback(
                 {
-                  error_code: "Unauthorized",
-                  error_message: "OTP Verification Failed"
+                  error_code: "InvalidOTP",
+                  error_message: "OTP Invalid, Please Generate a new one"
                 },
-                403
+                400
               );
             }
-          });
-        }
-      });
+          } else {
+            // Update FloodControl to incrememnt retry
+            // If Retry is > 3 block account
+            FloodControl.increment("retry", { where: { uuid: subscriber_id } });
+            return FloodControl.findOne({
+              where: {
+                uuid: subscriber_id
+              },
+              attributes: ["retry", "created_at"],
+              raw: true
+            })
+              .then(floodControl => {
+                if (floodControl.retry >= 3) {
+                  /**
+                   * Invalidate OTP here
+                   */
+                  return FloodControl.update(
+                    { status: 1 },
+                    { where: { uuid: subscriber_id } }
+                  )
+                    .then(() => {
+                      return invalidateOTP(subscriber_id, app_id, () => {
+                        return callback(
+                          {
+                            error_code: "Unauthorized",
+                            error_message:
+                              "Account Blocked, please try in 30 mins"
+                          },
+                          403
+                        );
+                      });
+                    })
+                    .catch(e =>
+                      callback(
+                        {
+                          error_code: "InternalServerError",
+                          error_message: "Internal Server Error"
+                        },
+                        500
+                      )
+                    );
+                } else {
+                  return callback(
+                    {
+                      error_code: "Unauthorized",
+                      error_message: "OTP Verification Failed"
+                    },
+                    403
+                  );
+                }
+              })
+              .catch(e =>
+                callback(
+                  {
+                    error_code: "InternalServerError",
+                    error_message: "Internal Server Error"
+                  },
+                  500
+                )
+              );
+          }
+        })
+        .catch(e =>
+          callback(
+            {
+              error_code: "InternalServerError",
+              error_message: "Internal Server Error"
+            },
+            500
+          )
+        );
     }
   });
 }
@@ -376,7 +451,7 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
  * @returns {function} returns a boolean value as a function argument
  */
 function invalidateOTP(subscriber_id, app_id, callback) {
-  SubscriberOTP.update(
+  return SubscriberOTP.update(
     { status: 1 },
     {
       where: {
@@ -385,9 +460,19 @@ function invalidateOTP(subscriber_id, app_id, callback) {
         status: 0
       }
     }
-  ).then(() => {
-    return callback(true);
-  });
+  )
+    .then(() => {
+      return callback(true);
+    })
+    .catch(e =>
+      callback(
+        {
+          error_code: "InternalServerError",
+          error_message: "Internal Server Error"
+        },
+        500
+      )
+    );
 }
 
 module.exports = { generateTOtp, verifyTOtp };

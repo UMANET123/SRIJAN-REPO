@@ -344,7 +344,7 @@
 											"    },",
 											"    body: {",
 											"        mode: 'raw',",
-											"        raw: JSON.stringify({msisdn:'09273164032',app_id:'c8b37b4f08b02dac715e64cf162964f8',blacklist: true})",
+											"        raw: JSON.stringify({msisdn:'09273164002',app_id:'c8b37b4f08b02dac715e64cf162964f8',blacklist: true})",
 											"    }",
 											"}, function (err, response) {",
 											"    console.log(response.json())",
@@ -385,7 +385,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"msisdn\" : \"09273164032\",\n    \"app_id\" :\"c8b37b4f08b02dac715e64cf162964f8\",\n    \"blacklist\": true\n}"
+									"raw": "{\n    \"msisdn\" : \"09273164002\",\n    \"app_id\" :\"c8b37b4f08b02dac715e64cf162964f8\",\n    \"blacklist\": true\n}"
 								},
 								"url": {
 									"raw": "{{host_auth}}/generate/totp",
