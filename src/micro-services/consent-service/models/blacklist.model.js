@@ -56,7 +56,7 @@ function createBlackList({ subscriber_id, app_id, developer_id }, callback) {
     },
     {
       returning: true,
-      where: { uuid: subscriber_id, app_id, developer_id, status: 0 }
+      where: { uuid: subscriber_id, app_id, developer_id }
     }
   )
     .then(updatedConsent => {
