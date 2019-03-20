@@ -176,7 +176,7 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
  * Flood Control Processor
  * @param {string} uuid Subscriber ID
  * @param {function} callback Callback Function
- * @returns {funciton} callback
+ * @returns {funciton} callback returns boolean and null if internal server error
  */
 function processFloodControl(uuid, callback) {
   //  query to find the user
