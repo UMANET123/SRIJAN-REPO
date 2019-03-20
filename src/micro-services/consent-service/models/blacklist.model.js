@@ -49,58 +49,53 @@ function checkBlacklist({ subscriber_id, app_id }, callback) {
  * return callback along with status code, object
  */
 function createBlackList({ subscriber_id, app_id, developer_id }, callback) {
-  // find or create BlackList record
-  SubscriberBlacklistApp.findOrCreate({
-    where: {
-      uuid: subscriber_id,
-      app_id,
-      developer_id,
-      blacklist_status: 1,
-      status: 0
+  // must update subscriber consent table return token
+  SubscriberConsent.update(
+    {
+      status: 1
     },
-    attributes: ["uuid"]
-  })
-    .spread((blacklist, created) => {
-      if (created) {
-        //  blacklist record is created
-        // must update subscriber consent table return token
-        SubscriberConsent.update(
-          {
-            status: 1
+    {
+      returning: true,
+      where: { uuid: subscriber_id, app_id, developer_id, status: 0 }
+    }
+  )
+    .then(updatedConsent => {
+      //  get updated Record
+      let [affectedRows, consent] = updatedConsent;
+      //  get access token from consent
+      if (consent[0]) {
+        let { access_token } = consent[0].dataValues;
+        //  for no access token make request forbidden
+        if (!access_token) return callback(403, { status: "Forbidden" });
+        // find or create BlackList record
+        SubscriberBlacklistApp.findOrCreate({
+          where: {
+            uuid: subscriber_id,
+            app_id,
+            developer_id,
+            blacklist_status: 1,
+            status: 0
           },
-          {
-            returning: true,
-            where: { uuid: subscriber_id, app_id, developer_id, status: 0 }
-          }
-        )
-          .then(updatedConsent => {
-            //  get updated Record
-            let [affectedRows, consent] = updatedConsent;
-            //  get access token from consent
-            if (consent[0]) {
-              let { access_token } = consent[0].dataValues;
-              //  for no access token make request forbidden
-              if (!access_token) return callback(403, { status: "Forbidden" });
-              // return access token with success response
-              return callback(201, { revoked_tokens: [access_token] });
-            } else {
-              //  no updated record, forbid it
-              return callback(403, { status: "Forbidden" });
+          attributes: ["uuid"]
+        })
+          .spread((blacklist, created) => {
+            if (!created) {
+              //  record found
+              return callback(302, { status: "Record already exists!" });
             }
+            // return access token with success response
+            return callback(201, { revoked_tokens: [access_token] });
           })
-          .catch(err => console.log(err));
-      } else if (blacklist.uuid) {
-        //  record found
-        return callback(302, { status: "Record already exists!" });
+          .catch(e => {
+            console.log(e);
+            return;
+          });
       } else {
-        // no record found
-        return callback(204, { status: "Record Not Found" });
+        //  no updated record, forbid it
+        return callback(403, { status: "Forbidden" });
       }
     })
-    .catch(e => {
-      console.log(e);
-      return;
-    });
+    .catch(err => console.log(err));
 }
 
 module.exports = { checkBlacklist, createBlackList };
