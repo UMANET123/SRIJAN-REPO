@@ -6,6 +6,18 @@ const generateTotpController = require("../controllers/generate-otp.controller")
 const verifyTotpController = require("../controllers/verify-otp.controller");
 const updateConsentController = require("../controllers/update-consent.controller");
 
+const scopeTexts = require('../utility/scopes-text');
+
+
+function scopeDescription(scope){
+  scope = scope.toLowerCase().replace(/ /g,'');
+  console.log(scope)
+  if(scopeTexts[scope]){
+    return scopeTexts[scope]
+  }
+  return ""
+}
+
 router.get("/", function(req, res) {
   sess = req.session;
   console.log(sess);
@@ -27,7 +39,8 @@ router.get("/consent", function(req, res) {
     sess.transaction_id = req.query.transaction_id;
     res.render("consent", {
       scopes: scopes,
-      redirect_uri: req.query.redirect_uri
+      redirect_uri: req.query.redirect_uri,
+      scopeDescription: scopeDescription
     });
   } else {
     res.redirect("/logout");
