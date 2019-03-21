@@ -11,7 +11,7 @@ module.exports = function(req, res, next) {
     });
   //   validate the number as per Philippines
   let isValidNumber = subscriberNumber.getTelco(msisdn);
-  if (!isValidNumber.valid || isValidNumber.telco !== "globe") {
+  if (!isValidNumber.valid) {
     return res.status(400).send({
       error_code: "BadRequest",
       error_message: "Bad Request"

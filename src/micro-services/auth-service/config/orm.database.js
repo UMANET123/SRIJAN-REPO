@@ -22,7 +22,7 @@ const sequelize = new Sequelize(
 sequelize
   .authenticate()
   .then(() => {
-    console.log("Connected to the database via Sequelize");
+    console.log(`Connected to the database via Sequelize ${ENV.DB_HOST}`);
   })
   .catch(err => {
     console.log(err);

@@ -27,13 +27,20 @@ function validateTransaction(...args) {
       app_id: app_id,
       status: 0
     }
-  }).then(result => {
-    if (result) {
-      return callback(200, { is_valid: true });
-    } else {
-      return callback(200, { is_valid: false });
-    }
-  });
+  })
+    .then(result => {
+      if (result) {
+        return callback(200, { is_valid: true });
+      } else {
+        return callback(200, { is_valid: false });
+      }
+    })
+    .catch(e => {
+      return callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      });
+    });
 }
 
 //  invalidate a transaction
@@ -70,13 +77,20 @@ function invalidateTransaction(...args) {
         status: 0
       }
     }
-  ).then(result => {
-    if (result) {
-      return callback(200, null);
-    } else {
-      return callback(204, null);
-    }
-  });
+  )
+    .then(result => {
+      if (result) {
+        return callback(200, null);
+      } else {
+        return callback(204, null);
+      }
+    })
+    .catch(e => {
+      return callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      });
+    });
 }
 
 module.exports = { validateTransaction, invalidateTransaction };
