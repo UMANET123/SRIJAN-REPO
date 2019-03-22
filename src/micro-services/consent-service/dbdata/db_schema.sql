@@ -1,6 +1,6 @@
 
 create table subscriber_consent (
-id serial, 
+id serial,
 uuid varchar,
 app_id varchar,
 developer_id varchar,
@@ -13,7 +13,7 @@ status int);
 create index app_id_index on subscriber_consent(app_id, developer_id);
 
 create table subscriber_blacklist_apps (
-id serial, 
+id serial,
 uuid varchar,
 app_id varchar,
 developer_id varchar,
@@ -26,9 +26,9 @@ create index app_id_index2 on subscriber_blacklist_apps (app_id,developer_id);
 
 
 create table apps_metadata(
-   id serial, 
+   id serial,
    app_id varchar,
-   developer_id varchar, 
+   developer_id varchar,
    appname varchar,
    short_description text,
    long_description text,
