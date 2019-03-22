@@ -44,17 +44,17 @@ module.exports = function(req, res, next) {
     console.log(response.statusCode, response.headers.location);
 
     //  for local dev
-    let req_uri = `curl -X POST "https://globeslingshot-dev-labs.apigee.net/auth/v1/generate/token" -H "Authorization: Basic REPLACE_BASE64_TOKEN_CLIENT_ID_SECRET_ID" -H "Cache-Control: no-cache" -H "Content-Type: application/x-www-form-urlencoded" -d "subscriber_id=${
-      sess.subscriber_id
-    }&grant_type=authorization_code&code=${response.headers.location
-      .split("=")[1]
-      .trim()}&redirect_uri=http%3A%2F%2F13.232.77.36%3A5560&transaction_id=${
-      sess.transaction_id
-    }"`;
-    console.log({
-      base64token_cmd: `echo -n "$client_id:$secret_id" | base64`
-    });
-    console.log({ access_token_url: req_uri });
+    // let req_uri = `curl -X POST "https://globeslingshot-dev-labs.apigee.net/auth/v1/generate/token" -H "Authorization: Basic REPLACE_BASE64_TOKEN_CLIENT_ID_SECRET_ID" -H "Cache-Control: no-cache" -H "Content-Type: application/x-www-form-urlencoded" -d "subscriber_id=${
+    //   sess.subscriber_id
+    // }&grant_type=authorization_code&code=${response.headers.location
+    //   .split("=")[1]
+    //   .trim()}&redirect_uri=http%3A%2F%2F13.232.77.36%3A5560&transaction_id=${
+    //   sess.transaction_id
+    // }"`;
+    // console.log({
+    //   base64token_cmd: `echo -n "$client_id:$secret_id" | base64`
+    // });
+    // console.log({ access_token_url: req_uri });
     // for local dev
 
     var res_data = {};
