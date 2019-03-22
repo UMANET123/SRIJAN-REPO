@@ -15,7 +15,7 @@ const { SubscriberConsent } = require("../config/models");
  */
 function revokeSingle(subscriber_id, app_id, developer_id, callback) {
   //  get consent and update scopes to null , status to 1
-  SubscriberConsent.update(
+  return SubscriberConsent.update(
     {
       scopes: null,
       status: 1
@@ -40,7 +40,12 @@ function revokeSingle(subscriber_id, app_id, developer_id, callback) {
         return callback(403, { status: "Forbidden" });
       }
     })
-    .catch(err => console.log(err));
+    .catch(() =>
+      callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      })
+    );
 }
 
 /**
@@ -54,7 +59,7 @@ function revokeSingle(subscriber_id, app_id, developer_id, callback) {
  */
 function revokeAll(subscriber_id, callback) {
   //  get consent and update scopes to null , status to 1
-  SubscriberConsent.update(
+  return SubscriberConsent.update(
     {
       scopes: null,
       status: 1
@@ -79,7 +84,12 @@ function revokeAll(subscriber_id, callback) {
         callback(403, { status: "Forbidden" });
       }
     })
-    .catch(err => console.log(err));
+    .catch(() =>
+      callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      })
+    );
 }
 
 module.exports = { revokeSingle, revokeAll };

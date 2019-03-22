@@ -38,7 +38,7 @@ function createAppMetaData(
       if (!app) {
         //  app is not created
         // create an app
-        console.log("Need to created app meta");
+        // assign 500 for internal server error/ network error
         return AppMetaData.create({
           app_id,
           developer_id,
@@ -48,17 +48,12 @@ function createAppMetaData(
           long_description,
           developer_name
         })
-          .then(() => {
-            console.log("app meta created and now callback");
-            return callback(true);
-          })
-          .catch(e => console.log(e));
+          .then(() => callback(true))
+          .catch(() => callback(500));
       }
-      // } else {
-      console.log("app meta callback called");
       return callback(true);
     })
-    .catch(e => console.log(e));
+    .catch(() => callback(500));
 }
 
 module.exports = { createAppMetaData };

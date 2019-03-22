@@ -39,81 +39,110 @@ function createConsent(
   // check isTransaction Valid
   isTransactionValid(subscriber_id, transaction_id, app_id, isTxnValid => {
     //  transaction is not valid
-    console.log(isTxnValid);
+    if (isTxnValid == 500)
+      return callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      });
     if (!isTxnValid) {
       return callback(403, { status: "Transaction id is not valid" });
     }
     //  find Existing consent ...
-    SubscriberConsent.findOne({
+    return SubscriberConsent.findOne({
       where: { uuid: subscriber_id, app_id, developer_id },
       attributes: ["app_id", "scopes"]
-    }).then(consent => {
-      if (consent && consent.app_id) {
-        //  consent is found
-        //  and check scopes are same return response
-        if (JSON.stringify(scopes) == JSON.stringify(consent.scopes)) {
-          //  record exists
-          return callback(302, { status: "Record already Exists!" });
-        } else {
-          //  if not update consent else return
-          SubscriberConsent.update(
-            {
-              scopes,
-              updated: createdDate
-            },
-            {
-              returning: true,
-              where: { uuid: subscriber_id, app_id, developer_id }
-            }
-          )
-            .then(updatedConsent => {
-              //  get updated Record
-              let [affectedRows, consent] = updatedConsent;
-              //  get access token from consent
-              let { access_token } = consent[0].dataValues;
-              //  return response
-              if (access_token) {
-                return callback(200, {
-                  old_token: true,
-                  old_token_value: access_token
-                });
-              } else {
-                return callback(200, {
-                  old_token: false,
-                  old_token_value: ""
-                });
+    })
+      .then(consent => {
+        if (consent && consent.app_id) {
+          //  consent is found
+          //  and check scopes are same return response
+          if (JSON.stringify(scopes) == JSON.stringify(consent.scopes)) {
+            //  record exists
+            return callback(302, { status: "Record already Exists!" });
+          } else {
+            //  if not update consent else return
+            SubscriberConsent.update(
+              {
+                scopes,
+                updated: createdDate
+              },
+              {
+                returning: true,
+                where: { uuid: subscriber_id, app_id, developer_id }
               }
-            })
-            .catch(err => console.log(err));
-        }
-      } else {
-        //  Need to create new consent
-        SubscriberConsent.create({
-          uuid: subscriber_id,
-          app_id,
-          developer_id,
-          scopes,
-          access_token,
-          created: createdDate,
-          status: 1
-        }).then(() => {
-          //  consent record is created
-          //  create metadata
-          createAppMetaData(
+            )
+              .then(updatedConsent => {
+                //  get updated Record
+                let [affectedRows, consent] = updatedConsent;
+                //  get access token from consent
+                let { access_token } = consent[0].dataValues;
+                //  return response
+                if (access_token) {
+                  return callback(200, {
+                    old_token: true,
+                    old_token_value: access_token
+                  });
+                } else {
+                  return callback(200, {
+                    old_token: false,
+                    old_token_value: ""
+                  });
+                }
+              })
+              .catch(() =>
+                callback(500, {
+                  error_code: "InternalServerError",
+                  error_message: "Internal Server Error"
+                })
+              );
+          }
+        } else {
+          //  Need to create new consent
+          SubscriberConsent.create({
+            uuid: subscriber_id,
             app_id,
             developer_id,
-            appname,
-            createdDate,
-            isAppMetaCreated => {
-              return callback(201, {
-                old_token: false,
-                old_token_value: ""
-              });
-            }
-          );
-        });
-      }
-    });
+            scopes,
+            access_token,
+            created: createdDate,
+            status: 1
+          })
+            .then(() => {
+              //  consent record is created
+              //  create metadata
+              createAppMetaData(
+                app_id,
+                developer_id,
+                appname,
+                createdDate,
+                isAppMetaCreated => {
+                  //  500 internal server error
+                  if (isAppMetaCreated == 500)
+                    return callback(500, {
+                      error_code: "InternalServerError",
+                      error_message: "Internal Server Error"
+                    });
+                  return callback(201, {
+                    old_token: false,
+                    old_token_value: ""
+                  });
+                }
+              );
+            })
+            .catch(() =>
+              callback(500, {
+                error_code: "InternalServerError",
+                error_message: "Internal Server Error"
+              })
+            );
+        }
+      })
+      .catch(() =>
+        callback(500, {
+          error_code: "InternalServerError",
+          error_message: "Internal Server Error"
+        })
+      );
   });
 }
 
@@ -145,6 +174,11 @@ function updateConsent(
   //  check transaction is valid then proceed
   isTransactionValid(subscriber_id, transaction_id, app_id, isTxnValid => {
     //  transaction is not valid
+    if (isTxnValid == 500)
+      return callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      });
     if (!isTxnValid) {
       return callback(403, { status: "Transaction id is not valid" });
     }
@@ -195,9 +229,19 @@ function updateConsent(
               return callback(403, { status: "Forbidden" });
             }
           })
-          .catch(e => console.log(e));
+          .catch(() =>
+            callback(500, {
+              error_code: "InternalServerError",
+              error_message: "Internal Server Error"
+            })
+          );
       })
-      .catch(e => console.log(e));
+      .catch(() =>
+        callback(500, {
+          error_code: "InternalServerError",
+          error_message: "Internal Server Error"
+        })
+      );
   });
 }
 
@@ -241,7 +285,6 @@ function getConsentList(
     //  add appname in the query object
     queryData.appname = `%${appname}%`;
   }
-  console.log({ order });
   //  query find appname, details from subscriber_consent and apps_metadata
   let queryToRun = `SELECT consent.app_id, appname, consent.developer_id, scopes, count(*) OVER() AS total_rows FROM subscriber_consent consent inner join apps_metadata app on consent.app_id=app.app_id and consent.developer_id=app.developer_id where uuid= :uuid ${filterWithApp} and status= :status and scopes IS NOT NULL 
   order by consent.created ${order} LIMIT :limit OFFSET :offset`;
@@ -274,7 +317,12 @@ function getConsentList(
         });
       }
     })
-    .catch(e => console.log(e));
+    .catch(() =>
+      callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      })
+    );
 }
 
 /**
@@ -297,7 +345,7 @@ function isTransactionValid(subscriber_id, transaction_id, app_id, callback) {
   axios
     .get(txnValidityUrl)
     .then(txn => callback(txn.data.is_valid))
-    .catch(e => console.log(e));
+    .catch(() => callback(500));
 }
 
 module.exports = { createConsent, updateConsent, getConsentList };

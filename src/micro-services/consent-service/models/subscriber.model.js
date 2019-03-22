@@ -1,6 +1,5 @@
 /* jshint esversion:6 */
 const sequelize = require("../config/orm.database");
-// const pool = require("../config/db");
 //  get subscriber apps
 /**
  *
@@ -27,11 +26,15 @@ function getSubscriberApps(subscriber_id, appname, callback) {
   sequelize
     .query(queryToRun, { replacements, type: sequelize.QueryTypes.SELECT })
     .then(app => {
-      console.log(app);
       let appArray = app.map(({ appname }) => appname);
       callback(200, { appname: appArray });
     })
-    .catch(e => console.log(e));
+    .catch(() =>
+      callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      })
+    );
 }
 
 module.exports = { getSubscriberApps };

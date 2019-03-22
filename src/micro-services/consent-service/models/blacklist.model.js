@@ -16,7 +16,7 @@ const {
  */
 function checkBlacklist({ subscriber_id, app_id }, callback) {
   //  find one app with above params
-  SubscriberBlacklistApp.findOne({
+  return SubscriberBlacklistApp.findOne({
     where: { uuid: subscriber_id, app_id },
     attributes: ["blacklist_status"]
   })
@@ -30,7 +30,12 @@ function checkBlacklist({ subscriber_id, app_id }, callback) {
         return callback(204, null);
       }
     })
-    .catch(e => console.log(e));
+    .catch(() =>
+      callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      })
+    );
 }
 
 //  create black list record
@@ -50,7 +55,7 @@ function checkBlacklist({ subscriber_id, app_id }, callback) {
  */
 function createBlackList({ subscriber_id, app_id, developer_id }, callback) {
   // must update subscriber consent table return token
-  SubscriberConsent.update(
+  return SubscriberConsent.update(
     {
       status: 1
     },
@@ -86,16 +91,23 @@ function createBlackList({ subscriber_id, app_id, developer_id }, callback) {
             // return access token with success response
             return callback(201, { revoked_tokens: [access_token] });
           })
-          .catch(e => {
-            console.log(e);
-            return;
-          });
+          .catch(() =>
+            callback(500, {
+              error_code: "InternalServerError",
+              error_message: "Internal Server Error"
+            })
+          );
       } else {
         //  no updated record, forbid it
         return callback(403, { status: "Forbidden" });
       }
     })
-    .catch(err => console.log(err));
+    .catch(() =>
+      callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      })
+    );
 }
 
 module.exports = { checkBlacklist, createBlackList };
