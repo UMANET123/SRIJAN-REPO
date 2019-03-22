@@ -39,12 +39,17 @@ module.exports = function(req, res, next) {
       console.log(response.headers.location);
       res_data.redirect = response.headers.location;
       //   for local only  ------- ************
-      // res_data.redirect = response.headers.location.replace("13.232.77.36","localhost");
+      res_data.redirect = response.headers.location.replace(
+        "13.232.77.36",
+        "localhost"
+      );
       // //   for local only  ------- ************
       console.log(res_data.redirect);
     } else if (response.statusCode == 403) {
       let errorResponseBody = response.body;
-      return res.status(response.statusCode).send(JSON.parse(errorResponseBody));
+      return res
+        .status(response.statusCode)
+        .send(JSON.parse(errorResponseBody));
     } else {
       res_data.error_message = "Invalid OTP.";
     }
