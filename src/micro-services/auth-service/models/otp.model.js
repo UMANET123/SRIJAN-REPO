@@ -30,6 +30,7 @@ const request = require("request-promise");
 const BLOCK_USER_LIMIT = 1;
 //  OTP exipiry time in mins
 const OTP_EXPIRY_TIME = 5;
+//
 var i = 0;
 /**
  * Generate TOTP
@@ -101,29 +102,53 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
             if (oldOtp && oldOtp.otp) {
               //  previously OTP exists
               let newOtp = getNewOtp(uuid);
-              //  update with new OTP
-              return SubscriberOTP.update(
-                {
-                  otp: newOtp,
-                  expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
-                  status: 0
-                },
-                { where: { uuid, app_id } }
-              )
-                .then(() =>
-                  //  return OTP response with callback
-                  {
-                    return callback(
+              //  get sms template
+              let smsContent = getOtpMsgTemplate(newOtp);
+              //  Send OTP SMS
+              //  After successful SMS send Do transaction
+              sendOtpSms(smsContent, msisdn, isSent => {
+                //  check for network error
+                if (isSent == 500) {
+                  return callback(
+                    {
+                      error_code: "InternalServerError",
+                      error_message: "Internal Server Error"
+                    },
+                    500
+                  );
+                }
+                //  sms sending true
+                if (isSent) {
+                  //  update with new OTP
+                  return SubscriberOTP.update(
+                    {
+                      otp: newOtp,
+                      expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
+                      status: 0
+                    },
+                    { where: { uuid, app_id } }
+                  )
+                    .then(() =>
+                      //  return OTP response with callback
                       {
-                        subscriber_id: uuid,
-                        otp: newOtp,
-                        app_id: app_id
-                      },
-                      201
-                    );
-                  }
-                )
-                .catch(err => console.log(err));
+                        return callback(
+                          {
+                            subscriber_id: uuid,
+                            otp: newOtp,
+                            app_id: app_id
+                          },
+                          201
+                        );
+                      }
+                    )
+                    .catch(err => console.log(err));
+                } else {
+                  return callback(
+                    { status: `Sorry, unable to send otp to ${msisdn}` },
+                    400
+                  );
+                }
+              });
             } else {
               //  No record exists with requested uuid, app_id
               //  create new OTP record
@@ -226,30 +251,54 @@ function insertOtpRecord(msisdn, app_id, callback) {
   let uuid = getNewSecret(msisdn);
   //  get new otp for new record
   let otp = getNewOtp(uuid);
-  //  insert records to the table
-  let currentDate = new Date();
-  //  query to find the user
-  //  insert record to subscriber data mask
-  return SubscriberDataMask.findOrCreate({
-    where: { uuid, phone_no: msisdn, created: currentDate, status: 0 },
-    attributes: ["uuid"]
-  }).spread((mask, created) => {
-    SubscriberOTP.create({
-      uuid,
-      app_id,
-      otp,
-      expiration: addMinToDate(currentDate, OTP_EXPIRY_TIME),
-      status: 0
-    }).then(otpRecord => {
+  let smsContent = getOtpMsgTemplate(otp);
+
+  //  send sms
+  sendOtpSms(smsContent, msisdn, isSent => {
+    if (isSent == 500) {
       return callback(
         {
-          subscriber_id: uuid,
-          otp,
-          app_id
+          error_code: "InternalServerError",
+          error_message: "Internal Server Error"
         },
-        201
+        500
       );
-    });
+    }
+    //  otp sending successful
+    if (isSent) {
+      //  Send OTP SMS
+      //  After successful SMS send Do transaction
+      //  insert records to the table
+      let currentDate = new Date();
+      //  query to find the user
+      //  insert record to subscriber data mask
+      return SubscriberDataMask.findOrCreate({
+        where: { uuid, phone_no: msisdn, created: currentDate, status: 0 },
+        attributes: ["uuid"]
+      }).spread((mask, created) => {
+        SubscriberOTP.create({
+          uuid,
+          app_id,
+          otp,
+          expiration: addMinToDate(currentDate, OTP_EXPIRY_TIME),
+          status: 0
+        }).then(otpRecord => {
+          return callback(
+            {
+              subscriber_id: uuid,
+              otp,
+              app_id
+            },
+            201
+          );
+        });
+      });
+    } else {
+      return callback(
+        { status: `Sorry, unable to send otp to ${msisdn}` },
+        400
+      );
+    }
   });
 }
 //  verify OTP
@@ -412,13 +461,31 @@ function sendOtpSms(message, address, callback) {
       address,
       passphrase: process.env.SMS_PASSPHRASE,
       app_id: process.env.SMS_APP_ID,
-      app_secret: process.env.SMS_APP_ID
+      app_secret: process.env.SMS_APP_SECRET
     }
   };
-
   request(options)
-    .then(response => console.log(response))
-    .catch(err => console.log(err));
+    .then(smsResponse => {
+      let {
+        outboundSMSMessageRequest: { address }
+      } = JSON.parse(smsResponse);
+      console.log({ address });
+      if (address) return callback(true);
+      return callback(false);
+    })
+    .catch(err => {
+      console.log({ err });
+      return callback(500);
+    });
+}
+/**
+ *
+ *
+ * @param {number} otp OTP number
+ * @returns {string} OTP messsage Template
+ */
+function getOtpMsgTemplate(otp) {
+  return `${otp} is your One Time Password for Globe login.This OTP is usable only once and valid for 5 minutes from the request`;
 }
 
-module.exports = { generateTOtp, verifyTOtp, sendOtpSms };
+module.exports = { generateTOtp, verifyTOtp };
