@@ -1,4 +1,5 @@
 /*jshint esversion: 8 */
+require("dotenv").config();
 /**
  * MAJOR TODO
  * - Write test cases for each and every case
@@ -20,7 +21,7 @@ const {
 } = require("./helper.model");
 const { verifyUser } = require("./auth.model");
 const updatePhoneNo = require("../helpers/mobile-number.modify");
-
+const request = require("request-promise");
 /**
  * Constants
  */
@@ -29,7 +30,7 @@ const updatePhoneNo = require("../helpers/mobile-number.modify");
 const BLOCK_USER_LIMIT = 1;
 //  OTP exipiry time in mins
 const OTP_EXPIRY_TIME = 5;
-var i = 0
+var i = 0;
 /**
  * Generate TOTP
  * @param {string} msisdn Mobile Number
@@ -123,7 +124,6 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                   }
                 )
                 .catch(err => console.log(err));
-                
             } else {
               //  No record exists with requested uuid, app_id
               //  create new OTP record
@@ -389,5 +389,36 @@ function invalidateOTP(subscriber_id, app_id, callback) {
     return callback(true);
   });
 }
+/**
+ *
+ *
+ * @param {string} message OTP sms
+ * @param {string} address mobile number
+ * @returns {function} Callback function with argument as boolean
+ *
+ * Send Otp to address/mobile number and return boolean
+ * as per the response
+ */
+function sendOtpSms(message, address, callback) {
+  var options = {
+    method: "POST",
+    url: process.env.SMS_API_ENDPOINT,
+    headers: {
+      "cache-control": "no-cache",
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    form: {
+      message,
+      address,
+      passphrase: process.env.SMS_PASSPHRASE,
+      app_id: process.env.SMS_APP_ID,
+      app_secret: process.env.SMS_APP_ID
+    }
+  };
 
-module.exports = { generateTOtp, verifyTOtp };
+  request(options)
+    .then(response => console.log(response))
+    .catch(err => console.log(err));
+}
+
+module.exports = { generateTOtp, verifyTOtp, sendOtpSms };
