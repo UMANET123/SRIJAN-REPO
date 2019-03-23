@@ -4,7 +4,7 @@
   "description": "Consent Service",
   "main": "app.js",
   "scripts": {
-    "test": "OTP_TIMER=1 OTP_STEP=10 NODE_ENV=test npx mocha --recursive --timeout 70000 --exit  tests",
+    "test": "NODE_ENV=test npx mocha --recursive --timeout 70000 --exit  tests",
     "dev": "npx nodemon app.js"
   },
   "author": "",
