@@ -25,7 +25,7 @@ describe("Testing Update Consent API Endpoint", () => {
         .type(contentType)
         .send(data)
         .end((err, res) => {
-          console.log({ body: res.body });
+          // console.log({ body: res.body });
           expect(res.statusCode).to.to.be.oneOf([200, 403]);
           expect(err).to.equal(null);
           expect(res.body).to.be.an("object");

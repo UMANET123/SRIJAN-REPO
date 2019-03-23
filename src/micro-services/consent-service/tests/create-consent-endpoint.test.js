@@ -24,7 +24,7 @@ describe("Testing Create Consent API Endpoint", () => {
         .type(contentType)
         .send(data)
         .end((err, res) => {
-          console.log(res.body);
+          //   console.log(res.body);
           expect(res.statusCode).to.be.oneOf([201, 200, 302, 403]);
           done();
         });

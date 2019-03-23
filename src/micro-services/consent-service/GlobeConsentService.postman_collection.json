@@ -1359,6 +1359,462 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Fail without Subscriber Id Revoke a Consent ",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cc769081-4ce5-4be8-be97-931e4fdc8688",
+								"exec": [
+									"// get postman env",
+									"let setEnv = (key, value) => {",
+									"    pm.environment.set(key, value);",
+									"};",
+									"//  get postman env",
+									"let getEnv = (key) => {",
+									"    return pm.environment.get(key);",
+									"}",
+									"",
+									"// generate otp",
+									"function generateOtp(cb) {",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_auth\") +\"/generate/totp\",",
+									"    method: 'POST',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({msisdn:getEnv('msisdn'), app_id: ",
+									"        getEnv('app_id'), blacklist: true})",
+									"    }",
+									"}, (err, response) => cb(err, response, createConsent) );",
+									"}",
+									"",
+									"",
+									"// verify otp",
+									"function verifyOtp(err, response, cb) {",
+									"    let {subscriber_id, app_id, otp} = response.json();",
+									"      if(subscriber_id && app_id) {",
+									"        setEnv('subscriber_id', subscriber_id);",
+									"        setEnv('app_id', app_id); ",
+									"    }",
+									"    pm.sendRequest({",
+									"        url: getEnv(\"host_auth\") +\"/verify/totp\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({app_id: app_id, subscriber_id: subscriber_id, otp: otp})",
+									"        }",
+									"    },(err, response) => cb(err, response, updateConsent));",
+									"}",
+									"// create consent",
+									"function createConsent(err, response, cb) {",
+									"   if(response.json().transaction_id) {",
+									"         setEnv('transaction_id', response.json().transaction_id);",
+									"    }",
+									"        //  creating consent",
+									"        pm.sendRequest({",
+									"        url: getEnv(\"host_consent\") +\"/consent\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname')})",
+									"        }",
+									"    }, (err, response) => cb(err, response));",
+									"}",
+									"// update consent",
+									"function updateConsent(err, response) {",
+									"   ",
+									"  ",
+									"        //  creating consent",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_consent\") +\"/consent\",",
+									"    method: 'PUT',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname'),",
+									"        access_token: \"GGYYYSWwx\"",
+									"        }),",
+									"        }",
+									"    });",
+									"}",
+									"//  consent flow ready",
+									"",
+									"//  call generate otp",
+									"generateOtp(verifyOtp);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "4be54013-2a48-4526-913b-a46d4a7d3dfc",
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"app_id\": \"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n  \"developer_id\": \"{{developer_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host_consent}}/revoke",
+							"host": [
+								"{{host_consent}}"
+							],
+							"path": [
+								"revoke"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail without App Id Revoke a Consent",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cc769081-4ce5-4be8-be97-931e4fdc8688",
+								"exec": [
+									"// get postman env",
+									"let setEnv = (key, value) => {",
+									"    pm.environment.set(key, value);",
+									"};",
+									"//  get postman env",
+									"let getEnv = (key) => {",
+									"    return pm.environment.get(key);",
+									"}",
+									"",
+									"// generate otp",
+									"function generateOtp(cb) {",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_auth\") +\"/generate/totp\",",
+									"    method: 'POST',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({msisdn:getEnv('msisdn'), app_id: ",
+									"        getEnv('app_id'), blacklist: true})",
+									"    }",
+									"}, (err, response) => cb(err, response, createConsent) );",
+									"}",
+									"",
+									"",
+									"// verify otp",
+									"function verifyOtp(err, response, cb) {",
+									"    let {subscriber_id, app_id, otp} = response.json();",
+									"      if(subscriber_id && app_id) {",
+									"        setEnv('subscriber_id', subscriber_id);",
+									"        setEnv('app_id', app_id); ",
+									"    }",
+									"    pm.sendRequest({",
+									"        url: getEnv(\"host_auth\") +\"/verify/totp\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({app_id: app_id, subscriber_id: subscriber_id, otp: otp})",
+									"        }",
+									"    },(err, response) => cb(err, response, updateConsent));",
+									"}",
+									"// create consent",
+									"function createConsent(err, response, cb) {",
+									"   if(response.json().transaction_id) {",
+									"         setEnv('transaction_id', response.json().transaction_id);",
+									"    }",
+									"        //  creating consent",
+									"        pm.sendRequest({",
+									"        url: getEnv(\"host_consent\") +\"/consent\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname')})",
+									"        }",
+									"    }, (err, response) => cb(err, response));",
+									"}",
+									"// update consent",
+									"function updateConsent(err, response) {",
+									"   ",
+									"  ",
+									"        //  creating consent",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_consent\") +\"/consent\",",
+									"    method: 'PUT',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname'),",
+									"        access_token: \"GGYYYSWwx\"",
+									"        }),",
+									"        }",
+									"    });",
+									"}",
+									"//  consent flow ready",
+									"",
+									"//  call generate otp",
+									"generateOtp(verifyOtp);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "4be54013-2a48-4526-913b-a46d4a7d3dfc",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Should Be a badRequest without scopes\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"developer_id\": \"{{developer_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{host_consent}}/revoke/{{subscriber_id}}",
+							"host": [
+								"{{host_consent}}"
+							],
+							"path": [
+								"revoke",
+								"{{subscriber_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail without Developer Id Revoke a Consent",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cc769081-4ce5-4be8-be97-931e4fdc8688",
+								"exec": [
+									"// get postman env",
+									"let setEnv = (key, value) => {",
+									"    pm.environment.set(key, value);",
+									"};",
+									"//  get postman env",
+									"let getEnv = (key) => {",
+									"    return pm.environment.get(key);",
+									"}",
+									"",
+									"// generate otp",
+									"function generateOtp(cb) {",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_auth\") +\"/generate/totp\",",
+									"    method: 'POST',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({msisdn:getEnv('msisdn'), app_id: ",
+									"        getEnv('app_id'), blacklist: true})",
+									"    }",
+									"}, (err, response) => cb(err, response, createConsent) );",
+									"}",
+									"",
+									"",
+									"// verify otp",
+									"function verifyOtp(err, response, cb) {",
+									"    let {subscriber_id, app_id, otp} = response.json();",
+									"      if(subscriber_id && app_id) {",
+									"        setEnv('subscriber_id', subscriber_id);",
+									"        setEnv('app_id', app_id); ",
+									"    }",
+									"    pm.sendRequest({",
+									"        url: getEnv(\"host_auth\") +\"/verify/totp\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({app_id: app_id, subscriber_id: subscriber_id, otp: otp})",
+									"        }",
+									"    },(err, response) => cb(err, response, updateConsent));",
+									"}",
+									"// create consent",
+									"function createConsent(err, response, cb) {",
+									"   if(response.json().transaction_id) {",
+									"         setEnv('transaction_id', response.json().transaction_id);",
+									"    }",
+									"        //  creating consent",
+									"        pm.sendRequest({",
+									"        url: getEnv(\"host_consent\") +\"/consent\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname')})",
+									"        }",
+									"    }, (err, response) => cb(err, response));",
+									"}",
+									"// update consent",
+									"function updateConsent(err, response) {",
+									"   ",
+									"  ",
+									"        //  creating consent",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_consent\") +\"/consent\",",
+									"    method: 'PUT',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname'),",
+									"        access_token: \"GGYYYSWwx\"",
+									"        }),",
+									"        }",
+									"    });",
+									"}",
+									"//  consent flow ready",
+									"",
+									"//  call generate otp",
+									"generateOtp(verifyOtp);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "4be54013-2a48-4526-913b-a46d4a7d3dfc",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Should Be a badRequest without scopes\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"app_id\": \"a46fa81d-9941-42c1-8b47-c8d57be4acc24\"\n}"
+						},
+						"url": {
+							"raw": "{{host_consent}}/revoke/{{subscriber_id}}",
+							"host": [
+								"{{host_consent}}"
+							],
+							"path": [
+								"revoke",
+								"{{subscriber_id}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1380,8 +1836,6 @@
 									"});",
 									"//  response body should contain following properties check",
 									"pm.test(\"Response Body should contain response properties as needed\", function () {",
-									"    pm.expect(jsonData).to.have.property(\"page\");",
-									"    pm.expect(jsonData).to.have.property(\"limit\");",
 									"    pm.expect(jsonData).to.have.property(\"resultcount\");",
 									"    pm.expect(jsonData).to.have.property(\"apps\");",
 									"});",
@@ -1389,7 +1843,8 @@
 									"if(jsonData.resultcount > 0){",
 									"    //  for more than 0 resultcount check",
 									"pm.test(\"Response Body apps should contain non empty array for resultcount > 0\", function () {",
-									" ",
+									"    pm.expect(jsonData).to.have.property(\"page\");",
+									"    pm.expect(jsonData).to.have.property(\"limit\");",
 									"    pm.expect(jsonData.apps.length).to.be.above(0);",
 									"});",
 									"}",
@@ -1597,15 +2052,15 @@
 									"/*  201 for Newly created Endpoint",
 									"*   302 for existing record with same scope ",
 									"*/",
-									"pm.test(\"Status code should be 201 or 403\", function () {",
-									"    pm.expect(_responseCode).to.be.oneOf([201,403]);",
+									"pm.test(\"Status code should be 200 or 403\", function () {",
+									"    pm.expect(_responseCode).to.be.oneOf([200,403]);",
 									"});",
 									"",
 									"//  ",
 									"pm.test(\"Should contain response properties as needed\", function () {",
 									"    let jsonData = pm.response.json();",
 									"   switch(_responseCode) {",
-									"       case 201:    pm.expect(jsonData).to.have.property(\"revoked_tokens\");",
+									"       case 200:    pm.expect(jsonData).to.have.property(\"revoked_tokens\");",
 									"                    pm.expect(jsonData.revoked_tokens).to.be.a(\"array\"); ",
 									"                    break;",
 									"       case 403:",
@@ -1631,6 +2086,160 @@
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"subscriber_id\": \"27ebb7307b843f2937373618d9cc5bd1\"\n}"
+						},
+						"url": {
+							"raw": "{{host_consent}}/revoke/all",
+							"host": [
+								"{{host_consent}}"
+							],
+							"path": [
+								"revoke",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail without Subscriber Id Revoke All Consent  ",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cc769081-4ce5-4be8-be97-931e4fdc8688",
+								"exec": [
+									"// get postman env",
+									"let setEnv = (key, value) => {",
+									"    pm.environment.set(key, value);",
+									"};",
+									"//  get postman env",
+									"let getEnv = (key) => {",
+									"    return pm.environment.get(key);",
+									"}",
+									"",
+									"// generate otp",
+									"function generateOtp(cb) {",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_auth\") +\"/generate/totp\",",
+									"    method: 'POST',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({msisdn:getEnv('msisdn'), app_id: ",
+									"        getEnv('app_id'), blacklist: true})",
+									"    }",
+									"}, (err, response) => cb(err, response, createConsent) );",
+									"}",
+									"",
+									"",
+									"// verify otp",
+									"function verifyOtp(err, response, cb) {",
+									"    let {subscriber_id, app_id, otp} = response.json();",
+									"      if(subscriber_id && app_id) {",
+									"        setEnv('subscriber_id', subscriber_id);",
+									"        setEnv('app_id', app_id); ",
+									"    }",
+									"    pm.sendRequest({",
+									"        url: getEnv(\"host_auth\") +\"/verify/totp\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({app_id: app_id, subscriber_id: subscriber_id, otp: otp})",
+									"        }",
+									"    },(err, response) => cb(err, response, updateConsent));",
+									"}",
+									"// create consent",
+									"function createConsent(err, response, cb) {",
+									"   if(response.json().transaction_id) {",
+									"         setEnv('transaction_id', response.json().transaction_id);",
+									"    }",
+									"        //  creating consent",
+									"        pm.sendRequest({",
+									"        url: getEnv(\"host_consent\") +\"/consent\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname')})",
+									"        }",
+									"    }, (err, response) => cb(err, response));",
+									"}",
+									"// update consent",
+									"function updateConsent(err, response) {",
+									"   ",
+									"  ",
+									"        //  creating consent",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_consent\") +\"/consent\",",
+									"    method: 'PUT',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname'),",
+									"        access_token: \"GGYYYSWwx\"",
+									"        }),",
+									"        }",
+									"    });",
+									"}",
+									"//  consent flow ready",
+									"",
+									"//  call generate otp",
+									"generateOtp(verifyOtp);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "4be54013-2a48-4526-913b-a46d4a7d3dfc",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Should Be a badRequest without App Id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n}"
 						},
 						"url": {
 							"raw": "{{host_consent}}/revoke/all",
@@ -1976,6 +2585,465 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Fail for No subscriber id , Create Black List app ",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ffad7c8c-560e-437c-befc-28d542ba6e8a",
+								"exec": [
+									"// get postman env",
+									"let setEnv = (key, value) => {",
+									"    pm.environment.set(key, value);",
+									"};",
+									"//  get postman env",
+									"let getEnv = (key) => {",
+									"    return pm.environment.get(key);",
+									"}",
+									"",
+									"// generate otp",
+									"function generateOtp(cb) {",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_auth\") +\"/generate/totp\",",
+									"    method: 'POST',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({msisdn:getEnv('msisdn'), app_id: ",
+									"        getEnv('app_id'), blacklist: true})",
+									"    }",
+									"}, (err, response) => cb(err, response, createConsent) );",
+									"}",
+									"",
+									"",
+									"// verify otp",
+									"function verifyOtp(err, response, cb) {",
+									"    let {subscriber_id, app_id, otp} = response.json();",
+									"      if(subscriber_id && app_id) {",
+									"        setEnv('subscriber_id', subscriber_id);",
+									"        setEnv('app_id', app_id); ",
+									"    }",
+									"    pm.sendRequest({",
+									"        url: getEnv(\"host_auth\") +\"/verify/totp\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({app_id: app_id, subscriber_id: subscriber_id, otp: otp})",
+									"        }",
+									"    },(err, response) => cb(err, response, updateConsent));",
+									"}",
+									"// create consent",
+									"function createConsent(err, response, cb) {",
+									"   if(response.json().transaction_id) {",
+									"         setEnv('transaction_id', response.json().transaction_id);",
+									"    }",
+									"        //  creating consent",
+									"        pm.sendRequest({",
+									"        url: getEnv(\"host_consent\") +\"/consent\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname')})",
+									"        }",
+									"    }, (err, response) => cb(err, response));",
+									"}",
+									"// update consent",
+									"function updateConsent(err, response) {",
+									"   ",
+									"  ",
+									"        //  creating consent",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_consent\") +\"/consent\",",
+									"    method: 'PUT',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname'),",
+									"        access_token: \"GGYYYSWwx\"",
+									"        }),",
+									"        }",
+									"    });",
+									"}",
+									"//  consent flow ready",
+									"",
+									"//  call generate otp",
+									"generateOtp(verifyOtp);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "dca3c364-4c37-44a5-9c28-2415950b5741",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Should Be a badRequest without App Id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"app_id\": \"dfdfsds\",\n  \"developer_id\": \"384hfhf\"\n}"
+						},
+						"url": {
+							"raw": "{{host_consent}}/blacklist",
+							"host": [
+								"{{host_consent}}"
+							],
+							"path": [
+								"blacklist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail for No app id in ther request body Create Black List app ",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ffad7c8c-560e-437c-befc-28d542ba6e8a",
+								"exec": [
+									"// get postman env",
+									"let setEnv = (key, value) => {",
+									"    pm.environment.set(key, value);",
+									"};",
+									"//  get postman env",
+									"let getEnv = (key) => {",
+									"    return pm.environment.get(key);",
+									"}",
+									"",
+									"// generate otp",
+									"function generateOtp(cb) {",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_auth\") +\"/generate/totp\",",
+									"    method: 'POST',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({msisdn:getEnv('msisdn'), app_id: ",
+									"        getEnv('app_id'), blacklist: true})",
+									"    }",
+									"}, (err, response) => cb(err, response, createConsent) );",
+									"}",
+									"",
+									"",
+									"// verify otp",
+									"function verifyOtp(err, response, cb) {",
+									"    let {subscriber_id, app_id, otp} = response.json();",
+									"      if(subscriber_id && app_id) {",
+									"        setEnv('subscriber_id', subscriber_id);",
+									"        setEnv('app_id', app_id); ",
+									"    }",
+									"    pm.sendRequest({",
+									"        url: getEnv(\"host_auth\") +\"/verify/totp\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({app_id: app_id, subscriber_id: subscriber_id, otp: otp})",
+									"        }",
+									"    },(err, response) => cb(err, response, updateConsent));",
+									"}",
+									"// create consent",
+									"function createConsent(err, response, cb) {",
+									"   if(response.json().transaction_id) {",
+									"         setEnv('transaction_id', response.json().transaction_id);",
+									"    }",
+									"        //  creating consent",
+									"        pm.sendRequest({",
+									"        url: getEnv(\"host_consent\") +\"/consent\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname')})",
+									"        }",
+									"    }, (err, response) => cb(err, response));",
+									"}",
+									"// update consent",
+									"function updateConsent(err, response) {",
+									"   ",
+									"  ",
+									"        //  creating consent",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_consent\") +\"/consent\",",
+									"    method: 'PUT',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname'),",
+									"        access_token: \"GGYYYSWwx\"",
+									"        }),",
+									"        }",
+									"    });",
+									"}",
+									"//  consent flow ready",
+									"",
+									"//  call generate otp",
+									"generateOtp(verifyOtp);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "dca3c364-4c37-44a5-9c28-2415950b5741",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Should Be a badRequest without App Id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subscriber_id\": \"{{subscriber_id}}\",\n  \"developer_id\": \"384hfhf\"\n}"
+						},
+						"url": {
+							"raw": "{{host_consent}}/blacklist",
+							"host": [
+								"{{host_consent}}"
+							],
+							"path": [
+								"blacklist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fail for No developer id in request body Create Black List app ",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ffad7c8c-560e-437c-befc-28d542ba6e8a",
+								"exec": [
+									"// get postman env",
+									"let setEnv = (key, value) => {",
+									"    pm.environment.set(key, value);",
+									"};",
+									"//  get postman env",
+									"let getEnv = (key) => {",
+									"    return pm.environment.get(key);",
+									"}",
+									"",
+									"// generate otp",
+									"function generateOtp(cb) {",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_auth\") +\"/generate/totp\",",
+									"    method: 'POST',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({msisdn:getEnv('msisdn'), app_id: ",
+									"        getEnv('app_id'), blacklist: true})",
+									"    }",
+									"}, (err, response) => cb(err, response, createConsent) );",
+									"}",
+									"",
+									"",
+									"// verify otp",
+									"function verifyOtp(err, response, cb) {",
+									"    let {subscriber_id, app_id, otp} = response.json();",
+									"      if(subscriber_id && app_id) {",
+									"        setEnv('subscriber_id', subscriber_id);",
+									"        setEnv('app_id', app_id); ",
+									"    }",
+									"    pm.sendRequest({",
+									"        url: getEnv(\"host_auth\") +\"/verify/totp\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({app_id: app_id, subscriber_id: subscriber_id, otp: otp})",
+									"        }",
+									"    },(err, response) => cb(err, response, updateConsent));",
+									"}",
+									"// create consent",
+									"function createConsent(err, response, cb) {",
+									"   if(response.json().transaction_id) {",
+									"         setEnv('transaction_id', response.json().transaction_id);",
+									"    }",
+									"        //  creating consent",
+									"        pm.sendRequest({",
+									"        url: getEnv(\"host_consent\") +\"/consent\",",
+									"        method: 'POST',",
+									"        header: {",
+									"            'content-type': 'application/json'",
+									"        },",
+									"        body: {",
+									"            mode: 'raw',",
+									"            raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname')})",
+									"        }",
+									"    }, (err, response) => cb(err, response));",
+									"}",
+									"// update consent",
+									"function updateConsent(err, response) {",
+									"   ",
+									"  ",
+									"        //  creating consent",
+									"    pm.sendRequest({",
+									"    url: getEnv(\"host_consent\") +\"/consent\",",
+									"    method: 'PUT',",
+									"    header: {",
+									"        'content-type': 'application/json'",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify({ ",
+									"        subscriber_id: getEnv('subscriber_id'),",
+									"        transaction_id : getEnv('transaction_id'),",
+									"        app_id: getEnv('app_id'),",
+									"        developer_id: getEnv('developer_id'),",
+									"        scopes: getEnv('scopes'),",
+									"        appname : getEnv('appname'),",
+									"        access_token: \"GGYYYSWwx\"",
+									"        }),",
+									"        }",
+									"    });",
+									"}",
+									"//  consent flow ready",
+									"",
+									"//  call generate otp",
+									"generateOtp(verifyOtp);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "dca3c364-4c37-44a5-9c28-2415950b5741",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Should Be a badRequest without App Id\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subscriber_id\": \"{{subscriber_id}}\",\n  \"app_id\": \"dfdfsds\"\n}"
+						},
+						"url": {
+							"raw": "{{host_consent}}/blacklist",
+							"host": [
+								"{{host_consent}}"
+							],
+							"path": [
+								"blacklist"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -2168,7 +3236,7 @@
 					"response": []
 				},
 				{
-					"name": "Success With an invalid record, Check App is BlackListed",
+					"name": "Fail 404 With an invalid record, Check App is BlackListed",
 					"event": [
 						{
 							"listen": "prerequest",
