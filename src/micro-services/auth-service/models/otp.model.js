@@ -445,11 +445,17 @@ function invalidateOTP(subscriber_id, app_id, callback) {
  * @param {string} address mobile number
  * @returns {function} Callback function with argument as boolean
  *
- * Send Otp to address/mobile number and return boolean
+ * Send Otp to address/mobile number and return boolean/500
  * as per the response
  */
 function sendOtpSms(message, address, callback) {
-  var options = {
+  //  find sms service status from enviroment
+  let smsIsActive = process.env.SMS_SERVICE_ACTIVE == "true";
+  //  check SMS service is not active
+  //  then skip sms api call
+  if (!smsIsActive) return callback(true);
+  //  else proceed
+  let options = {
     method: "POST",
     url: process.env.SMS_API_ENDPOINT,
     headers: {
@@ -469,12 +475,10 @@ function sendOtpSms(message, address, callback) {
       let {
         outboundSMSMessageRequest: { address }
       } = JSON.parse(smsResponse);
-      console.log({ address });
       if (address) return callback(true);
       return callback(false);
     })
-    .catch(err => {
-      console.log({ err });
+    .catch(() => {
       return callback(500);
     });
 }
