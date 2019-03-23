@@ -22,18 +22,18 @@ services:
     restart: always
     image: postgres:10
     environment:
-    - POSTGRES_USER=wakanda_auth_service
-    - POSTGRES_PASSWORD=12345
-    - POSTGRES_DB=wakanda_auth_db
+      - POSTGRES_USER=wakanda_auth_service
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=wakanda_auth_db
     volumes:
-    - ./postgres-data/postgres:/var/lib/postgresql/data
-    - ./dbdata:/docker-entrypoint-initdb.d/
+      - ./postgres-data/postgres:/var/lib/postgresql/data
+      - ./dbdata:/docker-entrypoint-initdb.d/
     ports:
-    - "5433:5432"
+      - "5433:5432"
     expose:
-    - "5432" 
+      - "5432"
     networks:
-        - authservice_default
+      - authservice_default
 
 networks:
   authservice_default:
