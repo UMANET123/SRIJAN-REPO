@@ -100,6 +100,7 @@ $(document).ready(function() {
       data: JSON.stringify(formData),
       dataType: "json",
       success: function(subsciber) {
+        console.log(subsciber);
         if (subsciber.statusCode == 201) {
           window.location.href = window.location.href;
           $("#postResultDiv").html(
@@ -112,9 +113,10 @@ $(document).ready(function() {
           );
         }
       },
-      error: function(e) {        
+      error: function(e) {     
+        let error = JSON.parse(e.responseText);
         $("#postResultDiv").html(
-          "<p class='error'>" + "Error! Invalid OTP.<br>"
+          "<p class='error'>" + error.error_message+ "<br>"
         );
       }
     });
