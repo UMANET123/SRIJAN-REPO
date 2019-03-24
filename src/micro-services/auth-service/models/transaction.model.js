@@ -74,11 +74,13 @@ function invalidateTransaction(...args) {
         transaction_id: transaction_id,
         uuid: subscriber_id,
         app_id: app_id,
-        status: 0
-      }
+        status: "0"
+      },
+      returning: true
     }
   )
-    .then(result => {
+    .then((result) => {
+      console.log(result)
       if (result) {
         return callback(200, null);
       } else {
@@ -86,11 +88,13 @@ function invalidateTransaction(...args) {
       }
     })
     .catch(e => {
+      console.log("ERROR IN INVALIDATE : ",e);
       return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
       });
     });
+  
 }
 
 module.exports = { validateTransaction, invalidateTransaction };
