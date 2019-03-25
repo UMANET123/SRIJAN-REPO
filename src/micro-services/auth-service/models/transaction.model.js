@@ -1,6 +1,21 @@
 const pool = require("../config/db");
 const { TransactionData } = require("../config/models");
 //  validate a transaction
+/**
+ *
+ *
+ * @param {array} args Following Arguments are needed to pass
+ * - reqParams {object} Path params
+ *   - transaction_id Transaction Id
+ *   - subscriber_id Subscriber Id
+ *   - app_id App Id
+ * - callback Callback Function
+ *
+ * @returns {callback} Callback Function
+ *
+ * It will validate transaction and return callback
+ * with passing boolean value
+ */
 function validateTransaction(...args) {
   let [reqParams, callback] = args;
   let { transaction_id, subscriber_id, app_id } = reqParams;
@@ -12,16 +27,39 @@ function validateTransaction(...args) {
       app_id: app_id,
       status: 0
     }
-  }).then(result => {
-    if (result) {
-      return callback(200, { is_valid: true });
-    } else {
-      return callback(200, { is_valid: false });
-    }
-  });
+  })
+    .then(result => {
+      if (result) {
+        return callback(200, { is_valid: true });
+      } else {
+        return callback(200, { is_valid: false });
+      }
+    })
+    .catch(e => {
+      return callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      });
+    });
 }
 
 //  invalidate a transaction
+/**
+ *
+ *
+ * @param {array} args Following Arguments are needed to pass
+ * - reqParams {object} Path params
+ *   - transaction_id Transaction Id
+ * - reqBody {object} Body
+ *   - subscriber_id Subscriber Id
+ *   - app_id App Id
+ * - callback Callback Function
+ * @returns {function} callback callback function
+ *
+ * invalidate a transaction and then
+ * invoke callback
+ *
+ */
 function invalidateTransaction(...args) {
   let [reqParams, reqBody, callback] = args;
   let { transaction_id } = reqParams;
@@ -36,16 +74,27 @@ function invalidateTransaction(...args) {
         transaction_id: transaction_id,
         uuid: subscriber_id,
         app_id: app_id,
-        status:0
+        status: "0"
+      },
+      returning: true
+    }
+  )
+    .then((result) => {
+      console.log(result)
+      if (result) {
+        return callback(200, null);
+      } else {
+        return callback(204, null);
       }
-    }
-  ).then(result => {
-    if (result) {
-      return callback(200, null);
-    } else {
-      return callback(204, null);
-    }
-  });
+    })
+    .catch(e => {
+      console.log("ERROR IN INVALIDATE : ",e);
+      return callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      });
+    });
+  
 }
 
 module.exports = { validateTransaction, invalidateTransaction };

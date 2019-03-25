@@ -3,6 +3,7 @@ const { verifyUser } = require("../models/auth.model");
 
 module.exports = function(req, res) {
   let { msisdn, subscriber_id } = req.body;
+  console.log("*****", req.body);
   if ((!msisdn && !subscriber_id) || (msisdn && subscriber_id))
     return res
       .status(400)
