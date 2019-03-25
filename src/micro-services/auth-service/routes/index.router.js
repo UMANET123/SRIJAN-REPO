@@ -1,3 +1,4 @@
+/*jshint esversion: 8 */
 const express = require("express");
 // const sequelize = require('../config/orm.database');
 const {
@@ -25,5 +26,4 @@ router.get(
   validateTransaction
 );
 router.put(`/transaction/:transaction_id/invalidate`, invalidateTransaction);
-
 module.exports = router;
