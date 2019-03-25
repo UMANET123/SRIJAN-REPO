@@ -6,7 +6,8 @@ then
 fi
 if [ $NODE_ENV == 'test' ]
 then
-    (npm test ; npm run dev&) && npx newman -e Globe.2FA.Development.postman_environment.json run globe.2FA.postman_collection.json
+    (npm run dev&) && npx newman -e GlobeConsentService.postman_environment.json run GlobeConsentService.postman_collection.json
+    npm test
 else
     npx nodemon app.js
 fi

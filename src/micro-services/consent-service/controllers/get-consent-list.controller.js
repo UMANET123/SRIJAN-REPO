@@ -1,11 +1,22 @@
 /* jshint esversion:6 */
 const { getConsentList } = require("../models/consent.model");
-//  order types
-const ORDER_TYPES = ["asc", "desc"];
+//  date predefined order types
+const ORDER_TYPES = ["desc", "asc"];
+/**
+ *
+ *  Consent AppList Controller
+ * @param {object} req Http Request
+ * @param {object} res Http Response
+ * @returns {object} Http Response
+ */
+
 module.exports = (req, res) => {
+  // console.log("running");
   let { subscriber_id } = req.params;
   let { limit, page, appname, order } = req.query;
+  // console.log({ limit, page, appname, order });
   if (order) {
+    // console.log({ order });
     if (!ORDER_TYPES.includes(order)) {
       // for invalid order type
       return res.status(400).send({
@@ -15,7 +26,7 @@ module.exports = (req, res) => {
     }
   } else {
     //    default order desc
-    order = ORDER_TYPES[1];
+    order = ORDER_TYPES[0];
   }
   getConsentList(
     subscriber_id,
