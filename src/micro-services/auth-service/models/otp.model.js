@@ -30,8 +30,6 @@ const request = require("request-promise");
 const BLOCK_USER_LIMIT = 30;
 //  OTP exipiry time in mins
 const OTP_EXPIRY_TIME = 5;
-(??)
-var i = 0;
 /**
  * Generate TOTP
  * @param {string} msisdn Mobile Number
@@ -192,7 +190,7 @@ function processFloodControl(uuid, callback) {
       if (!created) {
         //  record already exists
         //  flood control record is blocked === 1 check
-        console.log('***** FLOOD CONTROL STATUS : ', floodControl.status);
+        console.log("***** FLOOD CONTROL STATUS : ", floodControl.status);
 
         if (floodControl.status === parseInt(1)) {
           //  check time validity
@@ -217,7 +215,6 @@ function processFloodControl(uuid, callback) {
               }
             })
               .then(result =>
-                
                 //  create a record for the user
                 {
                   console.log("**** DELETE RESULT : ", result);
