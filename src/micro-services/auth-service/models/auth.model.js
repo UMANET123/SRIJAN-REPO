@@ -13,32 +13,52 @@ function verifyUser(phone_no, uuid, callback) {
     // update phone number with STD/ISD code
     phone_no = updatePhoneNo(phone_no);
     //  find phone number/msisdn by uuid/subscriber_id
-    SubscriberDataMask.findOne({
+    return SubscriberDataMask.findOne({
       where: { phone_no: phone_no },
       attributes: ["uuid"]
-    }).then(mask => {
-      if (mask && mask.uuid) {
-        // success
-        callback({ subscriber_id: mask.uuid }, 200);
-      } else {
-        //  not found
-        callback(null, 204);
-      }
-    });
+    })
+      .then(mask => {
+        if (mask && mask.uuid) {
+          // success
+          return callback({ subscriber_id: mask.uuid }, 200);
+        } else {
+          //  not found
+          return callback(null, 204);
+        }
+      })
+      .catch(e => {
+        return callback(
+          {
+            error_code: "InternalServerError",
+            error_message: "Internal Server Error"
+          },
+          500
+        );
+      });
   } else {
     //  find uuid/subscriber_id by phone number/msisdn
-    SubscriberDataMask.findOne({
+    return SubscriberDataMask.findOne({
       where: { uuid },
       attributes: ["phone_no"]
-    }).then(mask => {
-      if (mask && mask.phone_no) {
-        // success
-        callback({ msisdn: mask.phone_no }, 200);
-      } else {
-        //  not found
-        callback(null, 204);
-      }
-    });
+    })
+      .then(mask => {
+        if (mask && mask.phone_no) {
+          // success
+          return callback({ msisdn: mask.phone_no }, 200);
+        } else {
+          //  not found
+          return callback(null, 204);
+        }
+      })
+      .catch(e => {
+        return callback(
+          {
+            error_code: "InternalServerError",
+            error_message: "Internal Server Error"
+          },
+          500
+        );
+      });
   }
 }
 

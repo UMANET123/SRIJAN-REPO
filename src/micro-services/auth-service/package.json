@@ -4,7 +4,7 @@
   "description": "Two Factor Auth Service",
   "main": "app.js",
   "scripts": {
-    "test": "OTP_TIMER=1 OTP_STEP=10 NODE_ENV=test npx mocha --recursive --timeout 70000 --exit  tests",
+    "test": "OTP_TIMER=1 OTP_STEP=10 NODE_ENV=test npx nyc --reporter=html --reporter=text mocha --recursive --timeout 70000 --exit  tests",
     "dev": "npx nodemon app.js"
   },
   "author": "",
@@ -28,7 +28,9 @@
     "mocha": "^5.2.0",
     "newman": "^4.2.1",
     "nodemon": "^1.18.4",
+    "nyc": "^13.3.0",
     "sinon": "^6.3.4",
+    "supertest": "^4.0.2",
     "timekeeper": "^2.2.0"
   }
 }
