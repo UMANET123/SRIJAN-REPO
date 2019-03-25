@@ -1,11 +1,11 @@
 const {verifyTOtp} = require('../models/otp.model');
 module.exports = function (req, res) {
 let {subscriber_id, otp, app_id} = req.body;
-if (!subscriber_id || !otp || !app_id) return res.status(400).send({
+if (!subscriber_id || !otp || !app_id || otp.length < 6 || otp.length > 6) return res.status(400).send({
     "error_code": "BadRequest",
     "error_message": "Bad Request"
   });
-verifyTOtp(req.body, (response, status) => {
+verifyTOtp(subscriber_id, otp, app_id, (response, status) => {
         return res.status(status).send(response);
     });
 }

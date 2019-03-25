@@ -1,28 +1,36 @@
-const pool = require('../config/db');
-const {getNewSecret} = require('./helper.model');
-//  create a transaction
-function createTransaction(...args) {
-    let [txnId, subscriberId, appId, currentDate, status, callback] = args;
-    if (!txnId) {
-      //  create txnid
-      let secret_key = subscriberId + appId + currentDate.getTime();
-      txnId = getNewSecret(secret_key);
-    }
-    //  create a transaction record
-      (async () => {
-        const client = await pool.connect();
-        try {
-          // insert transaction record
-          await client.query("INSERT INTO transaction_data(transaction_id, uuid, app_id, created, status) values($1, $2, $3, $4, $5)", [txnId, subscriberId, appId, currentDate, status]);
-          return callback(txnId);
-       } finally {
-          client.release();
-        }
-      })().catch(e =>{
-        console.log(e.stack);
-        return callback(false);
-      } );
-  
-  }
+/*jshint esversion:6 */
+const pool = require("../config/db");
+const { getNewSecret } = require("./helper.model");
+const { TransactionData } = require("../config/models");
 
-module.exports = {createTransaction};
+ /**
+  * Function will create Transaction record and after success invoke
+  * the callback with passing the txnId
+  * @param {string} txnId Transaction ID
+  * @param {string} subscriberId Subscriber ID
+  * @param {string} appId App ID
+  * @param {Date} currentDate Current Date/Time
+  * @param {number} status Status of the Transaction
+  * @param {function} callback Callback after success/fail
+  * @returns {boolean} returns true/false via the callback
+  */
+function createTransaction(txnId, subscriberId, appId, currentDate, status, callback) {
+  if (!txnId) {
+    // create secret key for txnId
+    let secret_key = subscriberId + appId + currentDate.getTime();
+    //  create txnid
+    txnId = getNewSecret(secret_key);
+  }
+  //  create a transaction record
+  TransactionData.create({
+    transaction_id: txnId,
+    uuid: subscriberId,
+    app_id: appId,
+    created: currentDate,
+    status: status
+  }).then(() => {
+    callback(txnId);
+  });
+}
+
+module.exports = { createTransaction };
