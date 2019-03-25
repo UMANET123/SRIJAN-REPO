@@ -2,9 +2,10 @@
 require("dotenv").config();
 const axios = require("axios");
 const { createAppMetaData } = require("./_util.model");
-// const pool = require("../config/db");
 const { SubscriberConsent } = require("../config/models");
 const sequelize = require("../config/orm.database");
+const arraysHaveSameItems = require("../helpers/compare-arrays.helper");
+
 /**
  *
  *
@@ -56,7 +57,8 @@ function createConsent(
         if (consent && consent.app_id) {
           //  consent is found
           //  and check scopes are same return response
-          if (JSON.stringify(scopes) == JSON.stringify(consent.scopes)) {
+
+          if (arraysHaveSameItems(scopes, consent.scopes)) {
             //  record exists
             return callback(302, { status: "Record already Exists!" });
           } else {
