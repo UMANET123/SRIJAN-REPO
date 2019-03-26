@@ -8,6 +8,7 @@ const revokeSingle = require("../controllers/revoke-app-consent.controller");
 const revokeAll = require("../controllers/revoke-all-app-consent.controller");
 const consentList = require("../controllers/get-consent-list.controller");
 const getSubscriberApps = require("../controllers/get-subscriber-apps.controller");
+const checkskipConsent = require('../controllers/check-consent-bypass.controller');
 
 router.post(`/consent`, createConsent);
 router.put(`/consent`, updateConsent);
@@ -17,5 +18,6 @@ router.put(`/revoke/all`, revokeAll);
 router.put(`/revoke/:subscriber_id`, revokeSingle);
 router.get(`/consent/:subscriber_id/list`, consentList);
 router.get(`/app/search/:subscriber_id`, getSubscriberApps);
+router.get ('/app/consent_bypass/:uuid/:app_id/:developer_id/:access_token/:scopes', checkskipConsent);
 
 module.exports = router;
