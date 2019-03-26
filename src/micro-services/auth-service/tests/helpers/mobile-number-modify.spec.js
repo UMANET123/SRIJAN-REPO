@@ -22,4 +22,10 @@ describe('Testing Mobile Number Modify',()=>{
         chai.expect(`+63${number}`).equal(modifiedNumber);
         done();
     })
+     it('Should ignore 0 ,return +63 number when number starts with 0',(done)=>{
+        let number = "09509806210";
+        let modifiedNumber = MobileNumberModify(number);
+        chai.expect(`+63${number.slice(1)}`).equal(modifiedNumber);
+        done();
+    })
 });
