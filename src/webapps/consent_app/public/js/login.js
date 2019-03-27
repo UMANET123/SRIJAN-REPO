@@ -63,6 +63,7 @@ $(document).ready(function() {
           data: JSON.stringify(formData),
           dataType: "json",
           success: function(subsciber) {
+            console.log('SUBSCRIBER, ',subsciber)
             if (subsciber.statusCode == 200 || subsciber.statusCode == 201) {
               $("#postResultDiv").html(
                 "<p class='success'>" + subsciber.message + "</p>"
@@ -78,6 +79,7 @@ $(document).ready(function() {
             }
           },
           error: function(e) {
+            console.log(e)
             $("#postResultDiv").html(
               "<p class='error'>" +
                 "Error! an error occured during opt generation.<br>"
