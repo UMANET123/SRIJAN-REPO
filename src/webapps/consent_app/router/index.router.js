@@ -39,12 +39,16 @@ router.get("/consent", function(req, res) {
   if (sess.sessionid && typeof req.query.scope != "undefined") {
     var scope_arr = req.query.scope.split(", ");
     var scopes = scope_arr;
+    var appName = req.query.app_name || "Developer Application";
+    var appMessage = req.query.app_message || ""
     sess.redirect_uri = req.query.redirect_uri;
     sess.transaction_id = req.query.transaction_id;
     res.render("consent", {
       scopes: scopes,
       redirect_uri: req.query.redirect_uri,
-      scopeDescription: scopeDescription
+      scopeDescription: scopeDescription,
+      appName: appName,
+      appMessage: appMessage
     });
   } else {
     res.redirect("/logout");
