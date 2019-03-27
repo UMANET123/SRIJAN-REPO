@@ -76,6 +76,9 @@ router.get("/api/validateMobileNo", function(req, res) {
 router.post("/api/generate/otp", generateTotpController);
 router.post("/api/verify/otp", verifyTotpController);
 router.post("/api/consent", updateConsentController);
+router.get("/api/skip-consent", (err, res) => {
+  res.render("skip-consent");
+});
 // router.post('/verify/hotp', verifyHotpController);
 
 // router.post('/verify/user', verifyUserController);
