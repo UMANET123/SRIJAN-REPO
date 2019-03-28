@@ -23,6 +23,7 @@ router.post("/api/blacklist", blacklistController);
 router.get("/api/search", searchApps);
 
 router.get("/", function(req, res) {
+  // console.log({ session: req.session });
   if (req.session.sessionid) {
     res.redirect("/dashboard");
   } else {

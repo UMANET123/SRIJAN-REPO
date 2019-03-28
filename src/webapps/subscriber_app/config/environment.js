@@ -4,7 +4,8 @@ const ENV = process.env;
 //  node server settings
 const NODE_SETTINGS = {
   portNumber: ENV.PORT_NUMBER || 3000,
-  nodeEnv: ENV.NODE_ENV || "dev"
+  nodeEnv: ENV.NODE_ENV || "dev",
+  sessionIdleTime: (process.env.SESSION_IDLE_TIME || 15) * 60 * 1000
 };
 
 //  node server settings
