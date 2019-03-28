@@ -1,13 +1,12 @@
 const { SubscriberConsent } = require("../config/models");
 function skipConsent(params, callback) {
-  let { uuid, app_id, developer_id, access_token, scopes } = params;
+  let { uuid, app_id, developer_id, scopes } = params;
   scopes = JSON.parse(scopes).sort();
   SubscriberConsent.findOne({
     where: {
       uuid: uuid,
       app_id: app_id,
       developer_id: developer_id,
-      access_token: access_token
     },
     attributes: ["uuid", "app_id", "developer_id", "access_token", "scopes"]
   }).then(result => {
