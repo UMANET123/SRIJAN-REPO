@@ -54,7 +54,7 @@ $(document).ready(function() {
       url: "/api/validateMobileNo",
       data: { phone_no: phone_no },
       dataType: "json",
-      success: function(subsciber) {
+      success: function(subscriber) {
         // DO POST
         $.ajax({
           type: "POST",
@@ -62,18 +62,18 @@ $(document).ready(function() {
           url: "/api/generate/otp",
           data: JSON.stringify(formData),
           dataType: "json",
-          success: function(subsciber) {
-            if (subsciber.statusCode == 200 || subsciber.statusCode == 201) {
+          success: function(subscriber) {
+            if (subscriber.statusCode == 200 || subscriber.statusCode == 201) {
               $("#postResultDiv").html(
-                "<p class='success'>" + subsciber.message + "</p>"
+                "<p class='success'>" + subscriber.message + "</p>"
               );
-              $("#subscriber_id").val(subsciber["subscriber_id"]);
+              $("#subscriber_id").val(subscriber.subscriber_id);
               $("#generate_otp").removeClass("generate_otp");
               $("#otp_form_group").css("display", "flex");
               $("#verify_otp").css("display", "block");
             } else {
               $("#postResultDiv").html(
-                "<p class='error'>" + subsciber.error_message + "</p>"
+                "<p class='error'>" + subscriber.error_message + "</p>"
               );
             }
           },
@@ -111,16 +111,16 @@ $(document).ready(function() {
       url: "/api/verify/otp",
       data: JSON.stringify(formData),
       dataType: "json",
-      success: function(subsciber) {
-        console.log("SUBSCRIBER ", subsciber);
-        if (subsciber.statusCode == 302) {
-          window.location.href = subsciber["redirect"];
+      success: function(subscriber) {
+        console.log("SUBSCRIBER ", subscriber);
+        if (subscriber.statusCode == 302) {
+          window.location.href = subscriber["redirect"];
           $("#postResultDiv").html(
-            "<p class='success'>" + subsciber.message + "</p>"
+            "<p class='success'>" + subscriber.message + "</p>"
           );
         } else {
           $("#postResultDiv").html(
-            "<p class='error'>" + subsciber.error_message + "</p>"
+            "<p class='error'>" + subscriber.error_message + "</p>"
           );
         }
       },
