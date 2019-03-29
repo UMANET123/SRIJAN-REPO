@@ -63,19 +63,12 @@ $(document).ready(function() {
           data: JSON.stringify(formData),
           dataType: "json",
           success: function(subscriber) {
-<<<<<<< HEAD
-=======
             console.log('SUBSCRIBER, ',subscriber)
->>>>>>> develop
             if (subscriber.statusCode == 200 || subscriber.statusCode == 201) {
               $("#postResultDiv").html(
                 "<p class='success'>" + subscriber.message + "</p>"
               );
-<<<<<<< HEAD
               $("#subscriber_id").val(subscriber.subscriber_id);
-=======
-              $("#subscriber_id").val(subscriber["subscriber_id"]);
->>>>>>> develop
               $("#generate_otp").removeClass("generate_otp");
               $("#otp_form_group").css("display", "flex");
               $("#verify_otp").css("display", "block");
