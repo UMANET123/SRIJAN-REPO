@@ -32,18 +32,12 @@ module.exports = function (req, res, next) {
             res_data.message = 'OTP has send to your mobile successfully.'
             res_data.subscriber_id = body_data['subscriber_id']
             res_data.otp = body_data['otp']
-        }
-        else if (response.statusCode == 403) {
+        }        
+        else {
             res_data.error_code = body_data.error_code
             res_data.error_message = body_data.error_message
         }
-        else {
-            res_data.error_code = body_data.error_code
-            res_data.error_message = 'Kindly check the phone no.'
-        }
-        console.log(res_data)
         res.send(res_data)
-        console.log(response.statusCode)
     });
 }
 

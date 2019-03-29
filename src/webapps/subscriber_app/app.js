@@ -10,7 +10,7 @@ const { checkAndUpdateToken } = require("./middlewares/update-refresh-token");
 const router = require("./router/index.router.js");
 
 const cors = require("cors");
-
+const { NODE_SETTINGS } = require("./config/environment");
 app.set("view engine", "ejs");
 app.use(cors());
 app.use(bodyParser.json());
@@ -27,9 +27,10 @@ app.use(
   session({
     secret: "wakanda-subscriberapp",
     resave: true,
+    cookie: { maxAge: NODE_SETTINGS.sessionIdleTime, path: "/" },
+    rolling: true,
     saveUninitialized: true,
-    name: "wakanda",
-    cookie: { maxAge: null, path: "/" }
+    name: "wakanda"
   })
 );
 

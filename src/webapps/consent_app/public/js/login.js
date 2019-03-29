@@ -63,11 +63,19 @@ $(document).ready(function() {
           data: JSON.stringify(formData),
           dataType: "json",
           success: function(subscriber) {
+<<<<<<< HEAD
+=======
+            console.log('SUBSCRIBER, ',subscriber)
+>>>>>>> develop
             if (subscriber.statusCode == 200 || subscriber.statusCode == 201) {
               $("#postResultDiv").html(
                 "<p class='success'>" + subscriber.message + "</p>"
               );
+<<<<<<< HEAD
               $("#subscriber_id").val(subscriber.subscriber_id);
+=======
+              $("#subscriber_id").val(subscriber["subscriber_id"]);
+>>>>>>> develop
               $("#generate_otp").removeClass("generate_otp");
               $("#otp_form_group").css("display", "flex");
               $("#verify_otp").css("display", "block");
@@ -75,22 +83,30 @@ $(document).ready(function() {
               $("#postResultDiv").html(
                 "<p class='error'>" + subscriber.error_message + "</p>"
               );
+              if(subscriber.error_code == "InvalidClient"){
+                $("#generate_otp").text("Generate OTP");
+              }
             }
           },
           error: function(e) {
+            console.log(e)
             $("#postResultDiv").html(
               "<p class='error'>" +
                 "Error! an error occured during opt generation.<br>"
             );
+            
             console.log("ERROR: ", e);
           }
         });
       },
       error: function(e) {
+        let error = JSON.parse(e.responseText);
         $("#postResultDiv").html(
-          "<p class='error'>" + "Please enter valid Globe no.<br>"
+          "<p class='error'>" + `${error.error_message}<br>`
         );
-        console.log("ERROR: ", e);
+        if(error.error_code == "InvalidPhoneNo"){
+          $("#generate_otp").text("Generate OTP");
+        }
       }
     });
   }

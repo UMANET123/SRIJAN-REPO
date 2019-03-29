@@ -17,7 +17,7 @@
             <div class="logo">
                 <img src="../images/logo.png" alt="Globe">
             </div>
-            <div class="user-details">
+            <!-- <div class="user-details">
                 <div class="notification">
                     <span class="bell-icon">
                         <img src="../images/bell-regular.svg" alt="">
@@ -31,14 +31,15 @@
                 <div class="profile-image">
                     <img src="../images/profile.png" alt="profile picture">
                 </div>
-            </div>
+            </div> -->
         </div>
     </header>
     <main>
         <div class="login-form-container container modal-box-wrapper">
             <div class="modal-box">
                 <div class="modal-box-header">
-                    <h3>This app would like to access your mobile number to allow:</h3>
+                    <h3><%= appName %></h3>
+                    <h5 style="text-align:center"><%= appMessage %></h5>
                 </div>
                 <div class="modal-box-body">
                     <div id="postResultDiv" class="error-container">
