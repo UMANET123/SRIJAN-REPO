@@ -24,12 +24,12 @@ function skipConsent(params, callback) {
       // }
       console.log(result)
       if(result.access_token!=null && result.scopes !=null && result.status == 0){
-        return callback(true, 200)
+        return callback({status:true, scopes: result.scopes}, 200)
       } else {
-        return callback(false,200);
+        return callback({status:false},200);
       }
     } else {
-      return callback(false, 200);
+      return callback({status: false}, 200);
     }
   });
 }
