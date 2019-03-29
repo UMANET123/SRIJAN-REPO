@@ -7,7 +7,7 @@ function skipConsent(params, callback) {
       uuid: uuid,
       app_id: app_id,
     },
-    attributes: ["uuid", "app_id", "developer_id", "access_token", "scopes"]
+    attributes: ["uuid", "app_id", "developer_id", "access_token", "scopes", "status"]
   }).then(result => {
     if (result) {
       // retrivedScopes = result.scopes.sort();
@@ -22,7 +22,8 @@ function skipConsent(params, callback) {
       // } else {
       //   return callback(false, 200);
       // }
-      if(result.token!=null && result.scopes !=null && result.status == 0){
+      console.log(result)
+      if(result.access_token!=null && result.scopes !=null && result.status == 0){
         return callback(true, 200)
       } else {
         return callback(false,200);
