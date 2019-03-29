@@ -18,6 +18,6 @@ router.put(`/revoke/all`, revokeAll);
 router.put(`/revoke/:subscriber_id`, revokeSingle);
 router.get(`/consent/:subscriber_id/list`, consentList);
 router.get(`/app/search/:subscriber_id`, getSubscriberApps);
-router.get ('/app/consent_bypass/:uuid/:app_id/:developer_id/:scopes', checkskipConsent);
+router.get ('/app/consent_bypass/:uuid/:app_id', checkskipConsent);
 
 module.exports = router;
