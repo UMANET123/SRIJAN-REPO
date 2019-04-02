@@ -1,0 +1,302 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: Subscriber-Authentication
+  description: |
+    Authorization based on OAuth 2.0 Authorization Grant Type
+schemes:
+  - https
+host: globeslingshot-dev-labs.apigee.net
+basePath: /auth/v1
+consumes:
+  - application/x-www-form-urlencoded
+  - application/json
+produces:
+  - application/json
+paths:
+  /generate/otp:
+    post:
+      tags:
+        - Generate & Send OTP to Subscriber
+      description: Generate & Send OTP to Subscriber
+      parameters:
+        - name: OtpGenerator
+          in: body
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/GenerateOTPSchema"
+      responses:
+        "201":
+          $ref: "#/definitions/GenerateOTPSuccess"
+        "400":
+          $ref: "#/definitions/BadRequest"
+  /verify/otp:
+    post:
+      operationId: VerifyOTP
+      tags:
+        - Verify OTP
+      description: Verify OTP
+      parameters:
+        - name: VerifyOtp
+          in: body
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/VerifyOtpSchema"
+      responses:
+        "200":
+          description: Success
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+  /transaction:
+    post:
+      operationId: CreateTransaction
+      tags:
+        - Create Transaction
+      description: Create Transaction for Consent
+      parameters:
+        - name: Create Transaction
+          in: body
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/CreateTransactionSchema"
+      responses:
+        "201":
+          $ref: "#/definitions/CreateTransactionSuccess"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "500":
+          $ref: "#/definitions/InternalServerError"
+    put:
+      operationId: updateTransaction
+      tags:
+        - Update Transaction
+      description: Update Transaction for Consent
+      parameters:
+        - in: path
+          name: transaction_id
+          type: string
+          required: true
+          description: transaction id of consent flow
+      responses:
+        "200":
+          $ref: "#/definitions/CreateTransactionSchema"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "500":
+          $ref: "#/definitions/InternalServerError"
+    get:
+      operationId: getTransaction
+      tags:
+        - Get Transaction
+      description: Get Transaction for Consent
+      parameters:
+        - in: path
+          name: transaction_id
+          type: string
+          required: true
+          description: transaction id of consent flow
+      responses:
+        "200":
+          $ref: "#/definitions/CreateTransactionSchema"
+        "500":
+          $ref: "#/definitions/InternalServerError"
+  /transaction/{transaction_id}/invalidate:
+    put:
+      operationId: invalidateTransaction
+      tags:
+        - invalidate Transaction
+      description: Invalidate Transaction for Consent
+      parameters:
+        - in: path
+          name: transaction_id
+          type: string
+          required: true
+          description: transaction id of consent flow
+      responses:
+        "200":
+          description: Success
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "500":
+          $ref: "#/definitions/InternalServerError"
+definitions:
+  GenerateOTPSchema:
+    type: object
+    properties:
+      msisdn:
+        type: string
+        example: "639944559933"
+      app_id:
+        type: string
+        example: "abcd3dsjndnjnejn43"
+      transaction_id:
+        type: string
+        example: "Zaf&ndfdjsjndnjnej14"
+      blacklist:
+        type: string
+        example: false
+  GenerateOTPSuccess:
+    description: Created
+    type: object
+    properties:
+      subscriber_id:
+        type: string
+      otp:
+        type: string
+    example:
+      subscriber_id: a0040a18-e227-4bca-b5aa-452c7ae03165
+      otp: 12343
+  VerifyOtpSchema:
+    type: object
+    properties:
+      subscriber_id:
+        type: string
+        example: a0040a18-e227-4bca-b5aa-452c7ae03165
+      otp:
+        type: integer
+        example: 12345
+    example:
+      subscriber_id: a0040a18-e227-4bca-b5aa-452c7ae03165
+      otp: 12343
+  CreateTransactionSuccess:
+    description: Created
+    type: object
+    properties:
+      transaction_id:
+        type: string
+        example: a0040a18-e227-4bca-b5aa-452c7ae03165
+  UpdateTransactionSchema:
+    type: object
+    properties:
+      transaction_id:
+        type: string
+        example: a0040a18-e227-4bca-b5aa-452c7ae03165
+  CreateTransactionSchema:
+    description: Success
+    type: object
+    properties:
+      response_type:
+        type: string
+        example: sample_type
+      client_id:
+        type: string
+        example: e2274bcab5aa452c7ae03165
+      redirect_uri:
+        type: string
+        example: url
+      scopes:
+        type: string
+        example: '["scope1", "scope2", "scope3"]'
+      state:
+        type: string
+        example: string_value
+      app_id:
+        type: string
+        example: FnyqFzJKZ5hrSB9JARCSpt90tgPN
+      developer_id:
+        type: string
+        example: j33ufh8hifjijdfdtgPN
+  ConsentListSchema:
+    description: Success
+    type: object
+    properties:
+      subscriber_id:
+        type: string
+        example: a0040a18-e227-4bca-b5aa-452c7ae03165
+  ConsentListSuccess:
+    description: success
+    type: object
+    properties:
+      page:
+        type: integer
+        example: 2
+      limit:
+        type: integer
+        example: 10
+      apps:
+        type: array
+        items:
+          $ref: "#/definitions/ConsentListSuccess2"
+  ConsentListSuccess2:
+    properties:
+      app_id:
+        type: string
+        example: e2274bcab5aa452c7ae03165
+      app_name:
+        type: string
+        example: Weather app
+      developer_id:
+        type: string
+        example: a0040a18e227
+      scopes:
+        $ref: "#/definitions/SubscriberConsent"
+      access_token:
+        type: string
+        example: FnyqFzJKZ5hrSB9JARCSpt90tgPN
+  ConsentSuccess:
+    description: Created/Updated
+    type: object
+    properties:
+      old_token:
+        type: boolean
+      old_token_value:
+        type: string
+    example:
+      old_token: true
+      old_token_value: FnyqFzJKZ5hrSB9JARCSpt90tgPN
+  SubscriberConsent:
+    type: string
+    properties:
+      sms:
+        type: string
+  BadRequest:
+    description: Bad Request
+    type: object
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: BadRequest
+      error_message: Bad Request
+  InternalServerError:
+    description: Internal Server Error
+    type: object
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: InternalServerError
+      error_message: Internal Server Error
+  Unauthorized:
+    description: Unauthorized
+    type: object
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: Unauthorized
+      error_message: Invalid Client ID
+  Forbidden:
+    description: Forbidden
+    type: object
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: Forbidden
+      error_message: Forbidden
