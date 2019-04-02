@@ -4,7 +4,7 @@
   "description": "Consent Service",
   "main": "app.js",
   "scripts": {
-    "test": "NODE_ENV=test npx nyc --reporter=html --reporter=text mocha --recursive --timeout 70000 --exit  tests",
+    "test": "NODE_ENV=test npx nyc --reporter=html --reporter=text --reporter=lcov mocha --recursive --timeout 70000 --exit  tests",
     "dev": "npx nodemon app.js"
   },
   "author": "",
