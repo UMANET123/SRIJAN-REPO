@@ -16,6 +16,13 @@ services:
       - "3001:3000"
     environment:
       - INSTANCE=authservice
+      - AUTH_SERVICE_BASEPATH=${ENV_AUTH_SERVICE_BASEPATH}
+      - CONSENT_SERVICE_BASEPATH=${CONSENT_SERVICE_BASEPATH}
+      - DB_USERNAME=${ENV_DB_USERNAME}
+      - DB_PASSWORD=${ENV_DB_PASSWORD}
+      - DB_NAME=${ENV_DB_NAME}
+      - DB_HOST=${ENV_DB_HOST}
+      - DB_PORT=${ENV_DB_HOST}
     networks:
       - authservice_default
   db:
@@ -25,6 +32,7 @@ services:
       - POSTGRES_USER=wakanda_auth_service
       - POSTGRES_PASSWORD=12345
       - POSTGRES_DB=wakanda_auth_db
+
     volumes:
       - ./postgres-data/postgres:/var/lib/postgresql/data
       - ./dbdata:/docker-entrypoint-initdb.d/
