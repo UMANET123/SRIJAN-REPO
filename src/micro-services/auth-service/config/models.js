@@ -1,6 +1,14 @@
 /* jshint esversion:6 */
 const sequelize = require("./orm.database");
-const { DATE, STRING, INTEGER, NOW, Op, DataTypes } = require("sequelize");
+const {
+  DATE,
+  STRING,
+  INTEGER,
+  NOW,
+  Op,
+  DataTypes,
+  JSON
+} = require("sequelize");
 
 const SubscriberDataMask = sequelize.define(
   "subscriber_data_mask",
@@ -90,7 +98,7 @@ const TransactionData = sequelize.define(
     response_type: { type: STRING },
     client_id: { type: STRING },
     redirect_uri: { type: STRING },
-    scope: { type: STRING },
+    scopes: { type: JSON },
     state: { type: STRING },
     app_id: { type: STRING },
     developer_id: { type: STRING },

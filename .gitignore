@@ -22,3 +22,6 @@ src/webapps/consent_app/.env
 
 src/micro-services/consent-service/.nyc_output
 src/micro-services/consent-service/coverage
+
+src/micro-services/auth-service/.nyc_output
+src/micro-services/auth-service/coverage

@@ -60,7 +60,7 @@ CREATE TABLE public.transaction_data (
 	response_type varchar NULL,
 	client_id varchar NULL,
 	redirect_uri varchar NULL,
-	scope varchar NULL,
+	scopes json NULL,
 	state varchar NULL,
 	app_id varchar NULL,
 	developer_id varchar NULL,

@@ -13,6 +13,7 @@ const verifyHotpController = require("../controllers/verify-hotp.controller");
 const verifyTotpController = require("../controllers/verify-topt.controller");
 const verifyUserController = require("../controllers/verify-user.controller");
 const invalidateTransaction = require("../controllers/invalidate-transaction.controller");
+const createTransaction = require("../controllers/create-transaction.controller");
 
 router.post(`/generate/hotp`, generateHotpController);
 router.post(`/generate/totp`, generateTotpController);
@@ -21,7 +22,7 @@ router.post(`/verify/totp`, verifyTotpController);
 router.post(`/verify/user`, verifyUserController);
 
 //  transaction routes
-// router.post("/transaction", createTransaction);
+router.post("/transaction", createTransaction);
 // router.put("/transaction/:transaction_id", updateTransaction);
 // router.get("/transaction/:transaction_id", getTransaction);
 router.put(`/transaction/:transaction_id/invalidate`, invalidateTransaction);
