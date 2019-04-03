@@ -54,9 +54,6 @@ ALTER table public.flood_control
   REFERENCES public.subscriber_data_mask (uuid);
 
 
-CREATE TYPE valid_auth_states AS ENUM ('initial', 'get-login', 'generate-otp', 'verify-otp', 'provide-consent');
-
-
 CREATE TABLE public.transaction_data (
 	id serial NOT NULL,
 	transaction_id varchar NULL,
@@ -67,7 +64,7 @@ CREATE TABLE public.transaction_data (
 	state varchar NULL,
 	app_id varchar NULL,
 	developer_id varchar NULL,
-	auth_state valid_auth_states DEFAULT 'initial',
+	auth_state int4 NULL,
 	created_at timestamp NULL DEFAULT now(),
 	updated_at timestamp NULL,
 	status int4 NULL
