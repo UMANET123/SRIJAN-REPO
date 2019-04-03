@@ -23,6 +23,11 @@ services:
       - DB_NAME=${ENV_DB_NAME}
       - DB_HOST=${ENV_DB_HOST}
       - DB_PORT=${ENV_DB_HOST}
+      - SMS_SERVICE_ACTIVE=false
+      - SMS_API_ENDPOINT=${ENV_SMS_API_ENDPOINT}
+      - SMS_PASSPHRASE=${ENV_SMS_PASSPHRASE}
+      - SMS_APP_ID=${ENV_SMS_APP_ID}
+      - SMS_APP_SECRET=${ENV_SMS_APP_SECRET}
     networks:
       - authservice_default
   db:
