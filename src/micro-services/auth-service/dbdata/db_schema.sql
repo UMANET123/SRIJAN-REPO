@@ -57,6 +57,7 @@ ALTER table public.flood_control
 CREATE TABLE public.transaction_data (
 	id serial NOT NULL,
 	transaction_id varchar NULL,
+	subscriber_id varchar NULL,
 	response_type varchar NULL,
 	client_id varchar NULL,
 	redirect_uri varchar NULL,

@@ -1,7 +1,8 @@
 /* jshint esversion:6 */
 // const pool = require("../config/db");
 const { TransactionData } = require("../config/models");
-const { getNewSecret, getRandomString } = require("../models/helper.model");
+// const { getNewSecret, getRandomString } = require("../models/helper.model");
+const uuidv4 = require("uuid/v4");
 /**
  * Function will create Transaction record and after success invoke
  * the callback with passing the txnId
@@ -29,14 +30,8 @@ function createTransaction(reqBody, callback) {
     developer_id
   } = reqBody;
   // create secret key for txnId
-  //  create txnid
-  console.log({ reqBody });
-  let transactionId = getNewSecret(
-    app_id ||
-      getRandomString() + developer_id ||
-      getRandomString() + new Date().getTime()
-  );
   //  create a transaction record
+  let transactionId = uuidv4();
   return TransactionData.create({
     transaction_id: transactionId,
     response_type,
@@ -49,16 +44,17 @@ function createTransaction(reqBody, callback) {
     developer_id,
     status: 0
   })
-    .then(txnResponse => callback({ transaction_id: transactionId }, 201))
-    .catch(() =>
-      callback(
+    .then(() => callback({ transaction_id: transactionId }, 201))
+    .catch(e => {
+      console.log(e);
+      return callback(
         {
           error_code: "InternalServerError",
           error_message: "Internal Server Error"
         },
         500
-      )
-    );
+      );
+    });
 }
 
 //  validate a transaction

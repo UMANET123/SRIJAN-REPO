@@ -1,14 +1,6 @@
 /* jshint esversion:6 */
 const sequelize = require("./orm.database");
-const {
-  DATE,
-  STRING,
-  INTEGER,
-  NOW,
-  Op,
-  DataTypes,
-  JSON
-} = require("sequelize");
+const { DATE, STRING, INTEGER, NOW, Op, JSON } = require("sequelize");
 
 const SubscriberDataMask = sequelize.define(
   "subscriber_data_mask",
@@ -95,6 +87,7 @@ const TransactionData = sequelize.define(
   "transaction_data",
   {
     transaction_id: { type: STRING },
+    subscriber_id: { type: STRING },
     response_type: { type: STRING },
     client_id: { type: STRING },
     redirect_uri: { type: STRING },
@@ -103,19 +96,13 @@ const TransactionData = sequelize.define(
     app_id: { type: STRING },
     developer_id: { type: STRING },
     auth_state: {
-      type: DataTypes.ENUM(
-        "initial",
-        "get-login",
-        "generate-otp",
-        "verify-otp",
-        "provide-consent"
-      )
+      type: INTEGER
     },
     created_at: {
       type: DATE,
       defaultValue: NOW()
     },
-    udpated_at: {
+    updated_at: {
       type: DATE
     },
     status: { type: INTEGER }
