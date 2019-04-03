@@ -28,10 +28,12 @@ services:
       - "5560:5560"
     environment:
       - INSTANCE=consentapp
-    networks: 
+      - CLIENT_ID=${ENV_CLIENT_ID}
+      - SECRET=${ENV_SECRET}
+      - APIGEE_BASE_URL=${ENV_APIGEE_BASE_URL}
+    networks:
       - webapp-network
 
 networks:
   webapp-network:
     driver: bridge
-    

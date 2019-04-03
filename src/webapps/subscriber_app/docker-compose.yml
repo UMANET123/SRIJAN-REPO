@@ -28,10 +28,13 @@ services:
       - "5561:5561"
     environment:
       - INSTANCE=subscriberapp
-    networks: 
+      - CLIENT_ID=${ENV_CLIENT_ID}
+      - SECRET=${ENV_SECRET}
+      - APIGEE_BASE_URL=${ENV_APIGEE_BASE_URL}
+      - SESSION_IDLE_TIME=${ENV_SESSION_IDLE_TIME}
+    networks:
       - subscriberapp-network
 
 networks:
   subscriberapp-network:
     driver: bridge
-    

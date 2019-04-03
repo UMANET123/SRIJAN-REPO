@@ -4,7 +4,7 @@
   "description": "Two Factor Auth Service",
   "main": "app.js",
   "scripts": {
-    "test": "OTP_TIMER=1 OTP_STEP=10 NODE_ENV=test npx nyc --reporter=html --reporter=text mocha --recursive --timeout 70000 --exit  tests",
+    "test": "OTP_TIMER=1 OTP_STEP=10 NODE_ENV=test npx nyc --reporter=html --reporter=text --reporter=lcov  mocha --recursive --timeout 70000 --exit  tests",
     "dev": "npx nodemon app.js"
   },
   "author": "",
@@ -21,7 +21,8 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "sequelize": "^4.43.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "dns": "^0.2.2"
   },
   "devDependencies": {
     "chai": "^4.1.2",

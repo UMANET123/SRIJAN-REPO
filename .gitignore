@@ -1,5 +1,7 @@
 *.DS_Store
 *node_modules/
+*coverage/
+*.nyc_output/
 *package-lock.json
 *.tar.gz
 src/micro-services/auth-service/yarn.lock
