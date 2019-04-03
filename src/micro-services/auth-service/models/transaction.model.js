@@ -1,5 +1,62 @@
-const pool = require("../config/db");
+/* jshint esversion:6 */
+// const pool = require("../config/db");
 const { TransactionData } = require("../config/models");
+// const { getNewSecret, getRandomString } = require("../models/helper.model");
+const uuidv4 = require("uuid/v4");
+/**
+ * Function will create Transaction record and after success invoke
+ * the callback with passing the txnId
+ * @param {Object} reqBody Http Request Body Object
+ *  - response_type string
+ *  - client_id {string} Client Id
+ *  - redirect_uri {string} Redirect URL
+ *  - scopes {Array} Consent Scopes
+ *  - state  {string} State
+ *  - auth_state  {string} Auth State
+ *  - app_id  {string} App Id
+ *  - developer_id  {string} Developer Id
+ * @param {function} callback Callback after success/fail
+ * @returns {string} returns transaction_id via the callback for success
+ */
+function createTransaction(reqBody, callback) {
+  let {
+    response_type,
+    client_id,
+    redirect_uri,
+    scopes,
+    state,
+    auth_state,
+    app_id,
+    developer_id
+  } = reqBody;
+  // create secret key for txnId
+  //  create a transaction record
+  let transactionId = uuidv4();
+  return TransactionData.create({
+    transaction_id: transactionId,
+    response_type,
+    client_id,
+    redirect_uri,
+    scopes,
+    state,
+    auth_state,
+    app_id,
+    developer_id,
+    status: 0
+  })
+    .then(() => callback({ transaction_id: transactionId }, 201))
+    .catch(e => {
+      console.log(e);
+      return callback(
+        {
+          error_code: "InternalServerError",
+          error_message: "Internal Server Error"
+        },
+        500
+      );
+    });
+}
+
 //  validate a transaction
 /**
  *
@@ -79,8 +136,8 @@ function invalidateTransaction(...args) {
       returning: true
     }
   )
-    .then((result) => {
-      console.log(result)
+    .then(result => {
+      console.log(result);
       if (result) {
         return callback(200, null);
       } else {
@@ -88,13 +145,16 @@ function invalidateTransaction(...args) {
       }
     })
     .catch(e => {
-      console.log("ERROR IN INVALIDATE : ",e);
+      console.log("ERROR IN INVALIDATE : ", e);
       return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
       });
     });
-  
 }
 
-module.exports = { validateTransaction, invalidateTransaction };
+module.exports = {
+  validateTransaction,
+  invalidateTransaction,
+  createTransaction
+};

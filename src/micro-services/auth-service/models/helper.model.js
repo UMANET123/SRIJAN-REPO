@@ -7,20 +7,20 @@ const {
   OTP_SETTINGS: { timer, step }
 } = require("../config/environment");
 const { verifyUser } = require("./auth.model");
- /**
-  * This function will generate an OTP using a secret
-  * @param {string} secret Secret Hash String
-  * @returns {number} 6 digit OTP number
-  */
+/**
+ * This function will generate an OTP using a secret
+ * @param {string} secret Secret Hash String
+ * @returns {number} 6 digit OTP number
+ */
 function getNewOtp(secret) {
   return otplib.authenticator.generate(secret);
 }
 
- /**
-  * Takes a key in and generates a string hash
-  * @param {number} key Unqiue key to generate a Hash
-  * @returns {string} Hash String
-  */
+/**
+ * Takes a key in and generates a string hash
+ * @param {number} key Unqiue key to generate a Hash
+ * @returns {string} Hash String
+ */
 function getNewSecret(key) {
   return crypto
     .createHash("md5")
@@ -42,7 +42,7 @@ function configureOTP() {
  * Checks if a user app is blacklisted
  * @param {string} msisdn Mobile Number
  * @param {string} app_id App ID
- * @param {Function} callback 
+ * @param {Function} callback
  * @returns {Function} returns callback with boolean value
  */
 function checkBlackListApp(msisdn, app_id, callback) {
@@ -69,10 +69,26 @@ function checkBlackListApp(msisdn, app_id, callback) {
     return callback(false);
   });
 }
+/**
+ *
+ * Get random string
+ * @returns {string}  Random String
+ */
+function getRandomString() {
+  return (
+    Math.random()
+      .toString(36)
+      .substring(2, 15) +
+    Math.random()
+      .toString(36)
+      .substring(2, 15)
+  );
+}
 
 module.exports = {
   getNewOtp,
   getNewSecret,
   configureOTP,
-  checkBlackListApp
+  checkBlackListApp,
+  getRandomString
 };
