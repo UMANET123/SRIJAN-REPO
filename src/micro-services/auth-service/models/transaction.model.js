@@ -1,4 +1,4 @@
-/* jshint esversion:6 */
+/* jshint esversion:9 */
 // const pool = require("../config/db");
 const { TransactionData } = require("../config/models");
 // const { getNewSecret, getRandomString } = require("../models/helper.model");
@@ -82,7 +82,6 @@ function getTransaction(transactionId, callback) {
       },
       400
     );
-  console.log({ transactionId });
   //  find transaction
   return TransactionData.findOne({
     where: {
@@ -182,9 +181,6 @@ function validateTransaction(...args) {
  * @param {array} args Following Arguments are needed to pass
  * - reqParams {object} Path params
  *   - transaction_id Transaction Id
- * - reqBody {object} Body
- *   - subscriber_id Subscriber Id
- *   - app_id App Id
  * - callback Callback Function
  * @returns {function} callback callback function
  *
@@ -192,10 +188,7 @@ function validateTransaction(...args) {
  * invoke callback
  *
  */
-function invalidateTransaction(...args) {
-  let [reqParams, reqBody, callback] = args;
-  let { transaction_id } = reqParams;
-  let { subscriber_id, app_id } = reqBody;
+function invalidateTransaction(transactionId, callback) {
   // create a transaction record
   return TransactionData.update(
     {
@@ -203,24 +196,101 @@ function invalidateTransaction(...args) {
     },
     {
       where: {
-        transaction_id: transaction_id,
-        uuid: subscriber_id,
-        app_id: app_id,
+        transaction_id: transactionId,
+        status: 0
+      },
+      returning: true
+    }
+  )
+    .then(transactionResponse => {
+      console.log(transactionResponse);
+      let [recordCount, response] = transactionResponse;
+
+      if (response.length > 0) {
+        return callback(200, null);
+      } else {
+        return callback(403, {
+          error_code: "Forbidden",
+          error_message: "Forbidden"
+        });
+      }
+    })
+    .catch(e => {
+      console.log("ERROR IN INVALIDATE : ", e);
+      return callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      });
+    });
+}
+/**
+ *
+ *
+ * @param {string} transactionId Transaction Id
+ * @param {object} reqBody request Body Object with following optional parameter
+ *  - response_type string
+ *  - client_id {string} Client Id
+ *  - redirect_uri {string} Redirect URL
+ *  - scopes {Array} Consent Scopes
+ *  - state  {string} State
+ *  - auth_state  {string} Auth State
+ *  - app_id  {string} App Id
+ *  - developer_id  {string} Developer Id
+ *
+ * @param {function} callback callback function
+ * @returns {function} callback function with Transaction Object with following attributes
+ *  - response_type string
+ *  - client_id {string} Client Id
+ *  - redirect_uri {string} Redirect URL
+ *  - scopes {Array} Consent Scopes
+ *  - state  {string} State
+ *  - auth_state  {string} Auth State
+ *  - app_id  {string} App Id
+ *  - developer_id  {string} Developer Id
+ */
+function updateTransaction(transactionId, reqBody, callback) {
+  // update a transaction record
+  return TransactionData.update(
+    {
+      ...reqBody,
+      updated_at: new Date()
+    },
+    {
+      where: {
+        transaction_id: transactionId,
         status: "0"
       },
       returning: true
     }
   )
-    .then(result => {
-      console.log(result);
-      if (result) {
-        return callback(200, null);
-      } else {
-        return callback(204, null);
-      }
+    .then(updatedTransaction => {
+      let [recordCount, record] = updatedTransaction;
+      //  no record updated/found
+      if (!record[0]) return callback(204, null);
+      let {
+        response_type,
+        client_id,
+        redirect_uri,
+        scopes,
+        state,
+        auth_state,
+        app_id,
+        developer_id
+      } = record[0].dataValues;
+      //  record updated
+      return callback(200, {
+        response_type,
+        client_id,
+        redirect_uri,
+        scopes,
+        state,
+        auth_state,
+        app_id,
+        developer_id
+      });
     })
     .catch(e => {
-      console.log("ERROR IN INVALIDATE : ", e);
+      console.log("ERROR IN UPDATE : ", e);
       return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
@@ -232,5 +302,6 @@ module.exports = {
   validateTransaction,
   invalidateTransaction,
   createTransaction,
-  getTransaction
+  getTransaction,
+  updateTransaction
 };
