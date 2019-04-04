@@ -56,6 +56,81 @@ function createTransaction(reqBody, callback) {
       );
     });
 }
+/**
+ * Function will get the Transaction record of transaction id and return
+ * a callback with transaction attributes/fields
+ * @param {string} transactionId Tranasaction ID
+ * @param {function} callback Callback after success/fail
+ * @returns {function} transaction Object having following attributes
+ *  - response_type string
+ *  - client_id {string} Client Id
+ *  - redirect_uri {string} Redirect URL
+ *  - scopes {Array} Consent Scopes
+ *  - state  {string} State
+ *  - auth_state  {string} Auth State
+ *  - app_id  {string} App Id
+ *  - developer_id  {string} Developer
+ *  passing in the callback for success
+ */
+function getTransaction(transactionId, callback) {
+  //  check if there is transaction id has falsy/null values
+  if (!transactionId)
+    return callback(
+      {
+        error_code: "BadRequest",
+        error_message: "Bad Request"
+      },
+      400
+    );
+  console.log({ transactionId });
+  //  find transaction
+  return TransactionData.findOne({
+    where: {
+      transaction_id: transactionId,
+      status: 0
+    },
+    attributes: [
+      "response_type",
+      "client_id",
+      "redirect_uri",
+      "scopes",
+      "state",
+      "auth_state",
+      "app_id",
+      "developer_id"
+    ]
+  })
+    .then(transactionRecord => {
+      if (!transactionRecord) return callback(204, null);
+      let {
+        response_type,
+        client_id,
+        redirect_uri,
+        scopes,
+        state,
+        auth_state,
+        app_id,
+        developer_id
+      } = transactionRecord;
+      return callback(200, {
+        response_type,
+        client_id,
+        redirect_uri,
+        scopes,
+        state,
+        auth_state,
+        app_id,
+        developer_id
+      });
+    })
+    .catch(e => {
+      console.log(e);
+      return callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      });
+    });
+}
 
 //  validate a transaction
 /**
@@ -156,5 +231,6 @@ function invalidateTransaction(...args) {
 module.exports = {
   validateTransaction,
   invalidateTransaction,
-  createTransaction
+  createTransaction,
+  getTransaction
 };
