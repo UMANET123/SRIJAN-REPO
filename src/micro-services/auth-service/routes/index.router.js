@@ -26,6 +26,7 @@ router.post(`/verify/user`, verifyUserController);
 //  transaction routes
 router.post("/transaction", createTransaction);
 router.put("/transaction/:transaction_id", updateTransaction);
+router.patch("/transaction/:transaction_id", updateTransaction);
 router.get("/transaction/:transaction_id", getTransaction);
 router.put(`/transaction/:transaction_id/invalidate`, invalidateTransaction);
 module.exports = router;
