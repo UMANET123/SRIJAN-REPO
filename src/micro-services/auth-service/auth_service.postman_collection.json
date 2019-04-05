@@ -1,1289 +1,1576 @@
 {
-  "info": {
-    "_postman_id": "9750cbc3-b1ce-43bf-b685-2087bf1ea944",
-    "name": "Globe Wakanda Micro Services",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
+  "id": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+  "name": "Globe Wakanda Micro Services copy",
+  "description": null,
+  "auth": null,
+  "events": null,
+  "variables": [],
+  "order": [],
+  "folders_order": ["36c5d21a-cc6e-4c8d-9985-8c87d72081e2"],
+  "folders": [
     {
+      "id": "36c5d21a-cc6e-4c8d-9985-8c87d72081e2",
       "name": "Auth Micro Service",
-      "item": [
+      "description": null,
+      "auth": null,
+      "events": null,
+      "collection": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folder": null,
+      "order": [],
+      "folders_order": [
+        "999eda71-8421-496a-9f4a-3226ec5ecfc7",
+        "9f7bef5b-622d-4e0a-8349-dd323b27d4bb",
+        "9eed1fff-88e6-4f14-a9da-7bb04b03ecda",
+        "2027c831-91f6-4188-b26c-3d71ee7553b5",
+        "5dea02f5-b48c-4d7b-bbc9-7b11353c3857",
+        "d242d464-9afa-4c8e-b943-6840aef73300",
+        "8ae55a5d-01a4-4dc4-be46-8531c7554fc5",
+        "8338f53a-25ae-4e0b-89df-0948486a0385"
+      ],
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folderId": "36c5d21a-cc6e-4c8d-9985-8c87d72081e2"
+    },
+    {
+      "id": "8ae55a5d-01a4-4dc4-be46-8531c7554fc5",
+      "name": "Create Transaction",
+      "description": null,
+      "auth": null,
+      "events": null,
+      "collection": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folder": "36c5d21a-cc6e-4c8d-9985-8c87d72081e2",
+      "order": ["fc425075-6dd7-4e25-9cf1-51f55bfa4963"],
+      "folders_order": [],
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folderId": "8ae55a5d-01a4-4dc4-be46-8531c7554fc5"
+    },
+    {
+      "id": "999eda71-8421-496a-9f4a-3226ec5ecfc7",
+      "name": "Generate TOTP",
+      "description": null,
+      "auth": null,
+      "events": null,
+      "collection": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folder": "36c5d21a-cc6e-4c8d-9985-8c87d72081e2",
+      "order": [
+        "d73a7e03-488e-4a0c-a296-f8fa67c54247",
+        "6e7a64c2-fd43-4b6b-a923-0bb6ba5b1930",
+        "bdc2b76c-39e9-4d67-bf01-d0ba11066cae",
+        "f0078d5a-951d-4a01-b5fe-356f9d273756",
+        "19da181f-229a-487f-a104-0f83633fec43",
+        "c116204b-e33e-4503-8182-076a3fc4cd54",
+        "112e84ee-cb61-4893-8f54-06f751b7a0e7"
+      ],
+      "folders_order": [],
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folderId": "999eda71-8421-496a-9f4a-3226ec5ecfc7"
+    },
+    {
+      "id": "d242d464-9afa-4c8e-b943-6840aef73300",
+      "name": "Get Transaction",
+      "description": null,
+      "auth": null,
+      "events": null,
+      "collection": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folder": "36c5d21a-cc6e-4c8d-9985-8c87d72081e2",
+      "order": [
+        "a36eb1e4-2f74-48f9-b45c-be4805b26c13",
+        "d1029e3f-610f-4a64-bef3-a7e024f045c6",
+        "c7d8ee93-3e98-43bd-8cbe-5634aa35eb8f"
+      ],
+      "folders_order": [],
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folderId": "d242d464-9afa-4c8e-b943-6840aef73300"
+    },
+    {
+      "id": "2027c831-91f6-4188-b26c-3d71ee7553b5",
+      "name": "Invalidate Transaction",
+      "description": null,
+      "auth": null,
+      "events": null,
+      "collection": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folder": "36c5d21a-cc6e-4c8d-9985-8c87d72081e2",
+      "order": ["03f2184a-7adf-4f4f-b195-c70e1a3b4e08"],
+      "folders_order": [],
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folderId": "2027c831-91f6-4188-b26c-3d71ee7553b5"
+    },
+    {
+      "id": "5dea02f5-b48c-4d7b-bbc9-7b11353c3857",
+      "name": "Sms Api Checking",
+      "description": null,
+      "auth": null,
+      "events": null,
+      "collection": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folder": "36c5d21a-cc6e-4c8d-9985-8c87d72081e2",
+      "order": [
+        "4cc36cf2-aea0-4208-b9b9-b7103be1faed",
+        "05375cc8-6769-4eb2-aae4-90580154537e",
+        "50f9c6fc-5419-4958-a5f3-ebab38b87886"
+      ],
+      "folders_order": [],
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folderId": "5dea02f5-b48c-4d7b-bbc9-7b11353c3857"
+    },
+    {
+      "id": "8338f53a-25ae-4e0b-89df-0948486a0385",
+      "name": "Update Transaction",
+      "description": null,
+      "auth": null,
+      "events": null,
+      "collection": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folder": "36c5d21a-cc6e-4c8d-9985-8c87d72081e2",
+      "order": [
+        "4a027668-245e-453a-aa24-6cd5d4267a21",
+        "2bfe6616-0366-4077-ab11-6488e429cc51"
+      ],
+      "folders_order": [],
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folderId": "8338f53a-25ae-4e0b-89df-0948486a0385"
+    },
+    {
+      "id": "9eed1fff-88e6-4f14-a9da-7bb04b03ecda",
+      "name": "Validate Transaction",
+      "description": null,
+      "auth": null,
+      "events": null,
+      "collection": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folder": "36c5d21a-cc6e-4c8d-9985-8c87d72081e2",
+      "order": [
+        "d72be959-2671-4b89-8688-fd99dc48b486",
+        "6ee020e0-ae4c-4f4d-847f-b9ed6d722e86"
+      ],
+      "folders_order": [],
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folderId": "9eed1fff-88e6-4f14-a9da-7bb04b03ecda"
+    },
+    {
+      "id": "9f7bef5b-622d-4e0a-8349-dd323b27d4bb",
+      "name": "Verify TOTP",
+      "description": null,
+      "auth": null,
+      "events": null,
+      "collection": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folder": "36c5d21a-cc6e-4c8d-9985-8c87d72081e2",
+      "order": [
+        "c34f4be3-e8ca-4ac1-8bdd-ce77fb6ee835",
+        "bc080007-873d-42d8-9031-eadb65100fbe",
+        "6ba4b507-9843-46c0-93f9-c011d1393aa8",
+        "48608d4b-aa1c-475c-820f-1a1b11d7a4ed",
+        "d10823d2-a369-49ea-a6ac-8655b99efbb6",
+        "95461434-66fb-452b-922e-36f9b35da41f",
+        "3a1bcd8e-541f-4a6f-8d86-51cdd84d83af",
+        "d3789554-2bb5-494c-b453-84d1f65ee33b"
+      ],
+      "folders_order": [],
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "folderId": "9f7bef5b-622d-4e0a-8349-dd323b27d4bb"
+    }
+  ],
+  "requests": [
+    {
+      "id": "03f2184a-7adf-4f4f-b195-c70e1a3b4e08",
+      "name": "Successfully Invalidate Transaction",
+      "url": "{{host_auth}}/transaction/{{transaction_id}}/invalidate",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
         {
-          "name": "Generate TOTP",
-          "item": [
-            {
-              "name": "Successfully Generate TOTP",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
-                    "exec": [
-                      "pm.test(\"Status code is 201\", function () {",
-                      "    pm.response.to.have.status(201);",
-                      "});",
-                      "",
-                      "pm.environment.set(\"app_id\", pm.response.json().app_id);",
-                      "pm.environment.set(\"subscriber_id\", pm.response.json().subscriber_id);",
-                      "pm.environment.set(\"otp\", pm.response.json().otp);",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"msisdn\" : \"{{sms_address}}\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n    \"blacklist\": true\n}"
-                },
-                "url": {
-                  "raw": "{{remote_host}}/generate/totp",
-                  "host": ["{{remote_host}}"],
-                  "path": ["generate", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail to Generate OTP, Wrong Mobile No.",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
-                    "exec": [
-                      "pm.test(\"Status code is 400\", function () {",
-                      "    pm.response.to.have.status(400);",
-                      "});",
-                      "",
-                      "",
-                      "pm.test(\"Should contain BadRequest in Error Code\", function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
-                      "});",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"msisdn\" : \"0937006210\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n    \"blacklist\": true\n}"
-                },
-                "url": {
-                  "raw": "{{remote_host}}/generate/totp",
-                  "host": ["{{remote_host}}"],
-                  "path": ["generate", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail to Generate OTP, NO Mobile No.",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
-                    "exec": [
-                      "pm.test(\"Status code is 400\", function () {",
-                      "    pm.response.to.have.status(400);",
-                      "});",
-                      "",
-                      "",
-                      "pm.test(\"Should contain BadRequest in Error Code\", function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
-                      "});",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"msisdn\" : \"\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n    \"blacklist\": true\n}"
-                },
-                "url": {
-                  "raw": "{{remote_host}}/generate/totp",
-                  "host": ["{{remote_host}}"],
-                  "path": ["generate", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail to Generate OTP, NO APP ID",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
-                    "exec": [
-                      "pm.test(\"Status code is 400\", function () {",
-                      "    pm.response.to.have.status(400);",
-                      "});",
-                      "",
-                      "",
-                      "pm.test(\"Should contain BadRequest in Error Code\", function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
-                      "});",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"msisdn\" : \"09273164031\",\n    \"app_id\" :\"\",\n    \"blacklist\": true\n}"
-                },
-                "url": {
-                  "raw": "{{remote_host}}/generate/totp",
-                  "host": ["{{remote_host}}"],
-                  "path": ["generate", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail to Generate OTP, NO Blacklist",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
-                    "exec": [
-                      "pm.test(\"Status code is 400\", function () {",
-                      "    pm.response.to.have.status(400);",
-                      "});",
-                      "",
-                      "",
-                      "pm.test(\"Should contain BadRequest in Error Code\", function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
-                      "});",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"msisdn\" : \"\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n    \"blacklist\": \"\"\n}"
-                },
-                "url": {
-                  "raw": "{{remote_host}}/generate/totp",
-                  "host": ["{{remote_host}}"],
-                  "path": ["generate", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail to Generate OTP, App Blacklisted",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
-                    "exec": [
-                      "pm.test(\"Status code is 403\", function () {",
-                      "    pm.response.to.have.status(403);",
-                      "});",
-                      "",
-                      "",
-                      "pm.test(\"Should contain Forbidden in error_code\", function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.error_code).to.eql(\"Forbidden\");",
-                      "});",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"msisdn\" : \"09273164032\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4ac\",\n    \"blacklist\": true\n}"
-                },
-                "url": {
-                  "raw": "{{remote_host}}/generate/totp",
-                  "host": ["{{remote_host}}"],
-                  "path": ["generate", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail to Generate OTP, Account is blocked",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
-                    "exec": [
-                      "pm.test(\"Status code is 403\", function () {",
-                      "    pm.response.to.have.status(403);",
-                      "});",
-                      "",
-                      "",
-                      "pm.test(\"Should Contain Unauthorized in error code\", function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.error_code).to.eql(\"Unauthorized\");",
-                      "});",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                },
-                {
-                  "listen": "prerequest",
-                  "script": {
-                    "id": "77a621a9-9252-47dc-9185-40a7ba6fe433",
-                    "exec": [
-                      "function verifyOtp() {",
-                      " pm.sendRequest({",
-                      "        url: pm.environment.get(\"host_auth\")+\"/verify/totp\",",
-                      "        method: 'POST',",
-                      "        header: {",
-                      "            'content-type': 'application/json'",
-                      "        },",
-                      "        body : {",
-                      "            mode: 'raw',",
-                      "            raw : JSON.stringify({subscriber_id: \"{{subscriber_id}}\", app_id: app_id, otp:'123456'})",
-                      "        }",
-                      "    },function(err, response){",
-                      "        console.log(err);",
-                      "        console.log(response)",
-                      "    });",
-                      "}",
-                      "function generateOtp() {",
-                      "    pm.sendRequest({",
-                      "    url: pm.environment.get(\"host_auth\")+\"/generate/totp\",",
-                      "    method: 'POST',",
-                      "    header: {",
-                      "        'content-type': 'application/json'",
-                      "    },",
-                      "    body: {",
-                      "        mode: 'raw',",
-                      "        raw: JSON.stringify({msisdn:\"9165974395\",app_id:'c8b37b4f08b02dac715e64cf162964f8',blacklist: true})",
-                      "    }",
-                      "}, function (err, response) {",
-                      "    console.log(response.json())",
-                      "    let {subscriber_id, app_id, otp}= response.json();",
-                      "})",
-                      "}",
-                      "",
-                      "function init(callback){",
-                      "    // for (let i=0; i<3; i++) {",
-                      "    //     verifyOtp();",
-                      "    // }",
-                      "    callback();",
-                      "}",
-                      "",
-                      "",
-                      "init(generateOtp);",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n    \"msisdn\" : \"09273164032\",\n    \"app_id\" :\"c8b37b4f08b02dac715e64cf162964f8\",\n    \"blacklist\": true\n}"
-                },
-                "url": {
-                  "raw": "{{remote_host}}/generate/totp",
-                  "host": ["{{remote_host}}"],
-                  "path": ["generate", "totp"]
-                }
-              },
-              "response": []
-            }
-          ],
-          "_postman_isSubFolder": true
-        },
-        {
-          "name": "Verify TOTP",
-          "item": [
-            {
-              "name": "Successfully Verify TOTP",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
-                    "exec": [
-                      "pm.test(\"Status code is 200\", function () {",
-                      "    pm.response.to.have.status(200);",
-                      "});",
-                      "",
-                      "pm.environment.set(\"transaction_id\", pm.response.json().transaction_id);"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"{{otp}}\"\n}"
-                },
-                "url": {
-                  "raw": "{{host_auth}}/verify/totp",
-                  "host": ["{{host_auth}}"],
-                  "path": ["verify", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Send SMS",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
-                    "exec": [
-                      "pm.test(\"Status code is 200\", function () {",
-                      "    pm.response.to.have.status(200);",
-                      "});",
-                      "",
-                      "pm.environment.set(\"transaction_id\", pm.response.json().transaction_id);"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"{{otp}}\"\n}"
-                },
-                "url": {
-                  "raw": "{{host_auth}}/test/sms",
-                  "host": ["{{host_auth}}"],
-                  "path": ["test", "sms"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail Verify TOTP, OTP wrong",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
-                    "exec": [
-                      "pm.test(\"Status code is 403\", function () {",
-                      "    pm.response.to.have.status(403);",
-                      "});",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"123456\"\n}"
-                },
-                "url": {
-                  "raw": "{{remote_host}}/verify/totp",
-                  "host": ["{{remote_host}}"],
-                  "path": ["verify", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail Verify TOTP, No App ID",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
-                    "exec": [
-                      "pm.test(\"Status code is 400\", function () {",
-                      "    pm.response.to.have.status(400);",
-                      "});",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\t\"app_id\": \"\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"123456\"\n}"
-                },
-                "url": {
-                  "raw": "{{host_auth}}/verify/totp",
-                  "host": ["{{host_auth}}"],
-                  "path": ["verify", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail Verify TOTP, No OTP",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
-                    "exec": [
-                      "pm.test(\"Status code is 400\", function () {",
-                      "    pm.response.to.have.status(400);",
-                      "});",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"\"\n}"
-                },
-                "url": {
-                  "raw": "{{host_auth}}/verify/totp",
-                  "host": ["{{host_auth}}"],
-                  "path": ["verify", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail Verify TOTP, No Subscriber ID",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
-                    "exec": [
-                      "pm.test(\"Status code is 400\", function () {",
-                      "    pm.response.to.have.status(400);",
-                      "});",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"\",\n\t\"otp\": \"123456\"\n}"
-                },
-                "url": {
-                  "raw": "{{host_auth}}/verify/totp",
-                  "host": ["{{host_auth}}"],
-                  "path": ["verify", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Failed to  Verify TOTP, OTP already verified",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
-                    "exec": [
-                      "pm.test(\"Status code is 400\", function () {",
-                      "    pm.response.to.have.status(400);",
-                      "});",
-                      "",
-                      "pm.test(\"Your test name\", function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.error_code).to.eql('InvalidOTP');",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"{{otp}}\"\n}"
-                },
-                "url": {
-                  "raw": "{{host_auth}}/verify/totp",
-                  "host": ["{{host_auth}}"],
-                  "path": ["verify", "totp"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail to verify, Account Blocked",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
-                    "exec": [
-                      "pm.test(\"Status code is 403\", function () {",
-                      "    pm.response.to.have.status(403);",
-                      "});",
-                      "",
-                      "pm.test(\"Should contain Unauthorized in response body\", function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.error_code).to.eql('Unauthorized');",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\t\"app_id\":\"c8b37b4f08b02dac715e64cf162964f8\",\n\t\"subscriber_id\":\"a2dbae3a1ba374ad7df6c02abcbaa033\",\n\t\"otp\": \"123456\"\n}"
-                },
-                "url": {
-                  "raw": "{{host_auth}}/verify/totp",
-                  "host": ["{{host_auth}}"],
-                  "path": ["verify", "totp"]
-                }
-              },
-              "response": []
-            }
-          ],
-          "_postman_isSubFolder": true
-        },
-        {
-          "name": "Validate Transaction",
-          "item": [
-            {
-              "name": "Successfully Validate Transaction, true case",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "0cf2c403-13a1-4c06-95c3-1eb62c179272",
-                    "exec": [
-                      "pm.test(\"Status code is 200\", function () {",
-                      "    pm.response.to.have.status(200);",
-                      "});",
-                      "",
-                      "pm.test(\"Your test name\", function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.is_valid).to.eql(true);",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
-                },
-                "url": {
-                  "raw": "{{host_auth}}/transaction/{{transaction_id}}/{{subscriber_id}}/{{app_id}}",
-                  "host": ["{{host_auth}}"],
-                  "path": [
-                    "transaction",
-                    "{{transaction_id}}",
-                    "{{subscriber_id}}",
-                    "{{app_id}}"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Successfully Validate Transaction, False condition",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "0cf2c403-13a1-4c06-95c3-1eb62c179272",
-                    "exec": [
-                      "pm.test(\"Status code is 200\", function () {",
-                      "    pm.response.to.have.status(200);",
-                      "});",
-                      "",
-                      "pm.test(\"Your test name\", function () {",
-                      "    var jsonData = pm.response.json();",
-                      "    pm.expect(jsonData.is_valid).to.eql(false);",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                },
-                {
-                  "listen": "prerequest",
-                  "script": {
-                    "id": "374db055-c591-4556-86c1-b56e2c1d61cd",
-                    "exec": [
-                      "pm.sendRequest({",
-                      "    url: pm.environment.get(\"host_auth\")+\"/transaction/\"+pm.environment.get(\"transaction_id\")+\"/invalidate\",",
-                      "    method: 'PUT',",
-                      "    header: {",
-                      "      'content-type': 'application/json'  ",
-                      "    },",
-                      "    body: {",
-                      "        mode: 'raw',",
-                      "        raw: JSON.stringify({subscriber_id: pm.environment.get(\"subscriber_id\"), app_id: pm.environment.get(\"app_id\")})",
-                      "    }",
-                      "}, function (err, response) {",
-                      "    console.log(response);",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
-                },
-                "url": {
-                  "raw": "{{host_auth}}/transaction/{{transaction_id}}/{{subscriber_id}}/{{app_id}}",
-                  "host": ["{{host_auth}}"],
-                  "path": [
-                    "transaction",
-                    "{{transaction_id}}",
-                    "{{subscriber_id}}",
-                    "{{app_id}}"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ],
-          "_postman_isSubFolder": true
-        },
-        {
-          "name": "Invalidate Transaction",
-          "item": [
-            {
-              "name": "Successfully Invalidate Transaction",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "b354d6e8-181f-446f-a821-ef6d2865ed33",
-                    "exec": [
-                      "pm.test(\"Status code is 200\", function () {",
-                      "    pm.response.to.have.status(200);",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                },
-                {
-                  "listen": "prerequest",
-                  "script": {
-                    "id": "79baf8a9-fec4-457a-93d5-d9299753785f",
-                    "exec": [
-                      "pm.sendRequest({",
-                      "    url: pm.environment.get(\"host_auth\")+\"/generate/totp\",",
-                      "    method: 'POST',",
-                      "    header: {",
-                      "        'content-type': 'application/json'",
-                      "    },",
-                      "    body: {",
-                      "        mode: 'raw',",
-                      "        raw: JSON.stringify({msisdn:'09273164033',app_id:'c8b37b4f08b02dac715e64cf162964f8',blacklist: true})",
-                      "    }",
-                      "}, function (err, response) {",
-                      "    let {subscriber_id, app_id, otp} = response.json()",
-                      "    pm.sendRequest({",
-                      "        url: pm.environment.get(\"host_auth\")+\"/verify/totp\",",
-                      "        method: 'POST',",
-                      "        header: {",
-                      "            'content-type': 'application/json'",
-                      "        },",
-                      "        body: {",
-                      "            mode: 'raw',",
-                      "            raw: JSON.stringify({app_id: app_id, subscriber_id: subscriber_id, otp: otp})",
-                      "        }",
-                      "    }, function(err, response){",
-                      "        pm.environment.set('transaction_id',response.json().transaction_id);",
-                      "    })",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "PUT",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\t\"subscriber_id\":\"{{subscriber_id}}\",\n\t\"app_id\":\"{{app_id}}\"\n}"
-                },
-                "url": {
-                  "raw": "{{host_auth}}/transaction/{{transaction_id}}/invalidate",
-                  "host": ["{{host_auth}}"],
-                  "path": ["transaction", "{{transaction_id}}", "invalidate"]
-                }
-              },
-              "response": []
-            }
-          ],
-          "_postman_isSubFolder": true
-        },
-        {
-          "name": "Sms Api Checking",
-          "item": [
-            {
-              "name": "Prod Env Generate Access Token SMS",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
-                },
-                "url": {
-                  "raw": "https://developer.globelabs.com.ph/oauth/access_token?app_id=g57rF5a7b7u7oi58xec7oKudp5onFGKz&app_secret=35fa1a9283c9bef3bd930d231aa19390cfac1cb9ab9ad9226b2b9014d4e83743&code=ys5oAoEFq7yKzFb9AM8fBGLEgSnEeA7IdgyX6F7Mj8zsKEjgLHL4nagCRXAajFgyo8BtE898BhK7qGEUnozMeH9nL9bHLz4zqsGE5Lzs5R5rAha4ARbfodBaetq5idjb7agTBnLtKGAXEf9B598h9454xsKd4gesaoLBkHp6zpzHBbqMGUb59R6hzpojBtebAE9F7jnKACArjnbHbzjz4so5yR6FAjeBAILMLLnSXxARyfK7yGzFnAA5GFGkpbXs",
-                  "protocol": "https",
-                  "host": ["developer", "globelabs", "com", "ph"],
-                  "path": ["oauth", "access_token"],
-                  "query": [
-                    {
-                      "key": "app_id",
-                      "value": "g57rF5a7b7u7oi58xec7oKudp5onFGKz"
-                    },
-                    {
-                      "key": "app_secret",
-                      "value": "35fa1a9283c9bef3bd930d231aa19390cfac1cb9ab9ad9226b2b9014d4e83743"
-                    },
-                    {
-                      "key": "code",
-                      "value": "ys5oAoEFq7yKzFb9AM8fBGLEgSnEeA7IdgyX6F7Mj8zsKEjgLHL4nagCRXAajFgyo8BtE898BhK7qGEUnozMeH9nL9bHLz4zqsGE5Lzs5R5rAha4ARbfodBaetq5idjb7agTBnLtKGAXEf9B598h9454xsKd4gesaoLBkHp6zpzHBbqMGUb59R6hzpojBtebAE9F7jnKACArjnbHbzjz4so5yR6FAjeBAILMLLnSXxARyfK7yGzFnAA5GFGkpbXs"
-                    }
-                  ]
-                }
-              },
-              "response": [
-                {
-                  "name": "Generate SMS Access Token",
-                  "originalRequest": {
-                    "method": "POST",
-                    "header": [],
-                    "body": {
-                      "mode": "raw",
-                      "raw": ""
-                    },
-                    "url": {
-                      "raw": "https://developer.globelabs.com.ph/oauth/access_token?app_id=ERqeuxn59nuXkc8Mr6T5KGuyRR6ruaxL&app_secret=646b7d0f978e1967f82921aa2c36edde569d544d9485242a6edc7232aeb91f05&code=qCAzr8Auar4boUzEgBphe6eKpF6jnjzHLRK65uLen8aCRg7nKf9g4BoFerr8qUB476xSxdMMoFpxbgBF4j9youeAEG8CpKxzdFk8Ld6t7AzRgSroB9GSyoyoGhRdiAqK9naTyMXhR9BoASKdzaRSAjLnptRjx4rF6kEbKCK499RuoGb6MFp9MzMFy97pBSb9rGRUoK4b6FLn7E8fzBn5dCdeKdBunqn4xHp8eb5FAXg85h9d47nUEGrMRuoAeerC",
-                      "protocol": "https",
-                      "host": ["developer", "globelabs", "com", "ph"],
-                      "path": ["oauth", "access_token"],
-                      "query": [
-                        {
-                          "key": "app_id",
-                          "value": "ERqeuxn59nuXkc8Mr6T5KGuyRR6ruaxL"
-                        },
-                        {
-                          "key": "app_secret",
-                          "value": "646b7d0f978e1967f82921aa2c36edde569d544d9485242a6edc7232aeb91f05"
-                        },
-                        {
-                          "key": "code",
-                          "value": "qCAzr8Auar4boUzEgBphe6eKpF6jnjzHLRK65uLen8aCRg7nKf9g4BoFerr8qUB476xSxdMMoFpxbgBF4j9youeAEG8CpKxzdFk8Ld6t7AzRgSroB9GSyoyoGhRdiAqK9naTyMXhR9BoASKdzaRSAjLnptRjx4rF6kEbKCK499RuoGb6MFp9MzMFy97pBSb9rGRUoK4b6FLn7E8fzBn5dCdeKdBunqn4xHp8eb5FAXg85h9d47nUEGrMRuoAeerC"
-                        }
-                      ]
-                    }
-                  },
-                  "status": "OK",
-                  "code": 200,
-                  "_postman_previewlanguage": "json",
-                  "header": [
-                    {
-                      "key": "Cache-Control",
-                      "value": "max-age=0, private, must-revalidate"
-                    },
-                    {
-                      "key": "Content-Type",
-                      "value": "application/json; charset=utf-8"
-                    },
-                    {
-                      "key": "Date",
-                      "value": "Tue, 19 Mar 2019 11:05:27 GMT"
-                    },
-                    {
-                      "key": "ETag",
-                      "value": "\"0dfebb74b9d3edbf75fc59bca2f320e0\""
-                    },
-                    {
-                      "key": "Server",
-                      "value": "nginx/1.8.0"
-                    },
-                    {
-                      "key": "Status",
-                      "value": "200 OK"
-                    },
-                    {
-                      "key": "X-Rack-Cache",
-                      "value": "invalidate, pass"
-                    },
-                    {
-                      "key": "X-Request-Id",
-                      "value": "1e20541d1c4f7e1a8065eedf5a0376db"
-                    },
-                    {
-                      "key": "X-Runtime",
-                      "value": "0.120295"
-                    },
-                    {
-                      "key": "X-UA-Compatible",
-                      "value": "IE=Edge,chrome=1"
-                    },
-                    {
-                      "key": "Content-Length",
-                      "value": "95"
-                    },
-                    {
-                      "key": "Connection",
-                      "value": "keep-alive"
-                    }
-                  ],
-                  "cookie": [],
-                  "body": "{\n    \"access_token\": \"6GrMfC6kCiNE9CqGigDXcYxio8mznHWz4rGAWwdXv8w\",\n    \"subscriber_number\": \"9952558864\"\n}"
-                }
-              ]
-            },
-            {
-              "name": "Stage Env Generate Access Token SMS",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
-                },
-                "url": {
-                  "raw": "http://ippweb.infoshiftinc.com/oauth/access_token?app_id=q4jo5fdyRb8tBgcnj5iR6gtEajK5fdze&app_secret=3e72fe93b25c2412bcf23bfcd484d7f43f996ac7f2fde206553b741703156eab&code=KK7s59qy8tqay6btn6e8AtL5GjyuyayqeF656q8u8arGnhqdnqGU87eKoU7KrRAsyAq9Kfq78rqfy4kbphzGEgES8dR8kF4XGLdh8pEKyHnxLoqsXA8abfgLyBqf4RTLkacyzefLn87dfXELG7saLEnMH68GdphzdREbFaKE5MSMqkBAhGL84dfxKqAxf89r8nsx7eboUEenbkUGEreXh5864puMRyLpFLzG7xuLXedytEryrjtB5q6ptEoKkMsE",
-                  "protocol": "http",
-                  "host": ["ippweb", "infoshiftinc", "com"],
-                  "path": ["oauth", "access_token"],
-                  "query": [
-                    {
-                      "key": "app_id",
-                      "value": "q4jo5fdyRb8tBgcnj5iR6gtEajK5fdze"
-                    },
-                    {
-                      "key": "app_secret",
-                      "value": "3e72fe93b25c2412bcf23bfcd484d7f43f996ac7f2fde206553b741703156eab"
-                    },
-                    {
-                      "key": "code",
-                      "value": "KK7s59qy8tqay6btn6e8AtL5GjyuyayqeF656q8u8arGnhqdnqGU87eKoU7KrRAsyAq9Kfq78rqfy4kbphzGEgES8dR8kF4XGLdh8pEKyHnxLoqsXA8abfgLyBqf4RTLkacyzefLn87dfXELG7saLEnMH68GdphzdREbFaKE5MSMqkBAhGL84dfxKqAxf89r8nsx7eboUEenbkUGEreXh5864puMRyLpFLzG7xuLXedytEryrjtB5q6ptEoKkMsE"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Stage SMS API",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n \"message\" : \"Test Message\",\n\"address\": \"{{sms_address}}\",\n\"passphrase\":\"kG9wDBYAV9\",\n\"app_id\":\"q4jo5fdyRb8tBgcnj5iR6gtEajK5fdze\",\n\"app_secret\":\"3e72fe93b25c2412bcf23bfcd484d7f43f996ac7f2fde206553b741703156eab\"\n}"
-                },
-                "url": {
-                  "raw": "http://ippdevapi.infoshiftinc.com/smsmessaging/v1/outbound/21588754/requests",
-                  "protocol": "http",
-                  "host": ["ippdevapi", "infoshiftinc", "com"],
-                  "path": [
-                    "smsmessaging",
-                    "v1",
-                    "outbound",
-                    "21588754",
-                    "requests"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ],
-          "_postman_isSubFolder": true
-        },
-        {
-          "name": "Get Transaction",
-          "item": [
-            {
-              "name": "Successfully Get Transaction",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
-                    "exec": [
-                      "pm.test(\"Status code is 200\", function () {",
-                      "    pm.response.to.have.status(200);",
-                      "});",
-                      "",
-                      "",
-                      "pm.test(\"Should contain response properties as needed\", function () {",
-                      "    let jsonData = pm.response.json();",
-                      "    pm.expect(jsonData).to.have.property(\"response_type\");",
-                      "    pm.expect(jsonData.response_type).to.be.a(\"string\");",
-                      "        pm.expect(jsonData).to.have.property(\"client_id\");",
-                      "    pm.expect(jsonData.client_id).to.be.a(\"string\");",
-                      "        pm.expect(jsonData).to.have.property(\"redirect_uri\");",
-                      "    pm.expect(jsonData.redirect_uri).to.be.a(\"string\");",
-                      "        pm.expect(jsonData).to.have.property(\"scopes\");",
-                      "    pm.expect(jsonData.scopes).to.be.a(\"array\");",
-                      "        pm.expect(jsonData).to.have.property(\"state\");",
-                      "    pm.expect(jsonData.state).to.be.a(\"string\");",
-                      "      pm.expect(jsonData).to.have.property(\"auth_state\");",
-                      "    pm.expect(jsonData.auth_state).to.be.a(\"number\");",
-                      "        pm.expect(jsonData).to.have.property(\"app_id\");",
-                      "    pm.expect(jsonData.app_id).to.be.a(\"string\");",
-                      "        pm.expect(jsonData).to.have.property(\"developer_id\");",
-                      "    pm.expect(jsonData.developer_id).to.be.a(\"string\");",
-                      " ",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
-                },
-                "url": {
-                  "raw": "{{host_auth}}/transaction/{{transaction_id}}",
-                  "host": ["{{host_auth}}"],
-                  "path": ["transaction", "{{transaction_id}}"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Successfully Not Conent for Get Transaction with invalid Transaction ID",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
-                    "exec": [
-                      "pm.test(\"Status code is 204\", function () {",
-                      "    pm.response.to.have.status(204);",
-                      "});",
-                      "",
-                      "",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
-                },
-                "url": {
-                  "raw": "{{host_auth}}/transaction/fd7447",
-                  "host": ["{{host_auth}}"],
-                  "path": ["transaction", "fd7447"]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Fail Get Transaction without transaction ID",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
-                    "exec": [
-                      "pm.test(\"Status code is 404\", function () {",
-                      "    pm.response.to.have.status(404);",
-                      "});",
-                      "",
-                      ""
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "type": "text",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": ""
-                },
-                "url": {
-                  "raw": "{{host_auth}}/transaction",
-                  "host": ["{{host_auth}}"],
-                  "path": ["transaction"]
-                }
-              },
-              "response": []
-            }
-          ],
-          "_postman_isSubFolder": true
-        },
-        {
-          "name": "Create Transaction",
-          "item": [
-            {
-              "name": "Successfully Create Transaction",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
-                    "exec": [
-                      "pm.test(\"Status code is 201\", function () {",
-                      "    pm.response.to.have.status(201);",
-                      "});",
-                      "",
-                      "",
-                      "pm.environment.set(\"transaction_id\", pm.response.json().transaction_id);",
-                      "pm.test(\"Should contain response properties as needed\", function () {",
-                      "    let jsonData = pm.response.json();",
-                      "    pm.expect(jsonData).to.have.property(\"transaction_id\");",
-                      "    pm.expect(jsonData.transaction_id).to.be.a(\"string\");",
-                      " ",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"response_type\": \"sample_type\",\n  \"client_id\": \"e2274bcab5aa452c7ae03165\",\n  \"redirect_uri\": \"url\",\n  \"scopes\": [\n    \"scope1\",\n    \"scope2\",\n    \"scope3\"\n  ],\n  \"state\": \"string_value\",\n  \"auth_state\": 0,\n  \"app_id\": \"FnyqFzJKZ5hrSB9JARCSpt90tgPN\",\n  \"developer_id\": \"j33ufh8hifjijdfdtgPN\"\n}"
-                },
-                "url": {
-                  "raw": "{{host_auth}}/transaction",
-                  "host": ["{{host_auth}}"],
-                  "path": ["transaction"]
-                }
-              },
-              "response": []
-            }
-          ],
-          "_postman_isSubFolder": true
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "type": "text"
         }
-      ]
+      ],
+      "method": "PUT",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "b354d6e8-181f-446f-a821-ef6d2865ed33",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "79baf8a9-fec4-457a-93d5-d9299753785f",
+            "exec": [""],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "2027c831-91f6-4188-b26c-3d71ee7553b5",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n\t\"subscriber_id\":\"{{subscriber_id}}\",\n\t\"app_id\":\"{{app_id}}\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "05375cc8-6769-4eb2-aae4-90580154537e",
+      "name": "Stage Env Generate Access Token SMS",
+      "url": "http://ippweb.infoshiftinc.com/oauth/access_token?app_id=q4jo5fdyRb8tBgcnj5iR6gtEajK5fdze&app_secret=3e72fe93b25c2412bcf23bfcd484d7f43f996ac7f2fde206553b741703156eab&code=KK7s59qy8tqay6btn6e8AtL5GjyuyayqeF656q8u8arGnhqdnqGU87eKoU7KrRAsyAq9Kfq78rqfy4kbphzGEgES8dR8kF4XGLdh8pEKyHnxLoqsXA8abfgLyBqf4RTLkacyzefLn87dfXELG7saLEnMH68GdphzdREbFaKE5MSMqkBAhGL84dfxKqAxf89r8nsx7eboUEenbkUGEreXh5864puMRyLpFLzG7xuLXedytEryrjtB5q6ptEoKkMsE",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [
+        {
+          "key": "app_id",
+          "value": "q4jo5fdyRb8tBgcnj5iR6gtEajK5fdze",
+          "equals": true
+        },
+        {
+          "key": "app_secret",
+          "value": "3e72fe93b25c2412bcf23bfcd484d7f43f996ac7f2fde206553b741703156eab",
+          "equals": true
+        },
+        {
+          "key": "code",
+          "value": "KK7s59qy8tqay6btn6e8AtL5GjyuyayqeF656q8u8arGnhqdnqGU87eKoU7KrRAsyAq9Kfq78rqfy4kbphzGEgES8dR8kF4XGLdh8pEKyHnxLoqsXA8abfgLyBqf4RTLkacyzefLn87dfXELG7saLEnMH68GdphzdREbFaKE5MSMqkBAhGL84dfxKqAxf89r8nsx7eboUEenbkUGEreXh5864puMRyLpFLzG7xuLXedytEryrjtB5q6ptEoKkMsE",
+          "equals": true
+        }
+      ],
+      "auth": null,
+      "events": null,
+      "folder": "5dea02f5-b48c-4d7b-bbc9-7b11353c3857",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "",
+      "headers": "",
+      "pathVariables": []
+    },
+    {
+      "id": "112e84ee-cb61-4893-8f54-06f751b7a0e7",
+      "name": "Fail to Generate OTP, Account is blocked",
+      "url": "{{remote_host}}/generate/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 403\", function () {",
+              "    pm.response.to.have.status(403);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Should Contain Unauthorized in error code\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error_code).to.eql(\"Unauthorized\");",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "77a621a9-9252-47dc-9185-40a7ba6fe433",
+            "exec": [
+              "function verifyOtp() {",
+              " pm.sendRequest({",
+              "        url: pm.environment.get(\"host_auth\")+\"/verify/totp\",",
+              "        method: 'POST',",
+              "        header: {",
+              "            'content-type': 'application/json'",
+              "        },",
+              "        body : {",
+              "            mode: 'raw',",
+              "            raw : JSON.stringify({subscriber_id: \"{{subscriber_id}}\", app_id: app_id, otp:'123456'})",
+              "        }",
+              "    },function(err, response){",
+              "        console.log(err);",
+              "        console.log(response)",
+              "    });",
+              "}",
+              "function generateOtp() {",
+              "    pm.sendRequest({",
+              "    url: pm.environment.get(\"host_auth\")+\"/generate/totp\",",
+              "    method: 'POST',",
+              "    header: {",
+              "        'content-type': 'application/json'",
+              "    },",
+              "    body: {",
+              "        mode: 'raw',",
+              "        raw: JSON.stringify({msisdn:\"9165974395\",app_id:'c8b37b4f08b02dac715e64cf162964f8',blacklist: true})",
+              "    }",
+              "}, function (err, response) {",
+              "    console.log(response.json())",
+              "    let {subscriber_id, app_id, otp}= response.json();",
+              "})",
+              "}",
+              "",
+              "function init(callback){",
+              "    // for (let i=0; i<3; i++) {",
+              "    //     verifyOtp();",
+              "    // }",
+              "    callback();",
+              "}",
+              "",
+              "",
+              "init(generateOtp);",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "999eda71-8421-496a-9f4a-3226ec5ecfc7",
+      "preRequestScript": "function verifyOtp() {\n pm.sendRequest({\n        url: pm.environment.get(\"host_auth\")+\"/verify/totp\",\n        method: 'POST',\n        header: {\n            'content-type': 'application/json'\n        },\n        body : {\n            mode: 'raw',\n            raw : JSON.stringify({subscriber_id: \"{{subscriber_id}}\", app_id: app_id, otp:'123456'})\n        }\n    },function(err, response){\n        console.log(err);\n        console.log(response)\n    });\n}\nfunction generateOtp() {\n    pm.sendRequest({\n    url: pm.environment.get(\"host_auth\")+\"/generate/totp\",\n    method: 'POST',\n    header: {\n        'content-type': 'application/json'\n    },\n    body: {\n        mode: 'raw',\n        raw: JSON.stringify({msisdn:\"9165974395\",app_id:'c8b37b4f08b02dac715e64cf162964f8',blacklist: true})\n    }\n}, function (err, response) {\n    console.log(response.json())\n    let {subscriber_id, app_id, otp}= response.json();\n})\n}\n\nfunction init(callback){\n    // for (let i=0; i<3; i++) {\n    //     verifyOtp();\n    // }\n    callback();\n}\n\n\ninit(generateOtp);\n",
+      "tests": "pm.test(\"Status code is 403\", function () {\n    pm.response.to.have.status(403);\n});\n\n\npm.test(\"Should Contain Unauthorized in error code\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.error_code).to.eql(\"Unauthorized\");\n});\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n    \"msisdn\" : \"09273164032\",\n    \"app_id\" :\"c8b37b4f08b02dac715e64cf162964f8\",\n    \"blacklist\": true\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "19da181f-229a-487f-a104-0f83633fec43",
+      "name": "Fail to Generate OTP, NO Blacklist",
+      "url": "{{remote_host}}/generate/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Should contain BadRequest in Error Code\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "999eda71-8421-496a-9f4a-3226ec5ecfc7",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 400\", function () {\n    pm.response.to.have.status(400);\n});\n\n\npm.test(\"Should contain BadRequest in Error Code\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");\n});\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n    \"msisdn\" : \"\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n    \"blacklist\": \"\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "2bfe6616-0366-4077-ab11-6488e429cc51",
+      "name": "Successfully Update Transaction with PATCH",
+      "url": "{{host_auth}}/transaction/{{transaction_id}}",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "PATCH",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "",
+              "// pm.test(\"Should contain response properties as needed\", function () {",
+              "//     let jsonData = pm.response.json();",
+              "//     pm.expect(jsonData).to.have.property(\"transaction_id\");",
+              "//     pm.expect(jsonData.transaction_id).to.be.a(\"string\");",
+              " ",
+              "// });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "8338f53a-25ae-4e0b-89df-0948486a0385",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n\n// pm.test(\"Should contain response properties as needed\", function () {\n//     let jsonData = pm.response.json();\n//     pm.expect(jsonData).to.have.property(\"transaction_id\");\n//     pm.expect(jsonData.transaction_id).to.be.a(\"string\");\n \n// });",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n  \"response_type\": \"sample_type2q\",\n  \"subscriber_id\": \"type21\",\n  \"client_id\": \"e2274bcab5aa452c7ae03165\",\n  \"redirect_uri\": \"url\",\n  \"scopes\": [\n    \"scope1\",\n    \"asasa\"\n  ],\n  \"state\": \"string_value\",\n  \"auth_state\": 0,\n  \"app_id\": \"FnyqFzJKZ5hrSB9JARCSpt90tgPN\",\n  \"developer_id\": \"j33ufh8hifjijdfdtgPN\",\n  \"status\": 0\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "3a1bcd8e-541f-4a6f-8d86-51cdd84d83af",
+      "name": "Failed to  Verify TOTP, OTP already verified",
+      "url": "{{host_auth}}/verify/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Your test name\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error_code).to.eql('InvalidOTP');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "9f7bef5b-622d-4e0a-8349-dd323b27d4bb",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 400\", function () {\n    pm.response.to.have.status(400);\n});\n\npm.test(\"Your test name\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.error_code).to.eql('InvalidOTP');\n});",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"{{otp}}\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "48608d4b-aa1c-475c-820f-1a1b11d7a4ed",
+      "name": "Fail Verify TOTP, No App ID",
+      "url": "{{host_auth}}/verify/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "9f7bef5b-622d-4e0a-8349-dd323b27d4bb",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 400\", function () {\n    pm.response.to.have.status(400);\n});\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n\t\"app_id\": \"\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"123456\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "4a027668-245e-453a-aa24-6cd5d4267a21",
+      "name": "Successfully Update Transaction",
+      "url": "{{host_auth}}/transaction/{{transaction_id}}",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "PUT",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "",
+              "// pm.test(\"Should contain response properties as needed\", function () {",
+              "//     let jsonData = pm.response.json();",
+              "//     pm.expect(jsonData).to.have.property(\"transaction_id\");",
+              "//     pm.expect(jsonData.transaction_id).to.be.a(\"string\");",
+              " ",
+              "// });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "8338f53a-25ae-4e0b-89df-0948486a0385",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n\n// pm.test(\"Should contain response properties as needed\", function () {\n//     let jsonData = pm.response.json();\n//     pm.expect(jsonData).to.have.property(\"transaction_id\");\n//     pm.expect(jsonData.transaction_id).to.be.a(\"string\");\n \n// });",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n  \"response_type\": \"sample_type2q\",\n  \"subscriber_id\": \"type21\",\n  \"client_id\": \"e2274bcab5aa452c7ae03165\",\n  \"redirect_uri\": \"url\",\n  \"scopes\": [\n    \"scope1\",\n    \"asasa\"\n  ],\n  \"state\": \"string_value\",\n  \"auth_state\": 0,\n  \"app_id\": \"FnyqFzJKZ5hrSB9JARCSpt90tgPN\",\n  \"developer_id\": \"j33ufh8hifjijdfdtgPN\",\n  \"status\": 0\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "4cc36cf2-aea0-4208-b9b9-b7103be1faed",
+      "name": "Prod Env Generate Access Token SMS",
+      "url": "https://developer.globelabs.com.ph/oauth/access_token?app_id=g57rF5a7b7u7oi58xec7oKudp5onFGKz&app_secret=35fa1a9283c9bef3bd930d231aa19390cfac1cb9ab9ad9226b2b9014d4e83743&code=ys5oAoEFq7yKzFb9AM8fBGLEgSnEeA7IdgyX6F7Mj8zsKEjgLHL4nagCRXAajFgyo8BtE898BhK7qGEUnozMeH9nL9bHLz4zqsGE5Lzs5R5rAha4ARbfodBaetq5idjb7agTBnLtKGAXEf9B598h9454xsKd4gesaoLBkHp6zpzHBbqMGUb59R6hzpojBtebAE9F7jnKACArjnbHbzjz4so5yR6FAjeBAILMLLnSXxARyfK7yGzFnAA5GFGkpbXs",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [
+        {
+          "key": "app_id",
+          "value": "g57rF5a7b7u7oi58xec7oKudp5onFGKz",
+          "equals": true
+        },
+        {
+          "key": "app_secret",
+          "value": "35fa1a9283c9bef3bd930d231aa19390cfac1cb9ab9ad9226b2b9014d4e83743",
+          "equals": true
+        },
+        {
+          "key": "code",
+          "value": "ys5oAoEFq7yKzFb9AM8fBGLEgSnEeA7IdgyX6F7Mj8zsKEjgLHL4nagCRXAajFgyo8BtE898BhK7qGEUnozMeH9nL9bHLz4zqsGE5Lzs5R5rAha4ARbfodBaetq5idjb7agTBnLtKGAXEf9B598h9454xsKd4gesaoLBkHp6zpzHBbqMGUb59R6hzpojBtebAE9F7jnKACArjnbHbzjz4so5yR6FAjeBAILMLLnSXxARyfK7yGzFnAA5GFGkpbXs",
+          "equals": true
+        }
+      ],
+      "auth": null,
+      "events": null,
+      "folder": "5dea02f5-b48c-4d7b-bbc9-7b11353c3857",
+      "responses": [
+        {
+          "id": "f5c7e033-f65f-4ae3-97ba-dc768b33bb76",
+          "name": "Generate SMS Access Token",
+          "status": "OK",
+          "mime": "",
+          "language": "json",
+          "text": "{\n    \"access_token\": \"6GrMfC6kCiNE9CqGigDXcYxio8mznHWz4rGAWwdXv8w\",\n    \"subscriber_number\": \"9952558864\"\n}",
+          "responseCode": {
+            "code": 200,
+            "name": "OK",
+            "detail": ""
+          },
+          "requestObject": {
+            "id": "679056f4-b49b-47e4-aa83-ed137f31b45b",
+            "method": "POST",
+            "headers": "",
+            "dataMode": "raw",
+            "data": "",
+            "url": "https://developer.globelabs.com.ph/oauth/access_token?app_id=ERqeuxn59nuXkc8Mr6T5KGuyRR6ruaxL&app_secret=646b7d0f978e1967f82921aa2c36edde569d544d9485242a6edc7232aeb91f05&code=qCAzr8Auar4boUzEgBphe6eKpF6jnjzHLRK65uLen8aCRg7nKf9g4BoFerr8qUB476xSxdMMoFpxbgBF4j9youeAEG8CpKxzdFk8Ld6t7AzRgSroB9GSyoyoGhRdiAqK9naTyMXhR9BoASKdzaRSAjLnptRjx4rF6kEbKCK499RuoGb6MFp9MzMFy97pBSb9rGRUoK4b6FLn7E8fzBn5dCdeKdBunqn4xHp8eb5FAXg85h9d47nUEGrMRuoAeerC",
+            "pathVariableData": [],
+            "queryParams": [
+              {
+                "key": "app_id",
+                "value": "ERqeuxn59nuXkc8Mr6T5KGuyRR6ruaxL",
+                "equals": true
+              },
+              {
+                "key": "app_secret",
+                "value": "646b7d0f978e1967f82921aa2c36edde569d544d9485242a6edc7232aeb91f05",
+                "equals": true
+              },
+              {
+                "key": "code",
+                "value": "qCAzr8Auar4boUzEgBphe6eKpF6jnjzHLRK65uLen8aCRg7nKf9g4BoFerr8qUB476xSxdMMoFpxbgBF4j9youeAEG8CpKxzdFk8Ld6t7AzRgSroB9GSyoyoGhRdiAqK9naTyMXhR9BoASKdzaRSAjLnptRjx4rF6kEbKCK499RuoGb6MFp9MzMFy97pBSb9rGRUoK4b6FLn7E8fzBn5dCdeKdBunqn4xHp8eb5FAXg85h9d47nUEGrMRuoAeerC",
+                "equals": true
+              }
+            ],
+            "headerData": []
+          },
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "max-age=0, private, must-revalidate"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 19 Mar 2019 11:05:27 GMT"
+            },
+            {
+              "key": "ETag",
+              "value": "\"0dfebb74b9d3edbf75fc59bca2f320e0\""
+            },
+            {
+              "key": "Server",
+              "value": "nginx/1.8.0"
+            },
+            {
+              "key": "Status",
+              "value": "200 OK"
+            },
+            {
+              "key": "X-Rack-Cache",
+              "value": "invalidate, pass"
+            },
+            {
+              "key": "X-Request-Id",
+              "value": "1e20541d1c4f7e1a8065eedf5a0376db"
+            },
+            {
+              "key": "X-Runtime",
+              "value": "0.120295"
+            },
+            {
+              "key": "X-UA-Compatible",
+              "value": "IE=Edge,chrome=1"
+            },
+            {
+              "key": "Content-Length",
+              "value": "95"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            }
+          ],
+          "cookies": [],
+          "request": "4cc36cf2-aea0-4208-b9b9-b7103be1faed",
+          "collection": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd"
+        }
+      ],
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "",
+      "headers": "",
+      "pathVariables": []
+    },
+    {
+      "id": "50f9c6fc-5419-4958-a5f3-ebab38b87886",
+      "name": "Stage SMS API",
+      "url": "http://ippdevapi.infoshiftinc.com/smsmessaging/v1/outbound/21588754/requests",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "type": "text"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": null,
+      "folder": "5dea02f5-b48c-4d7b-bbc9-7b11353c3857",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n \"message\" : \"Test Message\",\n\"address\": \"{{sms_address}}\",\n\"passphrase\":\"kG9wDBYAV9\",\n\"app_id\":\"q4jo5fdyRb8tBgcnj5iR6gtEajK5fdze\",\n\"app_secret\":\"3e72fe93b25c2412bcf23bfcd484d7f43f996ac7f2fde206553b741703156eab\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "6ba4b507-9843-46c0-93f9-c011d1393aa8",
+      "name": "Fail Verify TOTP, OTP wrong",
+      "url": "{{remote_host}}/verify/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
+            "exec": [
+              "pm.test(\"Status code is 403\", function () {",
+              "    pm.response.to.have.status(403);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "9f7bef5b-622d-4e0a-8349-dd323b27d4bb",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 403\", function () {\n    pm.response.to.have.status(403);\n});\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"123456\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "6e7a64c2-fd43-4b6b-a923-0bb6ba5b1930",
+      "name": "Fail to Generate OTP, Wrong Mobile No.",
+      "url": "{{remote_host}}/generate/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Should contain BadRequest in Error Code\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "999eda71-8421-496a-9f4a-3226ec5ecfc7",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 400\", function () {\n    pm.response.to.have.status(400);\n});\n\n\npm.test(\"Should contain BadRequest in Error Code\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");\n});\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n    \"msisdn\" : \"0937006210\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n    \"blacklist\": true\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "6ee020e0-ae4c-4f4d-847f-b9ed6d722e86",
+      "name": "Successfully Validate Transaction, False condition",
+      "url": "{{host_auth}}/transaction/{{transaction_id}}/{{subscriber_id}}/{{app_id}}",
+      "description": null,
+      "data": null,
+      "dataMode": null,
+      "headerData": [],
+      "method": "GET",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "0cf2c403-13a1-4c06-95c3-1eb62c179272",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Your test name\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.is_valid).to.eql(false);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "374db055-c591-4556-86c1-b56e2c1d61cd",
+            "exec": [
+              "pm.sendRequest({",
+              "    url: pm.environment.get(\"host_auth\")+\"/transaction/\"+pm.environment.get(\"transaction_id\")+\"/invalidate\",",
+              "    method: 'PUT',",
+              "    header: {",
+              "      'content-type': 'application/json'  ",
+              "    },",
+              "    body: {",
+              "        mode: 'raw',",
+              "        raw: JSON.stringify({subscriber_id: pm.environment.get(\"subscriber_id\"), app_id: pm.environment.get(\"app_id\")})",
+              "    }",
+              "}, function (err, response) {",
+              "    console.log(response);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "9eed1fff-88e6-4f14-a9da-7bb04b03ecda",
+      "preRequestScript": "pm.sendRequest({\n    url: pm.environment.get(\"host_auth\")+\"/transaction/\"+pm.environment.get(\"transaction_id\")+\"/invalidate\",\n    method: 'PUT',\n    header: {\n      'content-type': 'application/json'  \n    },\n    body: {\n        mode: 'raw',\n        raw: JSON.stringify({subscriber_id: pm.environment.get(\"subscriber_id\"), app_id: pm.environment.get(\"app_id\")})\n    }\n}, function (err, response) {\n    console.log(response);\n});",
+      "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Your test name\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.is_valid).to.eql(false);\n});",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "headers": "",
+      "pathVariables": []
+    },
+    {
+      "id": "95461434-66fb-452b-922e-36f9b35da41f",
+      "name": "Fail Verify TOTP, No Subscriber ID",
+      "url": "{{host_auth}}/verify/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "9f7bef5b-622d-4e0a-8349-dd323b27d4bb",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 400\", function () {\n    pm.response.to.have.status(400);\n});\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"\",\n\t\"otp\": \"123456\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "a36eb1e4-2f74-48f9-b45c-be4805b26c13",
+      "name": "Successfully Get Transaction",
+      "url": "{{host_auth}}/transaction/{{transaction_id}}",
+      "description": null,
+      "data": null,
+      "dataMode": null,
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "GET",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Should contain response properties as needed\", function () {",
+              "    let jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"response_type\");",
+              "    pm.expect(jsonData.response_type).to.be.a(\"string\");",
+              "        pm.expect(jsonData).to.have.property(\"client_id\");",
+              "    pm.expect(jsonData.client_id).to.be.a(\"string\");",
+              "        pm.expect(jsonData).to.have.property(\"redirect_uri\");",
+              "    pm.expect(jsonData.redirect_uri).to.be.a(\"string\");",
+              "        pm.expect(jsonData).to.have.property(\"scopes\");",
+              "    pm.expect(jsonData.scopes).to.be.a(\"array\");",
+              "        pm.expect(jsonData).to.have.property(\"state\");",
+              "    pm.expect(jsonData.state).to.be.a(\"string\");",
+              "      pm.expect(jsonData).to.have.property(\"auth_state\");",
+              "    pm.expect(jsonData.auth_state).to.be.a(\"number\");",
+              "        pm.expect(jsonData).to.have.property(\"app_id\");",
+              "    pm.expect(jsonData.app_id).to.be.a(\"string\");",
+              "        pm.expect(jsonData).to.have.property(\"developer_id\");",
+              "    pm.expect(jsonData.developer_id).to.be.a(\"string\");",
+              " ",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "d242d464-9afa-4c8e-b943-6840aef73300",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\n\npm.test(\"Should contain response properties as needed\", function () {\n    let jsonData = pm.response.json();\n    pm.expect(jsonData).to.have.property(\"response_type\");\n    pm.expect(jsonData.response_type).to.be.a(\"string\");\n        pm.expect(jsonData).to.have.property(\"client_id\");\n    pm.expect(jsonData.client_id).to.be.a(\"string\");\n        pm.expect(jsonData).to.have.property(\"redirect_uri\");\n    pm.expect(jsonData.redirect_uri).to.be.a(\"string\");\n        pm.expect(jsonData).to.have.property(\"scopes\");\n    pm.expect(jsonData.scopes).to.be.a(\"array\");\n        pm.expect(jsonData).to.have.property(\"state\");\n    pm.expect(jsonData.state).to.be.a(\"string\");\n      pm.expect(jsonData).to.have.property(\"auth_state\");\n    pm.expect(jsonData.auth_state).to.be.a(\"number\");\n        pm.expect(jsonData).to.have.property(\"app_id\");\n    pm.expect(jsonData.app_id).to.be.a(\"string\");\n        pm.expect(jsonData).to.have.property(\"developer_id\");\n    pm.expect(jsonData.developer_id).to.be.a(\"string\");\n \n});",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "bc080007-873d-42d8-9031-eadb65100fbe",
+      "name": "Send SMS",
+      "url": "{{host_auth}}/test/sms",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.environment.set(\"transaction_id\", pm.response.json().transaction_id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "9f7bef5b-622d-4e0a-8349-dd323b27d4bb",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.environment.set(\"transaction_id\", pm.response.json().transaction_id);",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"{{otp}}\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "bdc2b76c-39e9-4d67-bf01-d0ba11066cae",
+      "name": "Fail to Generate OTP, NO Mobile No.",
+      "url": "{{remote_host}}/generate/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Should contain BadRequest in Error Code\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "999eda71-8421-496a-9f4a-3226ec5ecfc7",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 400\", function () {\n    pm.response.to.have.status(400);\n});\n\n\npm.test(\"Should contain BadRequest in Error Code\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");\n});\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n    \"msisdn\" : \"\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n    \"blacklist\": true\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "c116204b-e33e-4503-8182-076a3fc4cd54",
+      "name": "Fail to Generate OTP, App Blacklisted",
+      "url": "{{remote_host}}/generate/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 403\", function () {",
+              "    pm.response.to.have.status(403);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Should contain Forbidden in error_code\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error_code).to.eql(\"Forbidden\");",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "999eda71-8421-496a-9f4a-3226ec5ecfc7",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 403\", function () {\n    pm.response.to.have.status(403);\n});\n\n\npm.test(\"Should contain Forbidden in error_code\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.error_code).to.eql(\"Forbidden\");\n});\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n    \"msisdn\" : \"09273164032\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4ac\",\n    \"blacklist\": true\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "c34f4be3-e8ca-4ac1-8bdd-ce77fb6ee835",
+      "name": "Successfully Verify TOTP",
+      "url": "{{host_auth}}/verify/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "type": "text"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.environment.set(\"transaction_id\", pm.response.json().transaction_id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "9f7bef5b-622d-4e0a-8349-dd323b27d4bb",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.environment.set(\"transaction_id\", pm.response.json().transaction_id);",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"{{otp}}\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "c7d8ee93-3e98-43bd-8cbe-5634aa35eb8f",
+      "name": "Fail Get Transaction without transaction ID",
+      "url": "{{host_auth}}/transaction",
+      "description": null,
+      "data": null,
+      "dataMode": null,
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "GET",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 404\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "d242d464-9afa-4c8e-b943-6840aef73300",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 404\", function () {\n    pm.response.to.have.status(404);\n});\n\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "d1029e3f-610f-4a64-bef3-a7e024f045c6",
+      "name": "Successfully Not Conent for Get Transaction with invalid Transaction ID",
+      "url": "{{host_auth}}/transaction/fd7447",
+      "description": null,
+      "data": null,
+      "dataMode": null,
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "GET",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 204\", function () {",
+              "    pm.response.to.have.status(204);",
+              "});",
+              "",
+              "",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "d242d464-9afa-4c8e-b943-6840aef73300",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 204\", function () {\n    pm.response.to.have.status(204);\n});\n\n\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "d10823d2-a369-49ea-a6ac-8655b99efbb6",
+      "name": "Fail Verify TOTP, No OTP",
+      "url": "{{host_auth}}/verify/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "9f7bef5b-622d-4e0a-8349-dd323b27d4bb",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 400\", function () {\n    pm.response.to.have.status(400);\n});\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n\t\"app_id\": \"{{app_id}}\",\n\t\"subscriber_id\": \"{{subscriber_id}}\",\n\t\"otp\": \"\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "d3789554-2bb5-494c-b453-84d1f65ee33b",
+      "name": "Fail to verify, Account Blocked",
+      "url": "{{host_auth}}/verify/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "09d7a369-cbd8-49e7-8f5a-571ebfcde109",
+            "exec": [
+              "pm.test(\"Status code is 403\", function () {",
+              "    pm.response.to.have.status(403);",
+              "});",
+              "",
+              "pm.test(\"Should contain Unauthorized in response body\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error_code).to.eql('Unauthorized');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "9f7bef5b-622d-4e0a-8349-dd323b27d4bb",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 403\", function () {\n    pm.response.to.have.status(403);\n});\n\npm.test(\"Should contain Unauthorized in response body\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.error_code).to.eql('Unauthorized');\n});",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n\t\"app_id\":\"c8b37b4f08b02dac715e64cf162964f8\",\n\t\"subscriber_id\":\"a2dbae3a1ba374ad7df6c02abcbaa033\",\n\t\"otp\": \"123456\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "d72be959-2671-4b89-8688-fd99dc48b486",
+      "name": "Successfully Validate Transaction, true case",
+      "url": "{{host_auth}}/transaction/{{transaction_id}}/{{subscriber_id}}/{{app_id}}",
+      "description": null,
+      "data": null,
+      "dataMode": null,
+      "headerData": [],
+      "method": "GET",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "0cf2c403-13a1-4c06-95c3-1eb62c179272",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Your test name\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.is_valid).to.eql(true);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "9eed1fff-88e6-4f14-a9da-7bb04b03ecda",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 200\", function () {\n    pm.response.to.have.status(200);\n});\n\npm.test(\"Your test name\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.is_valid).to.eql(true);\n});",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "headers": "",
+      "pathVariables": []
+    },
+    {
+      "id": "d73a7e03-488e-4a0c-a296-f8fa67c54247",
+      "name": "Successfully Generate TOTP",
+      "url": "{{remote_host}}/generate/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "type": "text"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.environment.set(\"app_id\", pm.response.json().app_id);",
+              "pm.environment.set(\"subscriber_id\", pm.response.json().subscriber_id);",
+              "pm.environment.set(\"otp\", pm.response.json().otp);",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "999eda71-8421-496a-9f4a-3226ec5ecfc7",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 201\", function () {\n    pm.response.to.have.status(201);\n});\n\npm.environment.set(\"app_id\", pm.response.json().app_id);\npm.environment.set(\"subscriber_id\", pm.response.json().subscriber_id);\npm.environment.set(\"otp\", pm.response.json().otp);\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n    \"msisdn\" : \"{{sms_address}}\",\n    \"app_id\" :\"a46fa81d-9941-42c1-8b47-c8d57be4acc24\",\n    \"blacklist\": true\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "f0078d5a-951d-4a01-b5fe-356f9d273756",
+      "name": "Fail to Generate OTP, NO APP ID",
+      "url": "{{remote_host}}/generate/totp",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "type": "text",
+          "value": "application/json"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "",
+              "pm.test(\"Should contain BadRequest in Error Code\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "999eda71-8421-496a-9f4a-3226ec5ecfc7",
+      "preRequestScript": null,
+      "tests": "pm.test(\"Status code is 400\", function () {\n    pm.response.to.have.status(400);\n});\n\n\npm.test(\"Should contain BadRequest in Error Code\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.error_code).to.eql(\"BadRequest\");\n});\n",
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n    \"msisdn\" : \"09273164031\",\n    \"app_id\" :\"\",\n    \"blacklist\": true\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
+    },
+    {
+      "id": "fc425075-6dd7-4e25-9cf1-51f55bfa4963",
+      "name": "Successfully Create Transaction",
+      "url": "{{host_auth}}/transaction",
+      "description": null,
+      "data": [],
+      "dataMode": "raw",
+      "headerData": [
+        {
+          "key": "Content-Type",
+          "name": "Content-Type",
+          "value": "application/json",
+          "type": "text"
+        }
+      ],
+      "method": "POST",
+      "pathVariableData": [],
+      "queryParams": [],
+      "auth": null,
+      "events": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "2a13b420-0332-4461-b1b2-7426a4a5ddd7",
+            "exec": [""],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "folder": "8ae55a5d-01a4-4dc4-be46-8531c7554fc5",
+      "preRequestScript": null,
+      "tests": null,
+      "currentHelper": null,
+      "helperAttributes": null,
+      "collectionId": "2840fa1d-abb1-4a16-bc7e-e6a15fb210cd",
+      "rawModeData": "{\n \"message\" : \"<script>alert('hacked') </script>\"\n}",
+      "headers": "Content-Type: application/json\n",
+      "pathVariables": []
     }
   ]
 }

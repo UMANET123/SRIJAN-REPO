@@ -100,7 +100,11 @@ function getTransaction(transactionId, callback) {
     ]
   })
     .then(transactionRecord => {
-      if (!transactionRecord) return callback(204, null);
+      if (!transactionRecord)
+        return callback(401, {
+          error_code: "Unauthorized",
+          error_message: "No record found"
+        });
       let {
         response_type,
         client_id,
@@ -266,7 +270,11 @@ function updateTransaction(transactionId, reqBody, callback) {
     .then(updatedTransaction => {
       let [recordCount, record] = updatedTransaction;
       //  no record updated/found
-      if (!record[0]) return callback(204, null);
+      if (!record[0])
+        return callback(401, {
+          error_code: "Unauthorized",
+          error_message: "No record found"
+        });
       let {
         response_type,
         client_id,
