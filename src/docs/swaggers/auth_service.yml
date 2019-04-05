@@ -75,8 +75,25 @@ paths:
     put:
       operationId: updateTransaction
       tags:
-        - Update Transaction
-      description: Update Transaction for Consent
+        - Update Transaction PUT
+      description: Update Transaction for Consent with PUT
+      parameters:
+        - in: path
+          name: transaction_id
+          type: string
+          required: true
+          description: transaction id of consent flow
+        - name: Update Transaction
+          in: body
+          description: ""
+          required: true
+          schema:
+            $ref: "#/definitions/CreateTransactionSchema"
+    patch:
+      operationId: updateTransaction PATCH
+      tags:
+        - Patch Update Transaction
+      description: Update Transaction for Consent with PATCH
       parameters:
         - in: path
           name: transaction_id
@@ -94,6 +111,8 @@ paths:
           $ref: "#/definitions/CreateTransactionSchema"
         "400":
           $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/NoTransactionFoundSchema"
         "500":
           $ref: "#/definitions/InternalServerError"
     get:
@@ -110,6 +129,8 @@ paths:
       responses:
         "200":
           $ref: "#/definitions/CreateTransactionSchema"
+        "401":
+          $ref: "#/definitions/NoTransactionFoundSchema"
         "500":
           $ref: "#/definitions/InternalServerError"
   /transaction/{transaction_id}/invalidate:
@@ -257,3 +278,14 @@ definitions:
     example:
       error_code: Forbidden
       error_message: Forbidden
+  NoTransactionFoundSchema:
+    description: Unauthorized
+    type: object
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: Unauthorized
+      error_message: No record found
