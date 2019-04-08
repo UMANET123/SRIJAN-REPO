@@ -61,7 +61,7 @@ paths:
         - name: Create Transaction
           in: body
           description: ""
-          required: true
+          required: false
           schema:
             $ref: "#/definitions/CreateTransactionSchema"
       responses:
@@ -86,12 +86,12 @@ paths:
         - name: Update Transaction
           in: body
           description: ""
-          required: true
+          required: false
           schema:
-            $ref: "#/definitions/CreateTransactionSchema"
+            $ref: "#/definitions/UpdateTransactionSchema"
       responses:
         "200":
-          $ref: "#/definitions/CreateTransactionSchema"
+          $ref: "#/definitions/UpdateTransactionSchema"
         "400":
           $ref: "#/definitions/BadRequest"
         "500":
@@ -109,7 +109,7 @@ paths:
           description: transaction id of consent flow
       responses:
         "200":
-          $ref: "#/definitions/CreateTransactionSchema"
+          $ref: "#/definitions/UpdateTransactionSchema"
         "500":
           $ref: "#/definitions/InternalServerError"
   /transaction/{transaction_id}/invalidate:
@@ -179,12 +179,6 @@ definitions:
       transaction_id:
         type: string
         example: a0040a18-e227-4bca-b5aa-452c7ae03165
-  UpdateTransactionSchema:
-    type: object
-    properties:
-      transaction_id:
-        type: string
-        example: a0040a18-e227-4bca-b5aa-452c7ae03165
   CreateTransactionSchema:
     description: Success
     type: object
@@ -207,6 +201,37 @@ definitions:
       auth_state:
         type: number
         example: 0
+      app_id:
+        type: string
+        example: FnyqFzJKZ5hrSB9JARCSpt90tgPN
+      developer_id:
+        type: string
+        example: j33ufh8hifjijdfdtgPN
+  UpdateTransactionSchema:
+    description: Update Success
+    type: object
+    properties:
+      response_type:
+        type: string
+        example: sample_type
+      client_id:
+        type: string
+        example: e2274bcab5aa452c7ae03165
+      redirect_uri:
+        type: string
+        example: url
+      scopes:
+        type: string
+        example: ["scope1", "scope2", "scope3"]
+      state:
+        type: string
+        example: string_value
+      auth_state:
+        type: number
+        example: 0
+      subscriber_id:
+        type: string
+        example: HGjhgjshdhbdsdjjhs
       app_id:
         type: string
         example: FnyqFzJKZ5hrSB9JARCSpt90tgPN
