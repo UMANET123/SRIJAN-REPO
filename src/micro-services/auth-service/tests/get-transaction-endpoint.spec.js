@@ -34,6 +34,7 @@ describe("Testing GET Transaction Endpoint", () => {
                   "scopes",
                   "state",
                   "auth_state",
+                  "subscriber_id",
                   "app_id",
                   "developer_id"
                 );
