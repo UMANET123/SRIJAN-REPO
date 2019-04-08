@@ -6,7 +6,7 @@ module.exports = function(req, res) {
       error_code: "BadRequest",
       error_message: "Bad Request"
     });
-  verifyTOtp(subscriber_id, otp, (response, status) => {
+  verifyTOtp(subscriber_id, otp, app_id, (response, status) => {
     return res.status(status).send(response);
   });
 };
