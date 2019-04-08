@@ -12,7 +12,6 @@ const {
   Op
 } = require("../config/models");
 const addMinToDate = require("../helpers/add-minute-to-date");
-const { createTransaction } = require("./_transaction.util");
 const {
   configureOTP,
   getNewOtp,
@@ -367,16 +366,7 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
               })
                 .then(() => {
                   return invalidateOTP(subscriber_id, app_id, () => {
-                    return createTransaction(
-                      null,
-                      subscriber_id,
-                      app_id,
-                      new Date(),
-                      0,
-                      txnId => {
-                        return callback({ transaction_id: txnId }, 200);
-                      }
-                    );
+                    return callback(null, 200);
                   });
                 })
                 .catch(e =>

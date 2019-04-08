@@ -14,7 +14,8 @@ describe("Testing Generate TOTP Endpoint", () => {
     let body = {
       msisdn: "639234567895",
       app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
-      blacklist: true
+      blacklist: true,
+      transaction_id: "fdfdfdffdd"
     };
 
     it("Should return 200/201 for POST", done => {
@@ -78,7 +79,8 @@ describe("Testing Generate TOTP Endpoint", () => {
       let body = {
         msisdn: "",
         app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
-        blacklist: true
+        blacklist: true,
+        transaction_id: "fdfdfdffdd"
       };
       chai
         .request(app)
@@ -94,7 +96,8 @@ describe("Testing Generate TOTP Endpoint", () => {
       let body = {
         msisdn: "639234567895",
         app_id: "",
-        blacklist: true
+        blacklist: true,
+        transaction_id: "fdfdfdffdd"
       };
       chai
         .request(app)
@@ -110,7 +113,8 @@ describe("Testing Generate TOTP Endpoint", () => {
       let body = {
         msisdn: "639234567895",
         app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
-        blacklist: "true"
+        blacklist: "true",
+        transaction_id: "fdfdfdffdd"
       };
       chai
         .request(app)
@@ -123,6 +127,23 @@ describe("Testing Generate TOTP Endpoint", () => {
         });
     });
     it("Should Return 400 for wrong MSISDN", done => {
+      let body = {
+        msisdn: "919234567895",
+        app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
+        blacklist: true,
+        transaction_id: "fdfdfdffdd"
+      };
+      chai
+        .request(app)
+        .post(endpoints.generate)
+        .type("application/json")
+        .send(JSON.stringify(body))
+        .end((err, res) => {
+          expect(res.status).to.be.equal(400);
+          done();
+        });
+    });
+    it("Should Return 400 without transaction id", done => {
       let body = {
         msisdn: "919234567895",
         app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
