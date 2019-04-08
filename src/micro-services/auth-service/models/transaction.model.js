@@ -89,6 +89,7 @@ function getTransaction(transactionId, callback) {
       status: 0
     },
     attributes: [
+      "subscriber_id",
       "response_type",
       "client_id",
       "redirect_uri",
@@ -113,7 +114,8 @@ function getTransaction(transactionId, callback) {
         state,
         auth_state,
         app_id,
-        developer_id
+        developer_id,
+        subscriber_id
       } = transactionRecord;
       return callback(200, {
         response_type,
@@ -123,7 +125,8 @@ function getTransaction(transactionId, callback) {
         state,
         auth_state,
         app_id,
-        developer_id
+        developer_id,
+        subscriber_id
       });
     })
     .catch(e => {
