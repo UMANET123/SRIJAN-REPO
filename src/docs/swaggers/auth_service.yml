@@ -323,3 +323,4 @@ definitions:
     example:
       error_code: Unauthorized
       error_message: No record found
+
