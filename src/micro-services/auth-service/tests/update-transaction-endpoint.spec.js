@@ -48,6 +48,7 @@ describe("Testing Update Transaction Endpoint", () => {
                   "scopes",
                   "state",
                   "auth_state",
+                  "subscriber_id",
                   "app_id",
                   "developer_id"
                 );
@@ -83,6 +84,7 @@ describe("Testing Update Transaction Endpoint", () => {
                   "scopes",
                   "state",
                   "auth_state",
+                  "subscriber_id",
                   "app_id",
                   "developer_id"
                 );
@@ -113,22 +115,4 @@ describe("Testing Update Transaction Endpoint", () => {
         });
     });
   });
-  //   describe("Testing Response Parameter for Create Transaction with scopes only in Request", () => {
-  //     it("Should Return transaction Id in the response", done => {
-  //       let body = {
-  //         scopes: ["scope1", "scope2", "scope3"]
-  //       };
-  //       chai
-  //         .request(app)
-  //         .post(endpoint)
-  //         .type("application/json")
-  //         .send(JSON.stringify(body))
-  //         .end((err, res) => {
-  //           expect(res.body).to.be.an("object");
-  //           expect(res.body).to.have.property("transaction_id");
-  //           expect(res.body.transaction_id).to.be.a("string");
-  //           done();
-  //         });
-  //     });
-  //   });
 });

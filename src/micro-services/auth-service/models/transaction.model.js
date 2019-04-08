@@ -96,6 +96,7 @@ function getTransaction(transactionId, callback) {
       "scopes",
       "state",
       "auth_state",
+      "subscriber_id",
       "app_id",
       "developer_id"
     ]
@@ -113,6 +114,7 @@ function getTransaction(transactionId, callback) {
         scopes,
         state,
         auth_state,
+        subscriber_id,
         app_id,
         developer_id,
         subscriber_id
@@ -124,6 +126,7 @@ function getTransaction(transactionId, callback) {
         scopes,
         state,
         auth_state,
+        subscriber_id,
         app_id,
         developer_id,
         subscriber_id
@@ -285,6 +288,7 @@ function updateTransaction(transactionId, reqBody, callback) {
         scopes,
         state,
         auth_state,
+        subscriber_id,
         app_id,
         developer_id
       } = record[0].dataValues;
@@ -296,6 +300,7 @@ function updateTransaction(transactionId, reqBody, callback) {
         scopes,
         state,
         auth_state,
+        subscriber_id,
         app_id,
         developer_id
       });
