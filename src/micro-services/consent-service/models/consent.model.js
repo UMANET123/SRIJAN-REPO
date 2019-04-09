@@ -37,99 +37,48 @@ function createConsent(
   callback
 ) {
   let createdDate = new Date();
-  // check isTransaction Valid
-  isTransactionValid(subscriber_id, transaction_id, app_id, isTxnValid => {
-    //  transaction is not valid
-    if (isTxnValid == 500)
-      return callback(500, {
-        error_code: "InternalServerError",
-        error_message: "Internal Server Error"
-      });
-    if (!isTxnValid) {
-      return callback(403, { status: "Transaction id is not valid" });
-    }
-    //  find Existing consent ...
-    return SubscriberConsent.findOne({
-      where: { uuid: subscriber_id, app_id, developer_id },
-      attributes: ["app_id", "scopes"]
-    })
-      .then(consent => {
-        if (consent && consent.app_id) {
-          //  consent is found
-          //  and check scopes are same return response
+  //  find Existing consent ...
+  return SubscriberConsent.findOne({
+    where: { uuid: subscriber_id, app_id, developer_id },
+    attributes: ["app_id", "scopes"]
+  })
+    .then(consent => {
+      if (consent && consent.app_id) {
+        //  consent is found
+        //  and check scopes are same return response
 
-          if (arraysHaveSameItems(scopes, consent.scopes)) {
-            //  record exists
-            return callback(302, { status: "Record already Exists!" });
-          } else {
-            //  if not update consent else return
-            SubscriberConsent.update(
-              {
-                scopes,
-                updated: createdDate
-              },
-              {
-                returning: true,
-                where: { uuid: subscriber_id, app_id, developer_id }
-              }
-            )
-              .then(updatedConsent => {
-                //  get updated Record
-                let [affectedRows, consent] = updatedConsent;
-                //  get access token from consent
-                let { access_token } = consent[0].dataValues;
-                //  return response
-                if (access_token) {
-                  return callback(200, {
-                    old_token: true,
-                    old_token_value: access_token
-                  });
-                } else {
-                  return callback(200, {
-                    old_token: false,
-                    old_token_value: ""
-                  });
-                }
-              })
-              .catch(() =>
-                callback(500, {
-                  error_code: "InternalServerError",
-                  error_message: "Internal Server Error"
-                })
-              );
-          }
+        if (arraysHaveSameItems(scopes, consent.scopes)) {
+          //  record exists
+          return callback(302, { status: "Record already Exists!" });
         } else {
-          //  Need to create new consent
-          SubscriberConsent.create({
-            uuid: subscriber_id,
-            app_id,
-            developer_id,
-            scopes,
-            access_token,
-            created: createdDate,
-            status: 1
-          })
-            .then(() => {
-              //  consent record is created
-              //  create metadata
-              createAppMetaData(
-                app_id,
-                developer_id,
-                appname,
-                createdDate,
-                isAppMetaCreated => {
-                  //  500 internal server error
-                  if (isAppMetaCreated == 500)
-                    return callback(500, {
-                      error_code: "InternalServerError",
-                      error_message: "Internal Server Error"
-                    });
-                  return callback(201, {
-                    old_token: false,
-                    old_token_value: ""
-                  });
-                }
-              );
+          //  if not update consent else return
+          SubscriberConsent.update(
+            {
+              scopes,
+              updated: createdDate
+            },
+            {
+              returning: true,
+              where: { uuid: subscriber_id, app_id, developer_id }
+            }
+          )
+            .then(updatedConsent => {
+              //  get updated Record
+              let [affectedRows, consent] = updatedConsent;
+              //  get access token from consent
+              let { access_token } = consent[0].dataValues;
+              //  return response
+              if (access_token) {
+                return callback(200, {
+                  old_token: true,
+                  old_token_value: access_token
+                });
+              } else {
+                return callback(200, {
+                  old_token: false,
+                  old_token_value: ""
+                });
+              }
             })
             .catch(() =>
               callback(500, {
@@ -138,14 +87,53 @@ function createConsent(
               })
             );
         }
-      })
-      .catch(() =>
-        callback(500, {
-          error_code: "InternalServerError",
-          error_message: "Internal Server Error"
+      } else {
+        //  Need to create new consent
+        SubscriberConsent.create({
+          uuid: subscriber_id,
+          app_id,
+          developer_id,
+          scopes,
+          access_token,
+          created: createdDate,
+          status: 1
         })
-      );
-  });
+          .then(() => {
+            //  consent record is created
+            //  create metadata
+            createAppMetaData(
+              app_id,
+              developer_id,
+              appname,
+              createdDate,
+              isAppMetaCreated => {
+                //  500 internal server error
+                if (isAppMetaCreated == 500)
+                  return callback(500, {
+                    error_code: "InternalServerError",
+                    error_message: "Internal Server Error"
+                  });
+                return callback(201, {
+                  old_token: false,
+                  old_token_value: ""
+                });
+              }
+            );
+          })
+          .catch(() =>
+            callback(500, {
+              error_code: "InternalServerError",
+              error_message: "Internal Server Error"
+            })
+          );
+      }
+    })
+    .catch(() =>
+      callback(500, {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      })
+    );
 }
 
 /**
@@ -173,78 +161,48 @@ function updateConsent(
   appname,
   callback
 ) {
-  //  check transaction is valid then proceed
-  isTransactionValid(subscriber_id, transaction_id, app_id, isTxnValid => {
-    //  transaction is not valid
-    if (isTxnValid == 500)
-      return callback(500, {
+  //  update query to run
+  let queryToRun = `UPDATE subscriber_consent SET scopes= :scopes, access_token= :access_token, status= :status, updated= :updated WHERE uuid= :uuid and app_id= :app_id and developer_id= :developer_id  RETURNING (SELECT access_token FROM subscriber_consent WHERE uuid= :uuid and app_id= :app_id and developer_id= :developer_id limit 1)`;
+  //  query values as object
+  let replacements = {
+    scopes: JSON.stringify(scopes),
+    access_token,
+    status: 0,
+    updated: new Date(),
+    uuid: subscriber_id,
+    app_id,
+    developer_id
+  };
+  // update consent
+  sequelize
+    .query(queryToRun, { replacements, type: sequelize.QueryTypes.UPDATE })
+    .then(consent => {
+      let [tokenRecord, updated] = consent;
+      //  get old token from query response
+      if (tokenRecord[0].hasOwnProperty("access_token")) {
+        if (tokenRecord[0].access_token) {
+          // valid access token
+          return callback(200, {
+            old_token: true,
+            old_token_value: tokenRecord[0].access_token
+          });
+        } else {
+          //  invalid value as null/falsy value
+          return callback(200, {
+            old_token: false,
+            old_token_value: ""
+          });
+        }
+      } else {
+        return callback(403, { status: "Forbidden" });
+      }
+    })
+    .catch(() =>
+      callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
-      });
-    if (!isTxnValid) {
-      return callback(403, { status: "Transaction id is not valid" });
-    }
-    //  update query to run
-    let queryToRun = `UPDATE subscriber_consent SET scopes= :scopes, access_token= :access_token, status= :status, updated= :updated WHERE uuid= :uuid and app_id= :app_id and developer_id= :developer_id  RETURNING (SELECT access_token FROM subscriber_consent WHERE uuid= :uuid and app_id= :app_id and developer_id= :developer_id limit 1)`;
-    //  query values as object
-    let replacements = {
-      scopes: JSON.stringify(scopes),
-      access_token,
-      status: 0,
-      updated: new Date(),
-      uuid: subscriber_id,
-      app_id,
-      developer_id
-    };
-    // update consent
-    sequelize
-      .query(queryToRun, { replacements, type: sequelize.QueryTypes.UPDATE })
-      .then(consent => {
-        //  invalidate tranaction endpoint
-        let invalidateTxnUrl = `${
-          process.env.AUTH_SERVICE_BASEPATH
-        }/transaction/${transaction_id}/invalidate`;
-        // invoke  invalidate transaction after setting access token
-        axios
-          .put(invalidateTxnUrl, {
-            subscriber_id,
-            app_id
-          })
-          .then(() => {
-            let [tokenRecord, updated] = consent;
-            //  get old token from query response
-            if (tokenRecord[0].hasOwnProperty("access_token")) {
-              if (tokenRecord[0].access_token) {
-                // valid access token
-                return callback(200, {
-                  old_token: true,
-                  old_token_value: tokenRecord[0].access_token
-                });
-              } else {
-                //  invalid value as null/falsy value
-                return callback(200, {
-                  old_token: false,
-                  old_token_value: ""
-                });
-              }
-            } else {
-              return callback(403, { status: "Forbidden" });
-            }
-          })
-          .catch(() =>
-            callback(500, {
-              error_code: "InternalServerError",
-              error_message: "Internal Server Error"
-            })
-          );
       })
-      .catch(() =>
-        callback(500, {
-          error_code: "InternalServerError",
-          error_message: "Internal Server Error"
-        })
-      );
-  });
+    );
 }
 
 /**
@@ -329,25 +287,13 @@ function getConsentList(
 
 /**
  *
+ *
  * validate transaction
  * @param {string} subscriber_id Subscriber Id
  * @param {string} transaction_id Transaction Id
  * @param {string} app_id App Id
  * @param {function} callback Callback Function
  * @returns {boolean}
- *
- * It checks a transaction is valid and return
- * boolean
  */
-function isTransactionValid(subscriber_id, transaction_id, app_id, callback) {
-  let txnValidityUrl = `${
-    process.env.AUTH_SERVICE_BASEPATH
-  }/transaction/${transaction_id}/${subscriber_id}/${app_id}`;
-  // check transaction id Exists
-  axios
-    .get(txnValidityUrl)
-    .then(txn => callback(txn.data.is_valid))
-    .catch(() => callback(500));
-}
 
 module.exports = { createConsent, updateConsent, getConsentList };

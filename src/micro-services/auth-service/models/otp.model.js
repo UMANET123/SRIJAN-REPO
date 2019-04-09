@@ -12,7 +12,6 @@ const {
   Op
 } = require("../config/models");
 const addMinToDate = require("../helpers/add-minute-to-date");
-const { createTransaction } = require("./_transaction.util");
 const {
   configureOTP,
   getNewOtp,
@@ -287,26 +286,37 @@ function insertOtpRecord(msisdn, app_id, callback) {
       //  query to find the user
       //  insert record to subscriber data mask
       return SubscriberDataMask.findOrCreate({
-        where: { uuid, phone_no: msisdn, created: currentDate, status: 0 },
+        where: { uuid, phone_no: msisdn, status: 0 },
         attributes: ["uuid"]
-      }).spread((mask, created) => {
-        SubscriberOTP.create({
-          uuid,
-          app_id,
-          otp,
-          expiration: addMinToDate(currentDate, OTP_EXPIRY_TIME),
-          status: 0
-        }).then(otpRecord => {
+      })
+        .spread((mask, created) => {
+          SubscriberOTP.create({
+            uuid,
+            app_id,
+            otp,
+            expiration: addMinToDate(currentDate, OTP_EXPIRY_TIME),
+            status: 0
+          }).then(otpRecord => {
+            return callback(
+              {
+                subscriber_id: uuid,
+                otp,
+                app_id
+              },
+              201
+            );
+          });
+        })
+        .catch(err => {
+          console.log({ err });
           return callback(
             {
-              subscriber_id: uuid,
-              otp,
-              app_id
+              error_code: "InternalServerError",
+              error_message: "Internal Server Error"
             },
-            201
+            500
           );
         });
-      });
     } else {
       return callback(
         { status: `Sorry, unable to send otp to ${msisdn}` },
@@ -367,16 +377,7 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
               })
                 .then(() => {
                   return invalidateOTP(subscriber_id, app_id, () => {
-                    return createTransaction(
-                      null,
-                      subscriber_id,
-                      app_id,
-                      new Date(),
-                      0,
-                      txnId => {
-                        return callback({ transaction_id: txnId }, 200);
-                      }
-                    );
+                    return callback(null, 200);
                   });
                 })
                 .catch(e =>

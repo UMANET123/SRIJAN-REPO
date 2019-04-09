@@ -1,134 +1,184 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
-  version: 1.0.0
-  title: Auth Service
+  version: 1.0.1
+  title: Subscriber-Authentication
   description: |
     Authorization based on OAuth 2.0 Authorization Grant Type
-    
 schemes:
   - https
-
+host: globeslingshot-dev-labs.apigee.net
+basePath: /auth/v1
 consumes:
+  - application/x-www-form-urlencoded
   - application/json
 produces:
   - application/json
-
 paths:
-
-  '/generate/totp':
+  /generate/otp:
     post:
-      tags: 
+      tags:
         - Generate & Send OTP to Subscriber
       description: Generate & Send OTP to Subscriber
       parameters:
         - name: OtpGenerator
           in: body
-          description: ''
+          description: ""
           required: true
           schema:
-            $ref: '#/definitions/GenerateOTPSchema'
+            $ref: "#/definitions/GenerateOTPSchema"
       responses:
-        201:
-          $ref: '#/definitions/GenerateOTPSuccess'
-        400:
-          $ref: '#/definitions/BadRequest'
-        403:
-          $ref: '#/definitions/UnauthorizedApp'
-          
-  '/verify/totp':
+        "201":
+          $ref: "#/definitions/GenerateOTPSuccess"
+        "400":
+          $ref: "#/definitions/BadRequest"
+  /verify/otp:
     post:
       operationId: VerifyOTP
       tags:
         - Verify OTP
       description: Verify OTP
-      
       parameters:
         - name: VerifyOtp
           in: body
-          description: ''
+          description: ""
           required: true
           schema:
-            $ref: '#/definitions/VerifyOtpSchema'
+            $ref: "#/definitions/VerifyOtpSchema"
       responses:
-        200:
-          $ref: '#/definitions/VerifyOTPSuccess'
-        400:
-          $ref: '#/definitions/BadRequest'
-        401:
-          $ref: '#/definitions/OTPVerficationFails'
-  
-          
-  '/transaction/{transaction_id}/{subscriber_id}/{app_id}':
-    get:
-      operationId: VerifyTransactionID
+        "200":
+          description: Success
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/Unauthorized"
+  /transaction:
+    post:
+      operationId: CreateTransaction
       tags:
-        - Validate Transaction
-      description: verify transaction internal api call from any ms to auth ms
-      
+        - Create Transaction
+      description: Create Transaction for Consent
       parameters:
-        - name: transaction_id
-          in: path
-          description: Transaction ID to be validated
-          required: true
-          type: string
-        - name: app_id
-          in: path
-          description: Transaction ID to be validated
-          required: true
-          type: string
-        - name: subscriber_id
-          in: path
-          description: Transaction ID to be validated
-          required: true
-          type: string  
-      responses:
-        200:
-          $ref: '#/definitions/VerifyTransactionSucess'
-        400:
-          $ref: '#/definitions/BadRequest'
-        401:
-          $ref: '#/definitions/OTPVerficationFails'
-          
-  '/transaction/{transaction_id}/invalidate':
-    put:
-      operationId: validatetransaction
-      tags:
-        - Validate Transaction
-      description: ValidateTransaction
-      
-      parameters:
-        - name: transaction_id
-          in: path
-          description: Transaction ID to be validated
-          required: true
-          type: string
-        - name: verifytransaction
+        - name: Create Transaction
           in: body
+          description: ""
+          required: false
           schema:
-            $ref: '#/definitions/VerifyTransactionSchema'
+            $ref: "#/definitions/CreateTransactionSchema"
       responses:
-        200:
-          description: ok
-        400:
-          $ref: '#/definitions/BadRequest'
-        401:
-          $ref: '#/definitions/OTPVerficationFails'
-    
-  
-          
+        "201":
+          $ref: "#/definitions/CreateTransactionSuccess"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "500":
+          $ref: "#/definitions/InternalServerError"
+  /transaction/{transaction_id}:
+    put:
+      operationId: updateTransaction
+      tags:
+        - Update Transaction PUT
+      description: Update Transaction for Consent with PUT
+      parameters:
+        - in: path
+          name: transaction_id
+          type: string
+          required: true
+          description: transaction id of consent flow
+        - name: Update Transaction
+          in: body
+          description: ""
+          required: false
+          schema:
+            $ref: "#/definitions/UpdateTransactionSchema"
+      responses:
+        "200":
+          $ref: "#/definitions/UpdateTransactionSchema"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/NoTransactionFoundSchema"
+        "500":
+          $ref: "#/definitions/InternalServerError"
+    patch:
+      operationId: updateTransaction PATCH
+      tags:
+        - Patch Update Transaction
+      description: Update Transaction for Consent with PATCH
+      parameters:
+        - in: path
+          name: transaction_id
+          type: string
+          required: true
+          description: transaction id of consent flow
+        - name: Update Transaction
+          in: body
+          description: ""
+          required: false
+          schema:
+            $ref: "#/definitions/UpdateTransactionSchema"
+      responses:
+        "200":
+          $ref: "#/definitions/UpdateTransactionSchema"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "401":
+          $ref: "#/definitions/NoTransactionFoundSchema"
+        "500":
+          $ref: "#/definitions/InternalServerError"
+    get:
+      operationId: getTransaction
+      tags:
+        - Get Transaction
+      description: Get Transaction for Consent
+      parameters:
+        - in: path
+          name: transaction_id
+          type: string
+          required: true
+          description: transaction id of consent flow
+      responses:
+        "200":
+          $ref: "#/definitions/UpdateTransactionSchema"
+        "401":
+          $ref: "#/definitions/NoTransactionFoundSchema"
+        "500":
+          $ref: "#/definitions/InternalServerError"
+  /transaction/{transaction_id}/invalidate:
+    put:
+      operationId: invalidateTransaction
+      tags:
+        - Invalidate Transaction
+      description: Invalidate Transaction for Consent
+      parameters:
+        - in: path
+          name: transaction_id
+          type: string
+          required: true
+          description: transaction id of consent flow
+      responses:
+        "200":
+          description: Success
+        "403":
+          $ref: "#/definitions/Forbidden"
+        "400":
+          $ref: "#/definitions/BadRequest"
+        "500":
+          $ref: "#/definitions/InternalServerError"
 definitions:
   GenerateOTPSchema:
-    type: "object"
+    type: object
     properties:
       msisdn:
         type: string
-        example: '+639944559933'
+        example: "639944559933"
       app_id:
         type: string
-        example: 'e2274bcab5aa452c7ae03165'
+        example: "abcd3dsjndnjnejn43"
+      transaction_id:
+        type: string
+        example: "Zaf&ndfdjsjndnjnej14"
       blacklist:
-        type: boolean
-        example: true
+        type: string
+        example: false
   GenerateOTPSuccess:
     description: Created
     type: object
@@ -137,22 +187,11 @@ definitions:
         type: string
       otp:
         type: string
-      app_id:
-        type: string
     example:
       subscriber_id: a0040a18-e227-4bca-b5aa-452c7ae03165
       otp: 12343
-      app_id: 'e2274bcab5aa452c7ae03165' 
-  VerifyOTPSuccess:
-    description: Created
-    type: object
-    properties:
-      transaction_id:
-        type: string
-    example:
-      transaction_id: a0040a18a0040a18a0040a18
   VerifyOtpSchema:
-    type: "object"
+    type: object
     properties:
       subscriber_id:
         type: string
@@ -160,42 +199,78 @@ definitions:
       otp:
         type: integer
         example: 12345
-      app_id:
-        type: string
-        example: 'e2274bcab5aa452c7ae03165'
-  
-  VerifyTransactionSchema:
-    type: "object"
-    properties:
-      subscriber_id:
-        type: string
-        example: a0040a18-e227-4bca-b5aa-452c7ae03165
-      app_id:
-        type: string
-        example: 'e2274bcab5aa452c7ae03165'        
-      
-  VerifyTransactionSucess:
-    description: ok
+    example:
+      subscriber_id: a0040a18-e227-4bca-b5aa-452c7ae03165
+      otp: 12343
+  CreateTransactionSuccess:
+    description: Created
     type: object
     properties:
-      is_valid:
-        type: boolean
-        example: true
-
-  UnauthorizedApp:
-    description: Unauthorized
-    type: "object"
+      transaction_id:
+        type: string
+        example: a0040a18-e227-4bca-b5aa-452c7ae03165
+  CreateTransactionSchema:
+    description: Success
+    type: object
     properties:
-      error_code:
+      response_type:
         type: string
-      error_message:
+        example: sample_type
+      client_id:
         type: string
-    example:
-      error_code: Unauthorized
-      error_message: App is blacklisted
+        example: e2274bcab5aa452c7ae03165
+      redirect_uri:
+        type: string
+        example: url
+      scopes:
+        type: string
+        example: ["scope1", "scope2", "scope3"]
+      state:
+        type: string
+        example: string_value
+      auth_state:
+        type: number
+        example: 0
+      app_id:
+        type: string
+        example: FnyqFzJKZ5hrSB9JARCSpt90tgPN
+      developer_id:
+        type: string
+        example: j33ufh8hifjijdfdtgPN
+  UpdateTransactionSchema:
+    description: Update Success
+    type: object
+    properties:
+      response_type:
+        type: string
+        example: sample_type
+      client_id:
+        type: string
+        example: e2274bcab5aa452c7ae03165
+      redirect_uri:
+        type: string
+        example: url
+      scopes:
+        type: string
+        example: ["scope1", "scope2", "scope3"]
+      state:
+        type: string
+        example: string_value
+      auth_state:
+        type: number
+        example: 0
+      subscriber_id:
+        type: string
+        example: HGjhgjshdhbdsdjjhs
+      app_id:
+        type: string
+        example: FnyqFzJKZ5hrSB9JARCSpt90tgPN
+      developer_id:
+        type: string
+        example: j33ufh8hifjijdfdtgPN
   BadRequest:
     description: Bad Request
-    type: "object"
+    type: object
     properties:
       error_code:
         type: string
@@ -204,10 +279,20 @@ definitions:
     example:
       error_code: BadRequest
       error_message: Bad Request
-      
-  OTPVerficationFails:
-    description: Unauthorized 
-    type: "object"
+  InternalServerError:
+    description: Internal Server Error
+    type: object
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: InternalServerError
+      error_message: Internal Server Error
+  Unauthorized:
+    description: Unauthorized
+    type: object
     properties:
       error_code:
         type: string
@@ -215,7 +300,27 @@ definitions:
         type: string
     example:
       error_code: Unauthorized
-      error_message: OTP Verification Failed
-# Added by API Auto Mocking Plugin
-host: globeslingshot-dev-labs.apigee.net
-basePath: /auth/v1/
+      error_message: Invalid Client ID
+  Forbidden:
+    description: Forbidden
+    type: object
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: Forbidden
+      error_message: Forbidden
+  NoTransactionFoundSchema:
+    description: Unauthorized
+    type: object
+    properties:
+      error_code:
+        type: string
+      error_message:
+        type: string
+    example:
+      error_code: Unauthorized
+      error_message: No record found
+
