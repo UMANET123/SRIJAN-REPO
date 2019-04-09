@@ -10,7 +10,6 @@ const arraysHaveSameItems = require("../helpers/compare-arrays.helper");
  *
  *
  * @param {string} subscriber_id Subscriber Id
- * @param {string} transaction_id Transaction Id
  * @param {string} access_token Access Token
  * @param {string} app_id App Id
  * @param {string} developer_id Developer Id
@@ -28,7 +27,6 @@ const arraysHaveSameItems = require("../helpers/compare-arrays.helper");
  */
 function createConsent(
   subscriber_id,
-  transaction_id,
   app_id,
   developer_id,
   scopes,
@@ -140,7 +138,6 @@ function createConsent(
  *
  *
  * @param {string} subscriber_id Subscriber Id
- * @param {string} transaction_id Transaction Id
  * @param {string} access_token Access Token
  * @param {string} app_id App ID
  * @param {string} developer_id Developer Id
@@ -153,7 +150,6 @@ function createConsent(
 
 function updateConsent(
   subscriber_id,
-  transaction_id,
   access_token,
   app_id,
   developer_id,
@@ -284,16 +280,5 @@ function getConsentList(
       })
     );
 }
-
-/**
- *
- *
- * validate transaction
- * @param {string} subscriber_id Subscriber Id
- * @param {string} transaction_id Transaction Id
- * @param {string} app_id App Id
- * @param {function} callback Callback Function
- * @returns {boolean}
- */
 
 module.exports = { createConsent, updateConsent, getConsentList };
