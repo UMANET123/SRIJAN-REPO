@@ -32,6 +32,9 @@ function getServiceResolvedUrl(
           "(serviceHost,serviceEndpointUri,serviceDefaultPath) one of them are not passed"
         )
       );
+    if (serviceHost == "consentms") {
+      return resolve(serviceDefaultPath);
+    }
     //  hit for dns service discovery with host
     dns.resolveSrv(serviceHost, (err, addresses) => {
       //    reject the promise if error occurs

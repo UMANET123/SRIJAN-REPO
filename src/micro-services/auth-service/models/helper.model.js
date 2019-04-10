@@ -7,6 +7,8 @@ const {
   OTP_SETTINGS: { timer, step }
 } = require("../config/environment");
 const { verifyUser } = require("./auth.model");
+
+const getServiceResolvedUrl = require("../helpers/get-service-resolved-url");
 /**
  * This function will generate an OTP using a secret
  * @param {string} secret Secret Hash String
@@ -46,28 +48,30 @@ function configureOTP() {
  * @returns {Function} returns callback with boolean value
  */
 function checkBlackListApp(msisdn, app_id, callback) {
-  let consent_base_url = process.env.CONSENT_SERVICE_BASEPATH;
+  serviceHost = process.env.CONSENT_SERVICE_HOST;
   // get uuid from phone
-  return verifyUser(msisdn, null, response => {
-    if (response && response.subscriber_id) {
-      //  do a query to check blacklist api with uuid and msisdn
-      let reqUrl = `${consent_base_url}/blacklist/${
-        response.subscriber_id
-      }/${app_id}`;
-      return axios
-        .get(reqUrl)
-        .then(({ data }) => {
-          if (data) {
-            return callback(true);
-          }
-          return callback(false);
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-    }
-    return callback(false);
-  });
+  return getServiceResolvedUrl(`${serviceHost}`)
+    .then(url =>
+      verifyUser(msisdn, null, response => {
+        if (response && response.subscriber_id) {
+          //  do a query to check blacklist api with uuid and msisdn
+          let reqUrl = `${url}/blacklist/${response.subscriber_id}/${app_id}`;
+          return axios
+            .get(reqUrl)
+            .then(({ data }) => {
+              if (data) {
+                return callback(true);
+              }
+              return callback(false);
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        }
+        return callback(false);
+      })
+    )
+    .catch(e => console.log(e));
 }
 /**
  *
