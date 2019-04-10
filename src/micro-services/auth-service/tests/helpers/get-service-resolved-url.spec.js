@@ -26,25 +26,34 @@ describe("Testing Get Service Resolved URL function", () => {
     });
   });
   describe("Will Fail Get Service Resolved URL function", () => {
-    /*
-     ,
-  */
-    it("Should return error  if ( serviceHost,serviceEndpointUri,serviceDefaultPath) any of ther parameters are not passed", () => {
-      getServiceResolvedUrl(
-        "consentservice",
-        "http://consentms:3002/subscriber/v1"
-      ).catch(err => {
-        chai.expect(err).to.be.an("error");
+    describe("Should return error  if ( serviceHost,serviceEndpointUri,serviceDefaultPath) any of ther parameters having falsy", () => {
+      it("Service Host falsy value will return error", () => {
+        getServiceResolvedUrl(
+          null,
+          "http://consentms:3002/subscriber/v1"
+        ).catch(err => {
+          chai.expect(err).to.be.an("error");
+        });
       });
-    });
-    it("Should return error  if wrong protocolStr is passed", () => {
-      getServiceResolvedUrl(
-        "consentservice",
-        "http://consentms:3002/subscriber/v1",
-        null,
-        "mshsh://"
-      ).catch(err => {
-        chai.expect(err).to.be.an("error");
+      it("Should return error  if falsy serviceEndpointUri is passed", () => {
+        getServiceResolvedUrl("consentms", null).catch(err => {
+          chai.expect(err).to.be.an("error");
+        });
+      });
+      it("Should return error  if falsy serviceDefaultPath is passed", () => {
+        getServiceResolvedUrl("consentms", null).catch(err => {
+          chai.expect(err).to.be.an("error");
+        });
+      });
+      it("Should return error  if falsy protocolStr is passed", () => {
+        getServiceResolvedUrl(
+          "consentms",
+          "/subscriber/v1",
+          "http://consentms:3002/subscriber/v1",
+          null
+        ).catch(err => {
+          chai.expect(err).to.be.an("error");
+        });
       });
     });
   });

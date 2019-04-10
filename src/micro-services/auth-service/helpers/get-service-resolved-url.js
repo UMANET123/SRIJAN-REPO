@@ -3,9 +3,9 @@ const dns = require("dns");
 /**
  *
  *
- * @param {string} serviceHost Micro Service HostName
- * @param {string} serviceEndpointUri Service Endpint URI i.e. /subscriber/v1
- * @param {string} serviceDefaultPath Micro Service default path set in Enviroment
+ * @param {string} serviceHost (Optional) Micro Service HostName
+ * @param {string} serviceEndpointUri (Optional)  Service Endpint URI i.e. /subscriber/v1
+ * @param {string} serviceDefaultPath (Optional)  Micro Service default path set in Enviroment
  * @param {string} protocolStr (Optional) Protocol string like http:// (default) or https://
  * @returns {object} Promise containing
  *   - success will return resolved url in the promise
@@ -19,12 +19,13 @@ const dns = require("dns");
  */
 
 function getServiceResolvedUrl(
-  serviceHost,
-  serviceEndpointUri,
-  serviceDefaultPath,
+  serviceHost = process.env.CONSENT_SERVICE_HOST,
+  serviceEndpointUri = process.env.CONSENT_SERVICE_ENDPOINT_URI,
+  serviceDefaultPath = process.env.CONSENT_SERVICE_BASEPATH,
   protocolStr = "http://"
 ) {
   return new Promise((resolve, reject) => {
+    // TODO: Need to add a mapping logic for service Endpoint, DefaultPath, Host
     if (!serviceHost || !serviceDefaultPath || !serviceEndpointUri)
       return reject(
         Error(
@@ -57,14 +58,21 @@ function getServiceResolvedUrl(
     });
   });
 }
+
 /*
-sample code block
-getServiceResolvedUrl(
-  "consentservice",
-  "/subscriber/v1",
-  "http://consentms:3002/subscriber/v1"
-)
-  .then(url => console.log(url))
-  .catch(e => console.log(e));
-*/
+ * Note sample code block
+ * example 1:
+ * getServiceResolvedUrl(
+ *)
+ *  .then(url => console.log(url))
+ *  .catch(e => console.log(e));
+ * example 2 with params:
+ * getServiceResolvedUrl(
+ *  "consentservice",
+ *  "/subscriber/v1",
+ *  "http://consentms:3002/subscriber/v1"
+ * )
+ *  .then(url => console.log(url))
+ *  .catch(e => console.log(e));
+ */
 module.exports = getServiceResolvedUrl;
