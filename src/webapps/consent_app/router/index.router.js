@@ -2,6 +2,7 @@ const express = require("express");
 let router = express.Router();
 
 var subscriberUtil = require("../utility/subscriber");
+const getConsentController = require("../controllers/get-consent.controller");
 const generateTotpController = require("../controllers/generate-otp.controller");
 const verifyTotpController = require("../controllers/verify-otp.controller");
 const updateConsentController = require("../controllers/update-consent.controller");
@@ -18,42 +19,23 @@ function scopeDescription(scope) {
 }
 
 router.get("/", function(req, res) {
-  sess = req.session;
-  console.log(sess);
-  if (sess.success_redirect_uri) {
-    let success_destination = sess.success_redirect_uri;
-    sess.success_redirect_uri = null;
-    return res.redirect(302, success_destination);
-  }
+  let sess = req.session;
+  console.log({ sess });
+  // if (sess.success_redirect_uri) {
+  //   let success_destination = sess.success_redirect_uri;
+  //   sess.success_redirect_uri = null;
+  //   return res.redirect(302, success_destination);
+  // }
   if (sess.sessionid) {
     res.redirect("/consent");
   } else {
-    var client_id = req.query.client_id;
-    if (!client_id) client_id = null;
-    console.log(client_id);
-    res.render("index", { client_id: client_id });
+    let { transaction_id } = req.query;
+    if (!transaction_id) transaction_id = null;
+    console.log(transaction_id);
+    res.render("index", { transaction_id });
   }
 });
-router.get("/consent", function(req, res) {
-  sess = req.session;
-  if (sess.sessionid && typeof req.query.scope != "undefined") {
-    var scope_arr = req.query.scope.split(", ");
-    var scopes = scope_arr;
-    var appName = req.query.app_name || "Developer Application";
-    var appMessage = req.query.app_message || ""
-    sess.redirect_uri = req.query.redirect_uri;
-    sess.transaction_id = req.query.transaction_id;
-    res.render("consent", {
-      scopes: scopes,
-      redirect_uri: req.query.redirect_uri,
-      scopeDescription: scopeDescription,
-      appName: appName,
-      appMessage: appMessage
-    });
-  } else {
-    res.redirect("/logout");
-  }
-});
+router.get("/consent", getConsentController);
 
 router.get("/logout", function(req, res) {
   req.session.destroy(function(err) {
