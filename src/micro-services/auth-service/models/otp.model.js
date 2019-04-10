@@ -18,6 +18,7 @@ const {
   getNewSecret,
   checkBlackListApp
 } = require("./helper.model");
+const logger = require("../logger");
 const { verifyUser } = require("./auth.model");
 const updatePhoneNo = require("../helpers/mobile-number.modify");
 const request = require("request-promise");
@@ -45,6 +46,9 @@ function generateTOtp(msisdn, app_id, blacklist, callback) {
   if (blacklist) {
     checkBlackListApp(msisdn, app_id, isBlackListed => {
       if (isBlackListed) {
+        logger.log("warn", "OtpModel:GenerateOTP:AppBlacklist", {
+          message: `:${app_id} is blacklisted`
+        });
         return callback(
           {
             error_code: "Forbidden",
@@ -80,8 +84,10 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
       //  check flood control
       return processFloodControl(uuid, isBlocked => {
         // user is blocked
-        console.log("**** IS BLOCKED: ", isBlocked);
         if (isBlocked && typeof isBlocked == "boolean") {
+          logger.log("warn", "OtpModel:AlwaysCreateOTP:ProcessFloodControl:", {
+            message: `${uuid} is blocked`
+          });
           return callback(
             {
               error_code: "Unauthorized",
@@ -107,6 +113,9 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
               sendOtpSms(smsContent, msisdn, isSent => {
                 //  check for network error
                 if (isSent == 500) {
+                  logger.log("error", "OtpModel:AlwaysCreateOTP:sendOtpSms:", {
+                    message: `Internal Server Error`
+                  });
                   return callback(
                     {
                       error_code: "InternalServerError",
@@ -141,6 +150,9 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                     )
                     .catch(err => console.log(err));
                 } else {
+                  logger.log("error", "OtpModel:AlwaysCreateOTP:sendOtpSms:", {
+                    message: `Unable to send OTP to ${msisdn}`
+                  });
                   return callback(
                     { status: `Sorry, unable to send otp to ${msisdn}` },
                     400

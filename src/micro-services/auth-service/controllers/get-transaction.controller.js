@@ -1,5 +1,6 @@
 /* jshint esversion:6 */
 const { getTransaction } = require("../models/transaction.model");
+const logger = require("../logger");
 /**
  *
  * Create Transaction Controller
@@ -10,7 +11,15 @@ const { getTransaction } = require("../models/transaction.model");
 module.exports = function(req, res) {
   //  invoke create transaction model for transaction
   let { transaction_id } = req.params;
+  if (!transaction_id) {
+    logger.log("error", "GetTransactionController", {
+      message: `Bad Request : Invalid Parameters Supplied`
+    });
+    return res
+      .status(400)
+      .send({ error_code: "BadRequest", error_message: "Bad Request" });
+  }
   return getTransaction(transaction_id, (status, responseBody) => {
-    res.status(status).send(responseBody);
+    return res.status(status).send(responseBody);
   });
 };

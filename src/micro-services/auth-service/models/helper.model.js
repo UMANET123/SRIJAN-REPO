@@ -7,6 +7,7 @@ const {
   OTP_SETTINGS: { timer, step }
 } = require("../config/environment");
 const { verifyUser } = require("./auth.model");
+const logger = require("../logger");
 /**
  * This function will generate an OTP using a secret
  * @param {string} secret Secret Hash String
@@ -63,6 +64,9 @@ function checkBlackListApp(msisdn, app_id, callback) {
           return callback(false);
         })
         .catch(function(error) {
+          logger.log("error", "HelperModel:CheckBlackListApp:verifyUser", {
+            message: error
+          });
           console.log(error);
         });
     }

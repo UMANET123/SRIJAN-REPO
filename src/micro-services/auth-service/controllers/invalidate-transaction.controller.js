@@ -8,7 +8,6 @@ const { invalidateTransaction } = require("../models/transaction.model");
  */
 module.exports = (req, res) => {
   //  invoke validate transaction model
-  console.log("i get called");
   let { transaction_id } = req.params;
   return invalidateTransaction(transaction_id, (status, response) => {
     return res.status(status).send(response);
