@@ -20,4 +20,11 @@ const DB_SETTINGS = {
 }
 const CONSENT_BASE_PATH= `/subscriber/v1`;
 
-module.exports = { NODE_SETTINGS,  DB_SETTINGS, CONSENT_BASE_PATH};
+const S3_BUCKET_SETTINGS = {
+    name:ENV.ENV_S3_BUCKET_NAME,
+    access_key_id:ENV.ENV_S3_ACCESS_KEY_ID,
+    secret_key_id:ENV.ENV_SECRET_ACCESS_KEY,
+    folder:ENV.ENV_S3_BUCKET_FOLDER
+}
+
+module.exports = { NODE_SETTINGS,  DB_SETTINGS, CONSENT_BASE_PATH, S3_BUCKET_SETTINGS };

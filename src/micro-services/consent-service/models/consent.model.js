@@ -1,6 +1,7 @@
 /* jshint esversion:6 */
 require("dotenv").config();
 const axios = require("axios");
+const logger = require("../logger");
 const { createAppMetaData } = require("./_util.model");
 const { SubscriberConsent } = require("../config/models");
 const sequelize = require("../config/orm.database");
@@ -78,12 +79,19 @@ function createConsent(
                 });
               }
             })
-            .catch(() =>
-              callback(500, {
+            .catch(() => {
+              logger.log(
+                "error",
+                "ConsentModel:CreateConsent:SubscriberConsent.update:",
+                {
+                  message: "Internal Server Error"
+                }
+              );
+              return callback(500, {
                 error_code: "InternalServerError",
                 error_message: "Internal Server Error"
-              })
-            );
+              });
+            });
         }
       } else {
         //  Need to create new consent
@@ -106,11 +114,19 @@ function createConsent(
               createdDate,
               isAppMetaCreated => {
                 //  500 internal server error
-                if (isAppMetaCreated == 500)
+                if (isAppMetaCreated == 500) {
+                  logger.log(
+                    "error",
+                    "ConsentModel:CreateConsent:CreateAppMetaData.create:",
+                    {
+                      message: "Internal Server Error"
+                    }
+                  );
                   return callback(500, {
                     error_code: "InternalServerError",
                     error_message: "Internal Server Error"
                   });
+                }
                 return callback(201, {
                   old_token: false,
                   old_token_value: ""
@@ -118,20 +134,34 @@ function createConsent(
               }
             );
           })
-          .catch(() =>
-            callback(500, {
+          .catch(() => {
+            logger.log(
+              "error",
+              "ConsentModel:CreateConsent:SubscriberConsent.create:",
+              {
+                message: "Internal Server Error"
+              }
+            );
+            return callback(500, {
               error_code: "InternalServerError",
               error_message: "Internal Server Error"
-            })
-          );
+            });
+          });
       }
     })
-    .catch(() =>
-      callback(500, {
+    .catch(() => {
+      logger.log(
+        "error",
+        "ConsentModel:CreateConsent:SubscriberConsent.findOne:",
+        {
+          message: "Internal Server Error"
+        }
+      );
+      return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
-      })
-    );
+      });
+    });
 }
 
 /**
@@ -193,12 +223,19 @@ function updateConsent(
         return callback(403, { status: "Forbidden" });
       }
     })
-    .catch(() =>
-      callback(500, {
+    .catch(() => {
+      logger.log(
+        "error",
+        "ConsentModel:UpdateConsent:SubscriberConsent.update:",
+        {
+          message: "Internal Server Error"
+        }
+      );
+      return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
-      })
-    );
+      });
+    });
 }
 
 /**
@@ -273,12 +310,15 @@ function getConsentList(
         });
       }
     })
-    .catch(() =>
-      callback(500, {
+    .catch(() => {
+      logger.log("error", "ConsentModel:GetConsentList:Conset.Select:", {
+        message: "Internal Server Error"
+      });
+      return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
-      })
-    );
+      });
+    });
 }
 
 module.exports = { createConsent, updateConsent, getConsentList };

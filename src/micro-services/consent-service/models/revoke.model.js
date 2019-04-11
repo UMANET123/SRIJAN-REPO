@@ -1,6 +1,7 @@
 /* jshint esversion:6 */
 
 const { SubscriberConsent } = require("../config/models");
+const logger = require("../logger");
 //  revoke consent for a single record
 /**
  *
@@ -40,12 +41,19 @@ function revokeSingle(subscriber_id, app_id, developer_id, callback) {
         return callback(403, { status: "Forbidden" });
       }
     })
-    .catch(() =>
-      callback(500, {
+    .catch(() => {
+      logger.log(
+        "error",
+        "RevokeModel:RevokeSingle:SubscriberConsent.update:",
+        {
+          message: "Internal Server Error"
+        }
+      );
+      return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
-      })
-    );
+      });
+    });
 }
 
 /**
@@ -84,12 +92,15 @@ function revokeAll(subscriber_id, callback) {
         callback(403, { status: "Forbidden" });
       }
     })
-    .catch(() =>
-      callback(500, {
+    .catch(() => {
+      logger.log("error", "RevokeModel:RevokeAll:SubscriberConsent.update:", {
+        message: "Internal Server Error"
+      });
+      return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
-      })
-    );
+      });
+    });
 }
 
 module.exports = { revokeSingle, revokeAll };

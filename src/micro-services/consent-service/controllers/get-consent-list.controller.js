@@ -1,5 +1,6 @@
 /* jshint esversion:6 */
 const { getConsentList } = require("../models/consent.model");
+const logger = require('../logger');
 //  date predefined order types
 const ORDER_TYPES = ["desc", "asc"];
 /**
@@ -19,6 +20,9 @@ module.exports = (req, res) => {
     // console.log({ order });
     if (!ORDER_TYPES.includes(order)) {
       // for invalid order type
+      logger.log("warn", "GetConsentListController:", {
+        message: "Invalid Parameters"
+      });
       return res.status(400).send({
         error_code: "BadRequest",
         error_message: "Invalid Parameter"
