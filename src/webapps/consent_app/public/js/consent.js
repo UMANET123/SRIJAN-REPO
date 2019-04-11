@@ -21,13 +21,13 @@ $(document).ready(function() {
       dataType: "json", // added data type
       success: function(res) {
         // console.log(res);
-        // ! need to comment before push for local only  -------
-        window.location.href = redirect_uri.replace(
-          "13.232.77.36",
-          "localhost"
-        );
-        // ! need to comment before push for local only  -------
-        // window.location.href = redirect_uri;
+        window.location.href = redirect_uri;
+        // // ! need to comment before push for local only  -------
+        // window.location.href = redirect_uri.replace(
+        //   "13.232.77.36",
+        //   "localhost"
+        // );
+        // // ! need to comment before push for local only  -------
       }
     });
   });
