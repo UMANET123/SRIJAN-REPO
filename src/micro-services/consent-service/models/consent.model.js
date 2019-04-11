@@ -16,7 +16,7 @@ const arraysHaveSameItems = require("../helpers/compare-arrays.helper");
  * @param {[]} scopes Scopes
  * @param {string} appname App Name
  * @param {string} consent_expiry Expiry date in ISO format
- * @param {string} consent_status Expiry status, ENUM [NO_EXPIRY, FIXED_EXPIRY, EVERYTIME_EXPIRY]
+ * @param {string} consent_type Expiry type, ENUM [NO_EXPIRY, FIXED_EXPIRY, EVERYTIME_EXPIRY]
  * @param {function} callback Callback Function
  * Create a Consent,
  * Cases

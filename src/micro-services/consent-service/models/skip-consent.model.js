@@ -19,8 +19,7 @@ const { SubscriberConsent } = require("../config/models");
  */
 
 function skipConsent(req, callback) {
-  // PLEASE NOT `subscriber_id` is the same as `uuid`
-  let { uuid, app_id } = req.params;
+  let { subscriber_id, app_id } = req.params;
   let { scopes } = req.query;
   let returnStatus = false;
   /**
@@ -31,7 +30,7 @@ function skipConsent(req, callback) {
   }
   SubscriberConsent.findOne({
     where: {
-      uuid: uuid,
+      uuid: subscriber_id,
       app_id: app_id
     },
     attributes: [
