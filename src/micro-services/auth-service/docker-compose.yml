@@ -18,7 +18,7 @@ services:
       - INSTANCE=authservice
       - AUTH_SERVICE_BASEPATH=${ENV_AUTH_SERVICE_BASEPATH}
       - CONSENT_SERVICE_BASEPATH=${ENV_CONSENT_SERVICE_BASEPATH}
-      - CONSENT_SERVICE_HOST=consentms
+      - CONSENT_SERVICE_HOST=${ENV_CONSENT_SERVICE_HOST}
       - CONSENT_SERVICE_ENDPOINT_URI=${ENV_CONSENT_SERVICE_ENDPOINT_URI}
       - DB_USERNAME=${ENV_DB_USERNAME}
       - DB_PASSWORD=${ENV_DB_PASSWORD}
@@ -36,17 +36,17 @@ services:
     restart: always
     image: postgres:10
     environment:
-      - POSTGRES_USER=wakanda_auth_service
-      - POSTGRES_PASSWORD=12345
-      - POSTGRES_DB=wakanda_auth_db
+      - POSTGRES_USER=${ENV_DB_USERNAME}
+      - POSTGRES_PASSWORD=${ENV_DB_PASSWORD}
+      - POSTGRES_DB=${ENV_DB_NAME}
 
     volumes:
       - ./postgres-data/postgres:/var/lib/postgresql/data
       - ./dbdata:/docker-entrypoint-initdb.d/
     ports:
       - "5433:5432"
-    expose:
-      - "5432"
+    # expose:
+    #   - "5432"
     networks:
       - authservice_default
 
