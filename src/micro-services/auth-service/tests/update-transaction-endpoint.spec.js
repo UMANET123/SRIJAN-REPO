@@ -3,7 +3,10 @@ const chaiHTTP = require("chai-http");
 const app = require("../app");
 const { expect } = chai;
 chai.use(chaiHTTP);
-
+const AUTH_CLIENT_ID = 'authjshdkjhas8sdandsakdadkad23';
+const AUTH_CLIENT_SECRET = 'secretmessageauthhgjgdsadb4343';
+const { getAuthorizationHeader } = require("../helpers/authorization");
+const token = getAuthorizationHeader(AUTH_CLIENT_ID, AUTH_CLIENT_SECRET);
 const endpoint = "/auth/v1/transaction";
 let body = { sampledata: "" };
 let payload = {
@@ -28,6 +31,7 @@ describe("Testing Update Transaction Endpoint", () => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(createTransactionPayload))
         .end((err, res) => {
@@ -36,6 +40,7 @@ describe("Testing Update Transaction Endpoint", () => {
             chai
               .request(app)
               .put(endpoint + `/${transaction_id}`)
+              .set({'Authorization': token})
               .type("application/json")
               .send(JSON.stringify(payload))
               .end((err, res) => {
@@ -64,6 +69,7 @@ describe("Testing Update Transaction Endpoint", () => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(createTransactionPayload))
         .end((err, res) => {
@@ -72,6 +78,7 @@ describe("Testing Update Transaction Endpoint", () => {
             chai
               .request(app)
               .patch(endpoint + `/${transaction_id}`)
+              .set({'Authorization': token})
               .type("application/json")
               .send(JSON.stringify(payload))
               .end((err, res) => {
@@ -93,12 +100,13 @@ describe("Testing Update Transaction Endpoint", () => {
           }
         });
     });
-    it("Should return 204  for invalid transaction ID", done => {
+    it("Should return 401  for invalid transaction ID", done => {
       chai
         .request(app)
         .get(endpoint + "/abcdsdsdse")
+        .set({'Authorization': token})
         .end((err, res) => {
-          expect(res.status).to.equal(204);
+          expect(res.status).to.equal(401);
           done();
         });
     });
@@ -107,6 +115,7 @@ describe("Testing Update Transaction Endpoint", () => {
       chai
         .request(app)
         .delete(endpoint)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {

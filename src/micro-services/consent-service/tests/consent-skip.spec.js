@@ -3,13 +3,17 @@ const chaiHTTP = require("chai-http");
 const app = require("../app");
 const { expect } = chai;
 chai.use(chaiHTTP);
-
+const CONSENT_CLIENT_ID = 'consentjshdkjhas8sdandsakdadkad23';
+const CONSENT_CLIENT_SECRET = 'secretmessageconsenthgjgdsadb4343';
+const { getAuthorizationHeader } = require("../helpers/authorization");
+const token = getAuthorizationHeader(CONSENT_CLIENT_ID, CONSENT_CLIENT_SECRET);
 const endpoints = {
   skipConsent: "/subscriber/v1/app/consent_bypass"
 };
 
 describe("Testing the Consent Skip Endpoint", () => {
   describe("Testing HTTP Methods", () => {
+    //request timeout code is handled for uuid and appid but sending all the parameters in the request
     it("Should return 200 for GET", done => {
       let data = {
         uuid: "312a1b11bef6a824a43419bd94723520",
@@ -26,6 +30,7 @@ describe("Testing the Consent Skip Endpoint", () => {
             data.developer_id
           }/${data.access_token}/${data.scopes}`
         )
+        .set({'Authorization': token})
         .type("application/json")
         .then(res => {
           expect(res).to.have.status(200);
@@ -48,6 +53,7 @@ describe("Testing the Consent Skip Endpoint", () => {
             data.developer_id
           }/${data.access_token}/${data.scopes}`
         )
+        .set({'Authorization': token})
         .type("application/json")
         .send({})
         .then(res => {
@@ -71,6 +77,7 @@ describe("Testing the Consent Skip Endpoint", () => {
             data.developer_id
           }/${data.access_token}/${data.scopes}`
         )
+        .set({'Authorization': token})
         .type("application/json")
         .send({})
         .then(res => {
@@ -94,6 +101,7 @@ describe("Testing the Consent Skip Endpoint", () => {
             data.developer_id
           }/${data.access_token}/${data.scopes}`
         )
+        .set({'Authorization': token})
         .type("application/json")
         .send({})
         .then(res => {
@@ -117,6 +125,7 @@ describe("Testing the Consent Skip Endpoint", () => {
             data.developer_id
           }/${data.access_token}/${data.scopes}`
         )
+        .set({'Authorization': token})
         .type("application/json")
         .send({})
         .then(res => {
@@ -125,7 +134,7 @@ describe("Testing the Consent Skip Endpoint", () => {
         });
     });
   });
-
+ 
   describe("Testing Consent Skip", () => {
     it("Should return 200 and with body TRUE if consent found", done => {
       let data = {
@@ -143,6 +152,7 @@ describe("Testing the Consent Skip Endpoint", () => {
             data.developer_id
           }/${data.access_token}/${data.scopes}`
         )
+        .set({'Authorization': token})
         .type("application/json")
         .then(res => {
           expect(res).to.have.status(200);
@@ -166,6 +176,7 @@ describe("Testing the Consent Skip Endpoint", () => {
             data.developer_id
           }/${data.access_token}/${data.scopes}`
         )
+        .set({'Authorization': token})
         .type("application/json")
         .then(res => {
           expect(res).to.have.status(200);

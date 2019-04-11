@@ -3,8 +3,11 @@ const chaiHTTP = require("chai-http");
 const app = require("../app");
 const { expect } = chai;
 chai.use(chaiHTTP);
-
+const AUTH_CLIENT_ID = 'authjshdkjhas8sdandsakdadkad23';
+const AUTH_CLIENT_SECRET = 'secretmessageauthhgjgdsadb4343';
 const endpoint = "/auth/v1/transaction";
+const { getAuthorizationHeader } = require("../helpers/authorization");
+const token = getAuthorizationHeader(AUTH_CLIENT_ID, AUTH_CLIENT_SECRET);
 
 describe("Testing Create Transaction Endpoint", () => {
   describe("Testing HTTP Method Responses", () => {
@@ -16,6 +19,7 @@ describe("Testing Create Transaction Endpoint", () => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -27,6 +31,7 @@ describe("Testing Create Transaction Endpoint", () => {
       chai
         .request(app)
         .put(endpoint)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -38,6 +43,7 @@ describe("Testing Create Transaction Endpoint", () => {
       chai
         .request(app)
         .patch(endpoint)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -49,6 +55,7 @@ describe("Testing Create Transaction Endpoint", () => {
       chai
         .request(app)
         .delete(endpoint)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -60,6 +67,7 @@ describe("Testing Create Transaction Endpoint", () => {
       chai
         .request(app)
         .get(endpoint)
+        .set({'Authorization': token})
         .type("application/json")
         .end((err, res) => {
           expect(res.status).to.be.equal(404);
@@ -83,6 +91,7 @@ describe("Testing Create Transaction Endpoint", () => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -101,6 +110,7 @@ describe("Testing Create Transaction Endpoint", () => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {

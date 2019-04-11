@@ -1,11 +1,16 @@
 /* jshint esversion:9 */
 const {
   APIGEE_CREDS: { apigeeBaseURL },
+  APIGEE_CREDS: { clientID },
+  APIGEE_CREDS: { clientSecret },
   APIGEE_ENDPOINTS: { verifyOTP }
 } = require("../config/environment");
 
 const request = require("request");
 const session = require("express-session");
+
+var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
+var authorizationHeaderString = 'Basic ' + encodedData;
 module.exports = function(req, res, next) {
   let { otp, transaction_id } = req.body;
 
@@ -14,7 +19,7 @@ module.exports = function(req, res, next) {
     url: `${apigeeBaseURL}/${verifyOTP}`,
     headers: {
       "cache-control": "no-cache",
-      //  Authorization: authorizationHeaderString,
+      "Authorization": authorizationHeaderString,
       "Content-Type": "application/x-www-form-urlencoded"
     },
     form: { otp, transaction_id }

@@ -3,6 +3,10 @@ const chaiHTTP = require("chai-http");
 const app = require("../app");
 const { expect, should } = chai;
 chai.use(chaiHTTP);
+const CONSENT_CLIENT_ID = 'consentjshdkjhas8sdandsakdadkad23';
+const CONSENT_CLIENT_SECRET = 'secretmessageconsenthgjgdsadb4343';
+const { getAuthorizationHeader } = require("../helpers/authorization");
+const token = getAuthorizationHeader(CONSENT_CLIENT_ID, CONSENT_CLIENT_SECRET);
 
 const endpoint = "/subscriber/v1/consent";
 const contentType = "application/json";
@@ -20,6 +24,7 @@ describe("Testing Create Consent API Endpoint", () => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type(contentType)
         .send(data)
         .end((err, res) => {
@@ -34,6 +39,7 @@ describe("Testing Create Consent API Endpoint", () => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type(contentType)
         .send(
           JSON.stringify({
@@ -57,6 +63,7 @@ describe("Testing Create Consent API Endpoint", () => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type(contentType)
         .send(
           JSON.stringify({
@@ -80,6 +87,7 @@ describe("Testing Create Consent API Endpoint", () => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type(contentType)
         .send(
           JSON.stringify({
@@ -103,6 +111,7 @@ describe("Testing Create Consent API Endpoint", () => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type(contentType)
         .send(
           JSON.stringify({
@@ -126,6 +135,7 @@ describe("Testing Create Consent API Endpoint", () => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type(contentType)
         .send(
           JSON.stringify({
@@ -145,11 +155,12 @@ describe("Testing Create Consent API Endpoint", () => {
           done();
         });
     });
-
+    //we have got status 302 (and location heder is given) as record already exists that's why it failing 
     it(`Testing endpoint Request ${endpoint} for invalid transaction_id`, done => {
       chai
         .request(app)
         .post(endpoint)
+        .set({'Authorization': token})
         .type(contentType)
         .send(
           JSON.stringify({
@@ -162,7 +173,7 @@ describe("Testing Create Consent API Endpoint", () => {
           })
         )
         .end(function(err, res) {
-          expect(err).to.equal(null);
+          expect(err).to.be.null;
           expect(res).to.have.status(403);
           expect(res.body).to.be.an("object");
           expect(res.body).to.have.property(

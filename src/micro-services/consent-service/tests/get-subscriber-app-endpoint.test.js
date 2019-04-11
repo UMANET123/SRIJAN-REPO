@@ -3,6 +3,10 @@ const chaiHTTP = require("chai-http");
 const app = require("../app");
 const { expect, should } = chai;
 chai.use(chaiHTTP);
+const CONSENT_CLIENT_ID = 'consentjshdkjhas8sdandsakdadkad23';
+const CONSENT_CLIENT_SECRET = 'secretmessageconsenthgjgdsadb4343';
+const { getAuthorizationHeader } = require("../helpers/authorization");
+const token = getAuthorizationHeader(CONSENT_CLIENT_ID, CONSENT_CLIENT_SECRET);
 
 const endpoint = "/subscriber/v1/app/search/e73216f434e325d7f687260c2c272cd6";
 describe(`Testing Response Code for ${endpoint}`, () => {
@@ -10,6 +14,7 @@ describe(`Testing Response Code for ${endpoint}`, () => {
     chai
       .request(app)
       .get(endpoint)
+      .set({'Authorization': token})
       .end((err, res) => {
         expect(err).to.equal(null);
         expect(res.statusCode).to.equal(200);
@@ -22,6 +27,7 @@ describe(`Testing Response Code for ${endpoint}`, () => {
     chai
       .request(app)
       .get("/subscriber/v1/app/search/absdasds3jzzzzzz")
+      .set({'Authorization': token})
       .end((err, res) => {
         expect(err).to.equal(null);
         expect(res.statusCode).to.equal(200);
@@ -34,6 +40,7 @@ describe(`Testing Response Code for ${endpoint}`, () => {
     chai
       .request(app)
       .get("/subscriber/v1/app/search")
+      .set({'Authorization': token})
       .end((err, res) => {
         expect(err).to.equal(null);
         expect(res.statusCode).to.equal(404);
