@@ -8,13 +8,16 @@ const { createConsent } = require("../models/consent.model");
  * @returns {object} Http Response
  */
 module.exports = function(req, res) {
+  console.log(req.body)
   let {
     subscriber_id,
     app_id,
     developer_id,
     scopes,
     appname,
-    access_token
+    access_token,
+    consent_expiry,
+    consent_type
   } = req.body;
   if (!subscriber_id || !app_id || !developer_id || !scopes || !appname) {
     return res.status(400).send({
@@ -29,6 +32,8 @@ module.exports = function(req, res) {
     scopes,
     appname,
     access_token,
+    consent_expiry,
+    consent_type,
     (status, response) => {
       return res.status(status).send(response);
     }
