@@ -14,7 +14,7 @@ const APIGEE_CREDS = {
   apigeeBaseURL: ENV.APIGEE_BASE_URL
 };
 
-const APIGEE_BASE = "auth/v1";
+const APIGEE_BASE = "auth/v2";
 //  node server settings
 const APIGEE_ENDPOINTS = {
   generateOTP: `${APIGEE_BASE}/generate/otp`,

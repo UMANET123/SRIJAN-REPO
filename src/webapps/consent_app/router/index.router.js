@@ -20,12 +20,12 @@ function scopeDescription(scope) {
 
 router.get("/", function(req, res) {
   let sess = req.session;
-  if (sess.success_redirect_uri) {
-    console.log("success redirect");
-    // sess.sessionid = null;
-    console.log({ sess });
-    return res.redirect(sess.success_redirect_uri);
-  }
+  // if (sess.success_redirect_uri) {
+  //   console.log("success redirect");
+  //   // sess.sessionid = null;
+  //   console.log({ sess });
+  //   return res.redirect(sess.success_redirect_uri);
+  // }
   if (sess.sessionid) {
     console.log("session exists");
     res.redirect("/consent");
@@ -47,7 +47,15 @@ router.get("/logout", function(req, res) {
     }
   });
 });
-
+router.get("/destroy/session", function(req, res) {
+  req.session.destroy(function(err) {
+    if (err) {
+      console.log(err);
+    } else {
+      return res.status(200).send({ status: "success" });
+    }
+  });
+});
 router.get("/api/validateMobileNo", function(req, res) {
   phone_no = req.query.phone_no;
   var number = subscriberUtil.getTelco(phone_no);

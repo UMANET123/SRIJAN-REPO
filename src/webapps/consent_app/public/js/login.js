@@ -34,15 +34,13 @@ $(document).ready(function() {
     );
     return match && decodeURIComponent(match[1].replace(/\+/g, " "));
   }
-  var raw =
-    "http://localhost:5560/?client_id=dNBhms6AvdY6LKw1To1vLW5232HghPiD#";
-  console.log(qs(raw));
+
   function generateOTP() {
     $("#postResultDiv").html("");
     // PREPARE FORM DATA
     let msisdn = $("#phone_no").val();
     let transaction_id = $("#transaction_id").val();
-    console.log({ msisdn, transaction_id });
+    // console.log({ msisdn, transaction_id });
     $.ajax({
       type: "GET",
       contentType: "application/json",
@@ -58,7 +56,7 @@ $(document).ready(function() {
           data: JSON.stringify({ msisdn, transaction_id }),
           dataType: "json",
           success: function(subscriber) {
-            console.log("SUBSCRIBER, ", subscriber);
+            // console.log("SUBSCRIBER, ", subscriber);
             if (subscriber.statusCode == 200 || subscriber.statusCode == 201) {
               $("#postResultDiv").html(
                 "<p class='success'>" + subscriber.message + "</p>"
@@ -77,7 +75,7 @@ $(document).ready(function() {
             }
           },
           error: function(e) {
-            console.log(e);
+            // console.log(e);
             $("#postResultDiv").html(
               "<p class='error'>" +
                 "Error! an error occured during opt generation.<br>"
@@ -115,7 +113,7 @@ $(document).ready(function() {
       data: JSON.stringify(formData),
       dataType: "json",
       success: function(subscriber) {
-        console.log("SUBSCRIBER ", subscriber);
+        // console.log("SUBSCRIBER ", subscriber);
         if (subscriber.statusCode == 302) {
           window.location.href = subscriber["redirect"];
           $("#postResultDiv").html(
@@ -141,7 +139,7 @@ $(document).ready(function() {
         }
       },
       complete: function(data) {
-        console.log({ data });
+        // console.log({ data });
         // console.log(JSON.parse(data));
       }
     });
