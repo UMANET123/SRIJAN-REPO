@@ -18,7 +18,7 @@ COPY . ./
 
 EXPOSE 3000
 
-RUN npm i -g nodemon
+RUN npm i -g nodemon mocha
 
 RUN apt-get update && apt-get install build-essential
 

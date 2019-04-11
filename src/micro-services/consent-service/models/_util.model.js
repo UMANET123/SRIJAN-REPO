@@ -34,7 +34,6 @@ function createAppMetaData(
     attributes: ["app_id"]
   })
     .then(app => {
-      console.log(app);
       if (!app) {
         //  app is not created
         // create an app

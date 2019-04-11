@@ -10,21 +10,13 @@ const { createConsent } = require("../models/consent.model");
 module.exports = function(req, res) {
   let {
     subscriber_id,
-    transaction_id,
     app_id,
     developer_id,
     scopes,
     appname,
     access_token
   } = req.body;
-  if (
-    !subscriber_id ||
-    !transaction_id ||
-    !app_id ||
-    !developer_id ||
-    !scopes ||
-    !appname
-  ) {
+  if (!subscriber_id || !app_id || !developer_id || !scopes || !appname) {
     return res.status(400).send({
       error_code: "BadRequest",
       error_message: "Bad Request"
@@ -32,7 +24,6 @@ module.exports = function(req, res) {
   }
   createConsent(
     subscriber_id,
-    transaction_id,
     app_id,
     developer_id,
     scopes,
