@@ -29,13 +29,13 @@ module.exports = function(req, res, next) {
     });
     if (response.statusCode == 302) {
       sess.success_redirect_uri = response.headers.location;
-      console.log({ sess });
-      //! for local only  ------- ************
-      res_data.success_redirect_uri = response.headers.location.replace(
-        "13.232.77.36",
-        "localhost"
-      );
-      // ! for local only  ------- ************
+      // console.log({ sess });
+      // //! for local only  ------- ************
+      // res_data.success_redirect_uri = response.headers.location.replace(
+      //   "13.232.77.36",
+      //   "localhost"
+      // );
+      // // ! for local only  ------- ************
       res_data.message = "Success.";
       res.status(response.statusCode).send(res_data);
     } else {

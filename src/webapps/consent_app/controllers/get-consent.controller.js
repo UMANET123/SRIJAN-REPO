@@ -46,9 +46,9 @@ module.exports = (req, res) => {
 };
 /**
  *
- *
- * @param {*} scope
- * @returns
+ * * scopeDescription
+ * @param {string} scope scope name
+ * @returns {string} scope description
  */
 function scopeDescription(scope) {
   scope = scope.toLowerCase().replace(/ /g, "");

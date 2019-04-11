@@ -37,9 +37,9 @@ module.exports = function(req, res, next) {
       sess.app_message = getQueryParamByName(location, "app_message");
       res_data.redirect = location;
 
-      // ! need to comment before push for local only  -------
-      res_data.redirect = location.replace("13.232.77.36", "localhost");
-      // ! need to comment before push for local only  -------
+      // // ! need to comment before push for local only  -------
+      // res_data.redirect = location.replace("13.232.77.36", "localhost");
+      // // ! need to comment before push for local only  -------
       // console.log(res_data.redirect);
     } else if (response.statusCode == 403) {
       // let errorResponseBody = response.body;
