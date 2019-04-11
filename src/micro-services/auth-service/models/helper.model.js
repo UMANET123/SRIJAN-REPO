@@ -64,10 +64,13 @@ function checkBlackListApp(msisdn, app_id, callback) {
           return callback(false);
         })
         .catch(function(error) {
-          logger.log("error", "HelperModel:CheckBlackListApp:verifyUser", {
-            message: error
-          });
-          console.log(error);
+          return logger.log(
+            "error",
+            "HelperModel:CheckBlackListApp:verifyUser",
+            {
+              message: error
+            }
+          );
         });
     }
     return callback(false);

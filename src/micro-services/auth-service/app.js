@@ -1,5 +1,7 @@
 const express = require("express");
 const router = require("./routes/index.router");
+const logger = require("./logger");
+const morgan = require("morgan");
 const {
   NODE_SETTINGS: { portNumber },
   AUTH_BASE_PATH
@@ -7,11 +9,12 @@ const {
 const app = express();
 
 // const httpPostOnlyMiddleware = require('./middleware/http-only-post.middleware');
-
+app.use(morgan("tiny",{stream: logger.stream}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(httpPostOnlyMiddleware);
 app.use(AUTH_BASE_PATH, router);
+
 app.listen(portNumber, () => {
   console.log(`App running on port ${portNumber}`);
 });

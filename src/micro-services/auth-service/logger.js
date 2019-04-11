@@ -1,4 +1,6 @@
 const winston = require("winston");
+const { format } = require('winston');
+const {combine, colorize, timestamp, label, printf, prettyPrint} = format;
 const s3StreamLogger = require("s3-streamlogger").S3StreamLogger;
 const {S3_BUCKET_SETTINGS} = require('./config/environment')
 const s3Stream = new s3StreamLogger({
@@ -17,6 +19,8 @@ transport.on("error",function(err){
     console.log("S3 Logging bucket failed, please restart service")
 })
 
+
+
 /**
  * TODO
  * - PUT LOGIC HERE TO USE CONSOLE IN DEVELOPMENT, 
@@ -24,11 +28,29 @@ transport.on("error",function(err){
  *      APP RESTARTS
  */
 
+const logFormat = printf(({level, message, label, timestamp})=>{
+    return `${timestamp} [${label}] [${level}] : ${message}`
+})
+
 const logger = winston.createLogger({
+    format: combine(
+        label({label:'Auth Service'}),
+        timestamp(),
+        logFormat
+    ),
     transports:[
         transport,
-        new winston.transports.Console()
+        new winston.transports.Console({
+            colorize:true,
+            json:false
+        })
     ]
 })
+
+logger.stream = {
+    write: function(message, encoding){
+        logger.info(message)
+    }
+}
 
 module.exports = logger;
