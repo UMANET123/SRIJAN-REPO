@@ -28,6 +28,12 @@ const SubscriberConsent = sequelize.define(
     },
     updated: {
       type: DATE
+    },
+    consent_expiry: {
+      type: STRING
+    },
+    consent_type: {
+      type: STRING
     }
   },
   {

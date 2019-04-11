@@ -10,7 +10,7 @@ const { skipConsent } = require("../models/skip-consent.model");
 module.exports = (req, res) => {
   //  check app is blacklisted
 
-  skipConsent(req.params, (response, status) => {
+  skipConsent(req, (response, status) => {
     return res.status(status).send(response);
   });
 };
