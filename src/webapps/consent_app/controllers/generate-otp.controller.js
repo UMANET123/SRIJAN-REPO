@@ -11,7 +11,6 @@ module.exports = function(req, res, next) {
     url: `${apigeeBaseURL}/${generateOTP}`,
     headers: {
       "cache-control": "no-cache",
-      //   Authorization: authorizationHeaderString,
       "Content-Type": "application/x-www-form-urlencoded"
     },
     form: { ...req.body }
