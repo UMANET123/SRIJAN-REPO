@@ -46,13 +46,14 @@ function skipConsent(req, callback) {
     ]
   })
     .then(result => {
-      console.log("RESULT: ", result);
       if (result) {
         switch (result.consent_type) {
           case "FIXED_EXPIRY":
+            console.log("Fixed Expiry");
             let expiry = Date.parse(result.consent_expiry);
             let today = Date.parse(new Date().toDateString());
             if (expiry <= today) {
+              console.log("Consent Expired");
               return callback({ status: false }, 200);
             }
             //check for scopes
@@ -60,35 +61,42 @@ function skipConsent(req, callback) {
               result.scopes.length > scopes.length ||
               result.scopes.length == scopes.length
             ) {
+              let state = true;
               scopes.map(scope => {
-                
                 if (!result.scopes.includes(scope)) {
-                  return callback({ status: false }, 200);
+                  console.log("Consent Mismatch");
+                  state = false;
                 }
               });
-              return callback({ status: true }, 200);
+              return callback({ status: state }, 200);
             } else if (result.scopes.length < scopes.length) {
+              console.log("Consent present < Consent Recieved");
               return callback({ status: false }, 200);
             }
             //default
             return callback({ status: false }, 200);
           case "NO_EXPIRY":
+            console.log("No Expiry");
             if (
               result.scopes.length > scopes.length ||
               result.scopes.length == scopes.length
             ) {
+              let state = true;
               scopes.map(scope => {
                 if (!result.scopes.includes(scope)) {
-                  return callback({ status: false }, 200);
+                  console.log("Consent Mismatch");
+                  state = false;
                 }
               });
-              return callback({ status: true }, 200);
+              return callback({ status: state }, 200);
             } else if (result.scopes.length < scopes.length) {
+              console.log("Consent present < Consent Recieved");
               return callback({ status: false }, 200);
             }
             //default
             return callback({ status: false }, 200);
           case "EVERYTIME_EXPIRY":
+            console.log("Everytime Expiry");
             return callback({ status: false }, 200);
         }
       } else {
@@ -97,7 +105,7 @@ function skipConsent(req, callback) {
       }
     })
     .catch(error => {
-      console.log(error);
+      console.log("ERRRORROROROR", error);
       return callback({
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
