@@ -4,8 +4,8 @@ const {
   APIGEE_ENDPOINTS: { verifyOTP }
 } = require("../config/environment");
 
-var request = require("request");
-var session = require("express-session");
+const request = require("request");
+const session = require("express-session");
 module.exports = function(req, res, next) {
   let { otp, transaction_id } = req.body;
 
@@ -19,11 +19,10 @@ module.exports = function(req, res, next) {
     },
     form: { otp, transaction_id }
   };
-  console.log(options.form);
+
   request(options, function(error, response, body) {
     if (error) throw new Error(error);
     var res_data = {};
-    console.log({ body });
     res_data.statusCode = response.statusCode;
     if (response.statusCode == 302) {
       res_data.message = "Success.";
@@ -31,26 +30,23 @@ module.exports = function(req, res, next) {
       sess.sessionid = transaction_id;
       let location = response.headers.location;
       // * set sessions code, state
+      console.log({ verify_location: location });
       sess.code = getQueryParamByName(location, "code");
-      sess.state = getQueryParamByName(location, "state");
+      // sess.state = getQueryParamByName(location, "state");
+      sess.app_name = getQueryParamByName(location, "app_name");
+      sess.app_message = getQueryParamByName(location, "app_message");
       res_data.redirect = location;
 
       // ! need to comment before push for local only  -------
-      res_data.redirect = response.headers.location.replace(
-        "13.232.77.36",
-        "localhost"
-      );
+      res_data.redirect = location.replace("13.232.77.36", "localhost");
       // ! need to comment before push for local only  -------
-      console.log(res_data.redirect);
+      // console.log(res_data.redirect);
     } else if (response.statusCode == 403) {
-      let errorResponseBody = response.body;
-      return res
-        .status(response.statusCode)
-        .send(JSON.parse(errorResponseBody));
+      // let errorResponseBody = response.body;
+      return res.status(response.statusCode).send(JSON.parse(body));
     } else {
       res_data.error_message = "Invalid OTP.";
     }
-    console.log(res_data);
     return res.status(response.statusCode).send(res_data);
   });
 };
@@ -63,5 +59,7 @@ module.exports = function(req, res, next) {
  */
 function getQueryParamByName(url, keyName) {
   var match = RegExp("[?&]" + keyName + "=([^&]*)").exec(url);
-  return match && decodeURIComponent(match[1].replace(/\+/g, " "));
+  return (
+    match && decodeURIComponent(match[1].replace(/\+/g, " ").replace(/\t/g, ""))
+  );
 }

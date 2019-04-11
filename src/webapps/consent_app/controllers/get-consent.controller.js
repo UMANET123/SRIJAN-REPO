@@ -6,13 +6,12 @@ const {
   APIGEE_CREDS: { apigeeBaseURL },
   APIGEE_ENDPOINTS: { validateTransaction }
 } = require("../config/environment");
-
+const scopeTexts = require("../utility/scopes-text");
 // * get consent page with data
+var session = require("express-session");
 module.exports = (req, res) => {
-  console.log("get consent called");
   sess = req.session;
   if (sess.sessionid) {
-    console.log(req.query);
     let appName = req.query.app_name || "Developer Application";
     let appMessage = req.query.app_message || "";
     // * Get Scopes by calling validate Transaction
@@ -20,14 +19,42 @@ module.exports = (req, res) => {
       `${apigeeBaseURL}/${validateTransaction}/${sess.sessionid}`,
       function(error, response, body) {
         if (error) throw new Error(error);
-        console.log({ body, response });
-        let { scopes } = JSON.parse(body);
-        // sess.redirect_uri = req.query.redirect_uri;
-        // sess.transaction_id = req.query.transaction_id;
-        return res.render("consent", { appName, appMessage, scopes });
+        // console.log({ body, response });
+        let {
+          scopes,
+          redirect_uri,
+          client_id,
+          subscriber_id,
+          app_id
+        } = JSON.parse(body);
+        sess.client_id = client_id;
+        sess.redirect_uri = redirect_uri;
+        sess.subscriber_id = subscriber_id;
+        sess.app_id = app_id;
+        return res.render("consent", {
+          appName,
+          appMessage,
+          scopes,
+          scopeDescription,
+          redirect_uri
+        });
       }
     );
   } else {
     return res.redirect("/logout");
   }
 };
+/**
+ *
+ *
+ * @param {*} scope
+ * @returns
+ */
+function scopeDescription(scope) {
+  scope = scope.toLowerCase().replace(/ /g, "");
+  console.log(scope);
+  if (scopeTexts[scope]) {
+    return scopeTexts[scope];
+  }
+  return "";
+}

@@ -20,13 +20,14 @@ function scopeDescription(scope) {
 
 router.get("/", function(req, res) {
   let sess = req.session;
-  console.log({ sess });
-  // if (sess.success_redirect_uri) {
-  //   let success_destination = sess.success_redirect_uri;
-  //   sess.success_redirect_uri = null;
-  //   return res.redirect(302, success_destination);
-  // }
+  if (sess.success_redirect_uri) {
+    console.log("success redirect");
+    // sess.sessionid = null;
+    console.log({ sess });
+    return res.redirect(sess.success_redirect_uri);
+  }
   if (sess.sessionid) {
+    console.log("session exists");
     res.redirect("/consent");
   } else {
     let { transaction_id } = req.query;

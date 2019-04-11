@@ -141,7 +141,8 @@ $(document).ready(function() {
         }
       },
       complete: function(data) {
-        console.log(JSON.parse(data));
+        console.log({ data });
+        // console.log(JSON.parse(data));
       }
     });
   }

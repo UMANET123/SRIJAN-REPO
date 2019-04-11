@@ -18,59 +18,54 @@ $(document).ready(function() {
     window.location.href = redirect_uri;
   });
   $("#accept_consent").click(function() {
-    checked_cons = $(".consents:checked");
-    // console.log(checked_cons)
-    if (checked_cons.length == 0) {
+    let checkedConsents = $(".consents:checked");
+    console.log(checkedConsents);
+    // console.log(checkedConsents)
+    if (checkedConsents.length == 0) {
       $("#postResultDiv").html(
         "<p class='error'>You need to select atleast 1 service.</p>"
       );
     } else {
-      var scopes = [];
-      checked_cons.map(function() {
-        scopes.push($(this).val());
+      let consentValues = [];
+      $(checkedConsents).each(item => {
+        console.log(checkedConsents[item], item);
+        consentValues.push($(checkedConsents[item]).val());
       });
-      // console.log(scopes)
-      // var scopes_data = scopes.join('')
-      var scopes_data = JSON.stringify(scopes);
-      // console.log({scopes_data})
-      // Get checked values
+
+      consentValues = consentValues.join(" ");
+      console.log(consentValues);
+      // let transactionId = $("#transaction_id").val();
       event.preventDefault();
-      updateConsent(scopes_data);
-    }
-    function updateConsent(scopes) {
-      $("#postResultDiv").html("");
-      // console.log()
-      // PREPARE FORM DATA
-      var formData = {
-        scopes: scopes
-        //	subsciber_id: subsciber_id
-      };
-      // console.log(formData)
-      // DO POST
-      $.ajax({
-        type: "POST",
-        contentType: "application/json",
-        url: "/api/consent",
-        data: JSON.stringify(formData),
-        dataType: "json",
-        success: function(subsciber) {
-          console.log(subsciber);
-        },
-        error: function(e) {
-          let error = JSON.parse(e.responseText);
-          if (error.statusCode != 302) {
-            $("#postResultDiv").html(
-              "<p class='error'>" + error.error_message + "<br>"
-            );
-          } else {
-            window.location.href = "/";
-            $("#postResultDiv").html(
-              "<p class='success'>" + error.message + "</p>"
-            );
-          }
-          console.log("ERROR: ", e);
-        }
-      });
+      updateConsent(consentValues);
     }
   });
+  function updateConsent(subscriber_consent) {
+    $("#postResultDiv").html("");
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/api/consent",
+      data: JSON.stringify({ subscriber_consent }),
+      dataType: "json",
+      success: function(subsciber) {
+        console.log({ subscriber });
+      },
+      error: function(e) {
+        let error = JSON.parse(e.responseText);
+        console.log(error.statusCode, error);
+        if (error.statusCode != 302) {
+          $("#postResultDiv").html(
+            "<p class='error'>" + error.error_message + "<br>"
+          );
+        } else {
+          window.location.href = "/";
+          $("#postResultDiv").html(
+            "<p class='success'>" + error.message + "</p>"
+          );
+        }
+        console.log("ERROR: ", e);
+      }
+    });
+  }
 });
