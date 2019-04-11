@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <title>Scopes </title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <title>Scopes</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="../js/consent.js"></script>
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
 
-<body>
+  <body>
     <header>
-        <div class="header-wrap container">
-            <div class="logo">
-                <img src="../images/logo.png" alt="Globe">
-            </div>
-            <!-- <div class="user-details">
+      <div class="header-wrap container">
+        <div class="logo">
+          <img src="../images/logo.png" alt="Globe" />
+        </div>
+        <!-- <div class="user-details">
                 <div class="notification">
                     <span class="bell-icon">
                         <img src="../images/bell-regular.svg" alt="">
@@ -32,58 +31,69 @@
                     <img src="../images/profile.png" alt="profile picture">
                 </div>
             </div> -->
-        </div>
+      </div>
     </header>
     <main>
-        <div class="login-form-container container modal-box-wrapper">
-            <div class="modal-box">
-                <div class="modal-box-header">
-                    <h3><%= appName %></h3>
-                    <h5 style="text-align:center"><%= appMessage %></h5>
-                </div>
-                <div class="modal-box-body">
-                    <div id="postResultDiv" class="error-container">
-                    </div>
-                    <% scopes.forEach(function(scope){ %>
-                    <div class="form-group">
-                        <span class="label-text">
-                            <label for="email"> <%=scope%> </label>
-                            <p><%= scopeDescription(scope)%></p>
-                        </span>
-                        <span class="apple-switch-botton">
-                            <input class="apple-switch consents" checked name="consents" type="checkbox"
-                                value="<%=scope%>">
-                        </span>
-                    </div>
-                    <% })%>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-default" id="accept_consent">Accept</button>
-                    <button type="button" class="btn btn-default" id="reject" value="<%=redirect_uri%>">Reject</button>
-                </div>
-                <div id="getResultDiv">
-                    <ul class="list-group">
-                    </ul>
-                </div>
+      <div class="login-form-container container modal-box-wrapper">
+        <div class="modal-box">
+          <div class="modal-box-header">
+            <h3><%= appName %></h3>
+            <h5 style="text-align:center"><%= appMessage %></h5>
+          </div>
+          <div class="modal-box-body">
+            <div id="postResultDiv" class="error-container"></div>
+            <% scopes.forEach(function(scope){ %>
+            <div class="form-group">
+              <span class="label-text">
+                <label for="email"> <%=scope%> </label>
+                <p><%= scopeDescription(scope)%></p>
+              </span>
+              <span class="apple-switch-botton">
+                <input
+                  class="apple-switch consents"
+                  checked
+                  name="consents"
+                  type="checkbox"
+                  value="<%=scope%>"
+                />
+              </span>
             </div>
+            <% })%>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-default" id="accept_consent">
+              Accept
+            </button>
+            <button
+              type="button"
+              class="btn btn-default"
+              id="reject"
+              value="<%=redirect_uri%>"
+            >
+              Reject
+            </button>
+          </div>
+          <div id="getResultDiv">
+            <ul class="list-group"></ul>
+          </div>
         </div>
-        <div class="footer-menu">
-            <ul>
-                <li>
-                    <a href="#">About Us</a>
-                </li>
-                <li>
-                    <a href="#">Help Centre</a>
-                </li>
-                <li>
-                    <a href="#">Blog</a>
-                </li>
-                <li>
-                    <a href="#">Privacy Policy</a>
-                </li>
-            </ul>
-        </div>
+      </div>
+      <div class="footer-menu">
+        <ul>
+          <li>
+            <a href="#">About Us</a>
+          </li>
+          <li>
+            <a href="#">Help Centre</a>
+          </li>
+          <li>
+            <a href="#">Blog</a>
+          </li>
+          <li>
+            <a href="#">Privacy Policy</a>
+          </li>
+        </ul>
+      </div>
     </main>
-</body>
-
+  </body>
 </html>
