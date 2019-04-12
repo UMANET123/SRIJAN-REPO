@@ -9,21 +9,24 @@ module.exports = function (req, res, next) {
     let authToken = '';
     if (!authHeader) {
       return res.status(403).send({
-        error: 'Forbidden'
+        error_code: 'Forbidden',
+        error_message: 'access token not found'
       });
     } else {
       if (authHeader.startsWith("Basic ")){ 
         authToken = authHeader.substring(6, authHeader.length);
       } else {
         return res.status(401).send({
-          error: 'UnAuthorized'
+          error_code: 'UnAuthorized',
+          error_message: 'Subscriber is not authorized to make the request'
         })
       }
       if (authToken && verifyAuthToken(authToken)) {
         next();
       } else {
         return res.status(401).send({
-          error: 'UnAuthorized'
+          error_code: 'UnAuthorized',
+          error_message: 'Subscriber is not authorized to make the request'
         })
       }
     }
