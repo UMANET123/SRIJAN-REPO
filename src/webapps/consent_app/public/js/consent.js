@@ -14,12 +14,26 @@ $(document).ready(function() {
     }
   });
   $("#reject").click(function() {
-    redirect_uri = $(this).val();
-    window.location.href = redirect_uri;
+    let redirect_uri = $(this).val();
+    $.ajax({
+      url: "/destroy/session",
+      type: "GET",
+      dataType: "json", // added data type
+      success: function(res) {
+        // console.log(res);
+        window.location.href = redirect_uri;
+        // // ! need to comment before push for local only  -------
+        // window.location.href = redirect_uri.replace(
+        //   "13.232.77.36",
+        //   "localhost"
+        // );
+        // // ! need to comment before push for local only  -------
+      }
+    });
   });
   $("#accept_consent").click(function() {
     let checkedConsents = $(".consents:checked");
-    console.log(checkedConsents);
+    // console.log(checkedConsents);
     // console.log(checkedConsents)
     if (checkedConsents.length == 0) {
       $("#postResultDiv").html(
@@ -28,12 +42,12 @@ $(document).ready(function() {
     } else {
       let consentValues = [];
       $(checkedConsents).each(item => {
-        console.log(checkedConsents[item], item);
+        // console.log(checkedConsents[item], item);
         consentValues.push($(checkedConsents[item]).val());
       });
 
       consentValues = consentValues.join(" ");
-      console.log(consentValues);
+      // console.log(consentValues);
       // let transactionId = $("#transaction_id").val();
       event.preventDefault();
       updateConsent(consentValues);
@@ -49,22 +63,22 @@ $(document).ready(function() {
       data: JSON.stringify({ subscriber_consent }),
       dataType: "json",
       success: function(subsciber) {
-        console.log({ subscriber });
+        // console.log({ subscriber });
       },
       error: function(e) {
         let error = JSON.parse(e.responseText);
-        console.log(error.statusCode, error);
+        // console.log(error.statusCode, error);
         if (error.statusCode != 302) {
           $("#postResultDiv").html(
             "<p class='error'>" + error.error_message + "<br>"
           );
         } else {
-          window.location.href = "/";
           $("#postResultDiv").html(
             "<p class='success'>" + error.message + "</p>"
           );
+          window.location.href = error.success_redirect_uri;
         }
-        console.log("ERROR: ", e);
+        // console.log("ERROR: ", e);
       }
     });
   }

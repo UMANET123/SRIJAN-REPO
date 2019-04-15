@@ -8,7 +8,7 @@ const {
 } = require("../config/environment");
 const scopeTexts = require("../utility/scopes-text");
 // * get consent page with data
-var session = require("express-session");
+// var session = require("express-session");
 module.exports = (req, res) => {
   sess = req.session;
   if (sess.sessionid) {

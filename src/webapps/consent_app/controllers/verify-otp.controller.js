@@ -8,9 +8,9 @@ const {
 
 const request = require("request");
 const session = require("express-session");
-
 var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
 var authorizationHeaderString = 'Basic ' + encodedData;
+// const session = require("express-session");
 module.exports = function(req, res, next) {
   let { otp, transaction_id } = req.body;
 
@@ -35,9 +35,8 @@ module.exports = function(req, res, next) {
       sess.sessionid = transaction_id;
       let location = response.headers.location;
       // * set sessions code, state
-      console.log({ verify_location: location });
+      // console.log({ verify_location: location });
       sess.code = getQueryParamByName(location, "code");
-      // sess.state = getQueryParamByName(location, "state");
       sess.app_name = getQueryParamByName(location, "app_name");
       sess.app_message = getQueryParamByName(location, "app_message");
       res_data.redirect = location;

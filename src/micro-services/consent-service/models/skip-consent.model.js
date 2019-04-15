@@ -50,7 +50,7 @@ function skipConsent(req, callback) {
           case "FIXED_EXPIRY":
             console.log("Fixed Expiry");
             let expiry = Date.parse(result.consent_expiry);
-            let today = Date.parse(new Date().toDateString());
+            let today = Date.parse(new Date());
             if (expiry <= today) {
               console.log("Consent Expired");
               return callback({ status: false }, 200);
