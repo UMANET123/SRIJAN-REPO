@@ -4,7 +4,7 @@ services:
   consentms:
     environment:
       - NODE_ENV=test
-      - AUTH_CLIENT_ID=authjshdkjhas8sdandsakdadkad23
-      - AUTH_CLIENT_SECRET=secretmessageauthhgjgdsadb4343
-      - CONSENT_CLIENT_ID=consentjshdkjhas8sdandsakdadkad23
-      - CONSENT_CLIENT_SECRET=secretmessageconsenthgjgdsadb4343
+      - AUTH_CLIENT_ID=${ENV_AUTH_CLIENT_ID}
+      - AUTH_CLIENT_SECRET=${ENV_AUTH_CLIENT_SECRET}
+      - CONSENT_CLIENT_ID=${ENV_CONSENT_CLIENT_ID}
+      - CONSENT_CLIENT_SECRET=${ENV_CONSENT_CLIENT_SECRET}
