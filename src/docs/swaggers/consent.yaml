@@ -1,23 +1,22 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   version: 1.0.0
   title: Subscriber-Consent
   description: |
     Subscriber Consent Endpoints of Microservice
-    
+
 schemes:
   - http
 host: 13.232.77.36:3002
 basePath: /subscriber/v1
 
 consumes:
-  - application/x-www-form-urlencoded
+  - application/json
 produces:
   - application/json
 
 paths:
-
-  '/consent':
+  "/consent":
     post:
       operationId: CreateConsent
       tags:
@@ -51,7 +50,7 @@ paths:
                 type: string
               scopes:
                 type: array
-                items: 
+                items:
                   type: string
               appname:
                 type: string
@@ -67,12 +66,12 @@ paths:
               transaction_id: 57676ce075ee47c70466f561a263b0c0
               app_id: 7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21
               developer_id: globeslingshot@@@10b28aac-1d95-43bf-8347-fa97e9851497
-              scopes: ["sms","location"]
+              scopes: ["sms", "location"]
               appname: Test App
               access_token: FnyqFzJKZ5hrSB9Jsdssdsds,
               consent_expiry: "2019-04-10T09:23:50.345Z"
               consent_type: FIXED_EXPIRY
-              
+
       responses:
         400:
           description: Bad Request, if transaction_id or subscriber_id or app_id or developer_id or scopes ir appname is not present
@@ -143,8 +142,8 @@ paths:
                 type: string
             example:
               old_token: false
-              old_token_value: 
-    
+              old_token_value:
+
     put:
       operationId: Update Consent
       tags:
@@ -177,7 +176,7 @@ paths:
                 type: string
               scopes:
                 type: array
-                items: 
+                items:
                   type: string
               appname:
                 type: string
@@ -193,13 +192,12 @@ paths:
               transaction_id: 57676ce075ee47c70466f561a263b0c0
               app_id: 7d3c0649-4ae3-4d02-8224-9ac9ccf2ca21
               developer_id: globeslingshot@@@10b28aac-1d95-43bf-8347-fa97e9851497
-              scopes: ["sms","location"]
+              scopes: ["sms", "location"]
               appname: Test App
               access_token: FnyqFzJKZ5hrSB9Jsdssdsds
               consent_expiry: "2019-04-10T09:23:50.345Z"
               consent_type: FIXED_EXPIRY
-              
-              
+
       responses:
         400:
           description: Bad Request, if transaction_id or access_token or subscriber_id or app_id or developer_id or scopes ir appname is not present
@@ -250,14 +248,14 @@ paths:
             example:
               old_token: true
               old_token_value: 57676ce075ee47c70466f561a263b0c0
-    
-  '/consent/{subscriber_id}/list':
+
+  "/consent/{subscriber_id}/list":
     get:
       operationId: GetConsentList
       tags:
         - Consent list
       description: Get all consent list of a subscriber
-      consumes: 
+      consumes:
         - application/json
       parameters:
         - name: subscriber_id
@@ -265,14 +263,14 @@ paths:
           in: path
           required: true
           type: string
-          
+
         - name: limit
           description: Limit of entries to return
           in: query
           type: integer
           default: 10
           required: false
-          
+
         - name: page
           description: navigate to page on consent list
           in: query
@@ -288,7 +286,7 @@ paths:
         - name: order
           in: query
           type: string
-          enum: [asc,desc]
+          enum: [asc, desc]
           required: false
       responses:
         400:
@@ -342,24 +340,24 @@ paths:
               limit: 10
               resultCount: 2
               apps: ["app one", "app two"]
-  
-  '/blacklist/{subscriber_id}/{app_id}':
+
+  "/blacklist/{subscriber_id}/{app_id}":
     get:
       operationId: CheckAppBlacklist
       tags:
         - Check App Blacklist
       description: Checks if the app is blacklisted by the following subscriber
       parameters:
-      - name: subscriber_id
-        in: path
-        required: true
-        type: string
-        description: Subscriber ID of the user
-      - name: app_id
-        in: path
-        required: true
-        type: string
-        description: App unique ID
+        - name: subscriber_id
+          in: path
+          required: true
+          type: string
+          description: Subscriber ID of the user
+        - name: app_id
+          in: path
+          required: true
+          type: string
+          description: App unique ID
       responses:
         200:
           description: Will return boolean if an app is blacklist or not
@@ -386,8 +384,8 @@ paths:
             example:
               error_code: InternalServerError
               error_message: Internal Server Error
-  
-  '/blacklist':
+
+  "/blacklist":
     post:
       operationId: CreateBlacklist
       tags:
@@ -457,11 +455,11 @@ paths:
                 items:
                   type: string
             example:
-              revoked_tokens: ['FnyqFzJKZ5hrSB9Jsdssdsds']
+              revoked_tokens: ["FnyqFzJKZ5hrSB9Jsdssdsds"]
         500:
-          $ref: '#/definitions/InternalServerError'
-  
-  '/revoke/all':
+          $ref: "#/definitions/InternalServerError"
+
+  "/revoke/all":
     put:
       operationId: RevokeAll
       tags:
@@ -478,8 +476,8 @@ paths:
             required:
               - subscriber_id
             properties:
-                subscriber_id:
-                  type: string
+              subscriber_id:
+                type: string
             example:
               subscriber_id: 57676ce075ee47c70466f561a263b0c0
       responses:
@@ -492,7 +490,7 @@ paths:
                 type: string
               error_message:
                 type: string
-            example: 
+            example:
               error_code: BadRequest
               error_message: Bad Request
         200:
@@ -505,7 +503,7 @@ paths:
                 items:
                   type: string
             example:
-              revoked_tokens: ['FnyqFzJKZ5hrSB9Jsdssdsds']
+              revoked_tokens: ["FnyqFzJKZ5hrSB9Jsdssdsds"]
         403:
           description: Forbiddem
           schema:
@@ -529,8 +527,8 @@ paths:
             example:
               error_code: InternalServerError
               error_message: Internal Server Error
-  
-  '/revoke/{subscriber_id}':
+
+  "/revoke/{subscriber_id}":
     put:
       operationId: RevokeSingleApp
       tags:
@@ -578,12 +576,12 @@ paths:
           schema:
             type: object
             properties:
-              status: 
+              status:
                 type: string
             example:
               status: Forbidden
         500:
-          $ref: '#/definitions/InternalServerError'
+          $ref: "#/definitions/InternalServerError"
         201:
           description: Revoked app access token
           schema:
@@ -595,8 +593,8 @@ paths:
                   type: string
             example:
               revoked_tokens: ["FnyqFzJKZ5hrSB9Jsdssdsds"]
-  
-  '/app/search/{subscriber_id}':
+
+  "/app/search/{subscriber_id}":
     get:
       operationId: AppSearch
       tags:
@@ -622,13 +620,12 @@ paths:
             properties:
               appname:
                 type: array
-                items: 
+                items:
                   type: string
             example:
-              appname: ['subscriber app', 'some other app']
-              
-  
-  '/app/consent_bypass/{subscriber_id}/{app_id}':
+              appname: ["subscriber app", "some other app"]
+
+  "/app/consent_bypass/{subscriber_id}/{app_id}":
     get:
       operationId: AppConsentCheck
       tags:
@@ -651,7 +648,7 @@ paths:
             type: string
       responses:
         500:
-          $ref: '#/definitions/InternalServerError'
+          $ref: "#/definitions/InternalServerError"
         200:
           description: Will return a boolean value if to skip consent or not
           schema:
@@ -663,23 +660,100 @@ paths:
               status: true
         403:
           description: Should return when access to app is forbidden, in case of consent expiry
-          
-          
-        
-        
-      
 
-  
-          
-  
-          
-  
-  
-  
-  
-          
+  "/revoke/app/single":
+    post:
+      operationId: RevokeSingleAppConsentAndToken
+      tags:
+        - Revoke a Single App's Token and Consent
+      description: Revoke a single app's tokens and consent by passing the app_id and the portal basic auth header
+      parameters:
+        - in: body
+          name: app and auth details
+          description: App Id and auth details to forward to cron job
+          schema:
+            type: object
+            required:
+              - app_id
+              - auth_header
+            properties:
+              app_id:
+                type: string
+              auth_header:
+                type: string
+            example:
+              app_id: 45e6736a1dadf8c93dc947ed646b0141
+              auth_header: aGVsbG93b3JsZDpoZWxsb3dvcmxk
+      responses:
+        200:
+          description: Will Return as soon as the consents in the MS are updated
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+            example:
+              status: true
+        400:
+          description: Returns 400 in case app_id and or auth_header is missing
+          schema:
+            type: object
+            properties:
+              error_code:
+                type: string
+              error_message:
+                type: string
+            example:
+              error_code: BadRequest
+              error_message: Bad Request
+        500:
+          $ref: "#/definitions/InternalServerError"
+
+  "/revoke/app/all":
+    post:
+      operationId: RevokeAllAppConsentAndAuthToken
+      tags:
+        - Revoke All Apps Consent and Tokens
+      description: Revoke all apps consent and tokens
+      parameters:
+        - in: body
+          name: Dashboard Auth Headers
+          description: Dashboard auth headers
+          schema:
+            type: object
+            required:
+              - auth_header
+            properties:
+              auth_header:
+                type: string
+            example:
+              auth_header: aGVsbG93b3JsZDpoZWxsb3dvcmxk
+      responses:
+        200:
+          description: Will return boolean value for success
+          schema:
+            type: object
+            properties:
+              status:
+                type: boolean
+            example:
+              status: true
+        400:
+          description: Returns 400 in case auth_header is missing
+          schema:
+            type: object
+            properties:
+              error_code:
+                type: string
+              error_message:
+                type: string
+            example:
+              error_code: BadRequest
+              error_message: Bad Request
+        500:
+          $ref: "#/definitions/InternalServerError"
+
 definitions:
-
   CreateConsentBody:
     description: Create Consent Request Body
     type: object
@@ -703,10 +777,9 @@ definitions:
       transaction_id: asdad
       app_id: asdad
       developer_id: oidjfsd
-      scopes: ['a']
+      scopes: ["a"]
       appname: Valindo
-    
-  
+
   InternalServerError:
     description: Incase there are any errors in the Microservice that is not in the scope of this data
     type: object
@@ -720,10 +793,8 @@ definitions:
     example:
       error_code: InternalServerError
       error_message: Internal Server Error
- 
-  
+
   BadRequest:
-    description: Bad Request
     type: object
     properties:
       error_code:
