@@ -31,7 +31,8 @@ function skipConsent(req, callback) {
   SubscriberConsent.findOne({
     where: {
       uuid: subscriber_id,
-      app_id: app_id
+      app_id: app_id,
+      status: 0
     },
     attributes: [
       "uuid",
