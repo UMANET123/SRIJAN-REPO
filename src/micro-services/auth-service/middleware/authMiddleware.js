@@ -17,7 +17,7 @@ module.exports = function (req, res, next) {
         authToken = authHeader.substring(6, authHeader.length);
       } else {
         return res.status(401).send({
-          error_code: 'UnAuthorized',
+          error_code: 'Unauthorized',
           error_message: 'Subscriber is not authorized to make the request'
         })
       }
@@ -25,7 +25,7 @@ module.exports = function (req, res, next) {
         next();
       } else {
         return res.status(401).send({
-          error_code: 'UnAuthorized',
+          error_code: 'Unauthorized',
           error_message: 'Subscriber is not authorized to make the request'
         })
       }
