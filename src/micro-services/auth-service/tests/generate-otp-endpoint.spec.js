@@ -8,8 +8,11 @@ const endpoints = {
   generate: "/auth/v1/generate/totp",
   verify: "/auth/v1/verify/totp"
 };
-const AUTH_CLIENT_ID = 'authjshdkjhas8sdandsakdadkad23';
-const AUTH_CLIENT_SECRET = 'secretmessageauthhgjgdsadb4343';
+const {
+  AUTH_KEYS: { auth_client_id, auth_secret_message }
+} = require("../config/environment");
+const AUTH_CLIENT_ID = auth_client_id;
+const AUTH_CLIENT_SECRET = auth_secret_message;
 const { getAuthorizationHeader } = require("../helpers/authorization");
 const token = getAuthorizationHeader(AUTH_CLIENT_ID, AUTH_CLIENT_SECRET);
 

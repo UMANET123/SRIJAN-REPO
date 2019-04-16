@@ -20,13 +20,13 @@ const DB_SETTINGS = {
 }
 
 const AUTH_KEYS = {
-    auth_client_id: ENV.AUTH_CLIENT_ID || 'authjshdkjhas8sdandsakdadkad23',
-    auth_secret_message: ENV.AUTH_CLIENT_SECRET || 'secretmessageauthhgjgdsadb4343'
+    auth_client_id: ENV.AUTH_CLIENT_ID,
+    auth_secret_message: ENV.AUTH_CLIENT_SECRET
 }
 //Consent Authentication Keys
 const CONSENT_KEYS = {
-    consent_client_id: ENV.CONSENT_CLIENT_ID || 'consentjshdkjhas8sdandsakdadkad23',
-    consent_secret_message: ENV.CONSENT_CLIENT_SECRET || 'secretmessageconsenthgjgdsadb4343'
+    consent_client_id: ENV.CONSENT_CLIENT_ID,
+    consent_secret_message: ENV.CONSENT_CLIENT_SECRET
 }
 const CONSENT_BASE_PATH= `/subscriber/v1`;
 const AUTHENTICATION_ACTIVE = ENV.AUTHENTICATION_ACTIVE || "false";

@@ -1,7 +1,10 @@
 const { verifyConsentToken, getAuthorizationHeader } = require("../helpers/authorization");
 var chai = require('chai');
-let CONSENT_CLIENT_ID = 'consentjshdkjhas8sdandsakdadkad23';
-let CONSENT_CLIENT_SECRET = 'secretmessageconsenthgjgdsadb4343';
+const {
+    CONSENT_KEYS: { consent_client_id, consent_secret_message }
+  } = require("../config/environment");
+  const CONSENT_CLIENT_ID = consent_client_id;
+  const CONSENT_CLIENT_SECRET = consent_secret_message;
 describe('Testing Token Verification',()=>{
     it('It should return true for correct token',(done)=>{
         var token = getAuthorizationHeader(CONSENT_CLIENT_ID, CONSENT_CLIENT_SECRET);
