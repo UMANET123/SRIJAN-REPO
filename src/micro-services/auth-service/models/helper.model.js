@@ -4,11 +4,15 @@ const crypto = require("crypto");
 const otplib = require("otplib");
 const axios = require("axios");
 const {
+  CONSENT_KEYS: { consent_client_id, consent_secret_message }
+} = require("../config/environment");
+const {
   OTP_SETTINGS: { timer, step }
 } = require("../config/environment");
 const { verifyUser } = require("./auth.model");
 
 const getServiceResolvedUrl = require("../helpers/get-service-resolved-url");
+const { getAuthorizationHeader } = require("../helpers/authorization");
 /**
  * This function will generate an OTP using a secret
  * @param {string} secret Secret Hash String
@@ -57,7 +61,10 @@ function checkBlackListApp(msisdn, app_id, callback) {
           //  do a query to check blacklist api with uuid and msisdn
           let reqUrl = `${url}/blacklist/${response.subscriber_id}/${app_id}`;
           return axios
-            .get(reqUrl)
+            .get(reqUrl, { headers: {
+              'Authorization': getAuthorizationHeader(consent_client_id, consent_secret_message)
+              }
+            })
             .then(({ data }) => {
               if (data) {
                 return callback(true);
