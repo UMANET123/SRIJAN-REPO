@@ -45,6 +45,13 @@ const SubscriberOTP = sequelize.define(
     },
     status: {
       type: INTEGER
+    },
+    resend_at: {
+      type: DATE
+    },
+    resend_count: {
+      type: INTEGER,
+      defaultValue: 0
     }
   },
   {

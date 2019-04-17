@@ -22,7 +22,7 @@ $(document).ready(function() {
     } else {
       event.preventDefault();
       // Validate the phone no
-      $("#generate_otp").text("Resend OTP");
+      // $("#generate_otp").text("Resend OTP");
       generateOTP();
     }
   });
@@ -65,6 +65,7 @@ $(document).ready(function() {
               $("#generate_otp").removeClass("generate_otp");
               $("#otp_form_group").css("display", "flex");
               $("#verify_otp").css("display", "block");
+              $("#generate_otp").text("Resend OTP");
             } else {
               $("#postResultDiv").html(
                 "<p class='error'>" + subscriber.error_message + "</p>"
