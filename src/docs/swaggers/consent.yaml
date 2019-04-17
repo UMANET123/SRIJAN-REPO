@@ -4,7 +4,6 @@ info:
   title: Subscriber-Consent
   description: |
     Subscriber Consent Endpoints of Microservice
-
 schemes:
   - http
 host: 13.232.77.36:3002
@@ -76,31 +75,9 @@ paths:
         400:
           description: Bad Request, if transaction_id or subscriber_id or app_id or developer_id or scopes ir appname is not present
           schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-                description: Error Code
-              error_message:
-                type: string
-                description: Error Message
-            example:
-              error_code: BadRequest
-              error_message: Bad Request
+            $ref: '#/definitions/BadRequest'
         500:
-          description: Incase there are any errors in the Microservice that is not in the scope of this data
-          schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-                description: Error Code
-              error_message:
-                type: string
-                description: Error Message
-            example:
-              error_code: InternalServerError
-              error_message: Internal Server Error
+          $ref: "#/definitions/InternalServerError"
         403:
           description: Transaction ID is not valid
           schema:
@@ -202,31 +179,9 @@ paths:
         400:
           description: Bad Request, if transaction_id or access_token or subscriber_id or app_id or developer_id or scopes ir appname is not present
           schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-                description: Error Code
-              error_message:
-                type: string
-                description: Error Message
-            example:
-              error_code: BadRequest
-              error_message: Bad Request
+            $ref: '#/definitions/BadRequest'
         500:
-          description: Incase there are any errors in the Microservice that is not in the scope of this data
-          schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-                description: Error Code
-              error_message:
-                type: string
-                description: Error Message
-            example:
-              error_code: InternalServerError
-              error_message: Internal Server Error
+          $ref: "#/definitions/InternalServerError"
         403:
           description: Transaction ID is not valid or Forbidden
           schema:
@@ -263,14 +218,12 @@ paths:
           in: path
           required: true
           type: string
-
         - name: limit
           description: Limit of entries to return
           in: query
           type: integer
           default: 10
           required: false
-
         - name: page
           description: navigate to page on consent list
           in: query
@@ -292,31 +245,9 @@ paths:
         400:
           description: Bad Request
           schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-                description: Error Code
-              error_message:
-                type: string
-                description: Error Message
-            example:
-              error_code: BadRequest
-              error_message: Bad Request
+            $ref: '#/definitions/BadRequest'
         500:
-          description: Internal Server Error
-          schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-                description: Error Code
-              error_message:
-                type: string
-                description: Error Message
-            example:
-              error_code: InternalServerError
-              error_message: Internal Server Error
+          $ref: "#/definitions/InternalServerError"
         200:
           description: Success Response
           schema:
@@ -371,19 +302,7 @@ paths:
         204:
           description: Returns null if no blacklist record is found
         500:
-          description: Incase there are any errors in the Microservice that is not in the scope of this data
-          schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-                description: Error Code
-              error_message:
-                type: string
-                description: Error Message
-            example:
-              error_code: InternalServerError
-              error_message: Internal Server Error
+          $ref: "#/definitions/InternalServerError"
 
   "/blacklist":
     post:
@@ -418,15 +337,7 @@ paths:
         400:
           description: Returns 400 in case app_id or subscriber_id or developer_id are not present
           schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-              error_message:
-                type: string
-            example:
-              error_code: BadRequest
-              error_message: Bad Request
+            $ref: '#/definitions/BadRequest'
         403:
           description: If no access token is present in the data record
           schema:
@@ -484,15 +395,7 @@ paths:
         400:
           description: Incase the subscriber id is missing
           schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-              error_message:
-                type: string
-            example:
-              error_code: BadRequest
-              error_message: Bad Request
+            $ref: '#/definitions/BadRequest'
         200:
           description: Return all Revoked tokens
           schema:
@@ -514,19 +417,7 @@ paths:
             example:
               status: Forbidden
         500:
-          description: Incase there are any errors in the Microservice that is not in the scope of this data
-          schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-                description: Error Code
-              error_message:
-                type: string
-                description: Error Message
-            example:
-              error_code: InternalServerError
-              error_message: Internal Server Error
+          $ref: "#/definitions/InternalServerError"
 
   "/revoke/{subscriber_id}":
     put:
@@ -562,15 +453,7 @@ paths:
         400:
           description: incase subscriber_id or app_id or developer_id is missing
           schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-              error_message:
-                type: string
-            example:
-              error_code: BadRequest
-              error_message: Bad Request
+            $ref: '#/definitions/BadRequest'
         403:
           description: forbidden
           schema:
@@ -652,12 +535,7 @@ paths:
         200:
           description: Will return a boolean value if to skip consent or not
           schema:
-            type: object
-            properties:
-              status:
-                type: boolean
-            example:
-              status: true
+            $ref: '#/definitions/BooleanStatusResponse'
         403:
           description: Should return when access to app is forbidden, in case of consent expiry
 
@@ -668,44 +546,25 @@ paths:
         - Revoke a Single App's Token and Consent
       description: Revoke a single app's tokens and consent by passing the app_id and the portal basic auth header
       parameters:
-        - in: body
-          name: app and auth details
-          description: App Id and auth details to forward to cron job
-          schema:
-            type: object
-            required:
-              - app_id
-              - auth_header
-            properties:
-              app_id:
-                type: string
-              auth_header:
-                type: string
-            example:
-              app_id: 45e6736a1dadf8c93dc947ed646b0141
-              auth_header: aGVsbG93b3JsZDpoZWxsb3dvcmxk
+        - in: header
+          name: X-Auth-Header
+          type: string
+          required: true
+          description: Dashboard auth header to be passed to cron job
+        - in: header
+          name: X-App-Id
+          type: string
+          required: true
+          description: App ID to revoke consent and tokens for
       responses:
         200:
           description: Will Return as soon as the consents in the MS are updated
           schema:
-            type: object
-            properties:
-              status:
-                type: boolean
-            example:
-              status: true
+            $ref: '#/definitions/BooleanStatusResponse'
         400:
           description: Returns 400 in case app_id and or auth_header is missing
           schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-              error_message:
-                type: string
-            example:
-              error_code: BadRequest
-              error_message: Bad Request
+            $ref: '#/definitions/BadRequest'
         500:
           $ref: "#/definitions/InternalServerError"
 
@@ -716,70 +575,24 @@ paths:
         - Revoke All Apps Consent and Tokens
       description: Revoke all apps consent and tokens
       parameters:
-        - in: body
-          name: Dashboard Auth Headers
-          description: Dashboard auth headers
-          schema:
-            type: object
-            required:
-              - auth_header
-            properties:
-              auth_header:
-                type: string
-            example:
-              auth_header: aGVsbG93b3JsZDpoZWxsb3dvcmxk
+        - in: header
+          name: X-Auth-Header
+          type: string
+          required: true
+          description: Dashboard auth header to be passed to cron job
       responses:
         200:
           description: Will return boolean value for success
           schema:
-            type: object
-            properties:
-              status:
-                type: boolean
-            example:
-              status: true
+            $ref: '#/definitions/BooleanStatusResponse'
         400:
-          description: Returns 400 in case auth_header is missing
+          description: Returns 400 in case X-Auth-Header is missing
           schema:
-            type: object
-            properties:
-              error_code:
-                type: string
-              error_message:
-                type: string
-            example:
-              error_code: BadRequest
-              error_message: Bad Request
+           $ref: '#/definitions/BadRequest'
         500:
           $ref: "#/definitions/InternalServerError"
 
 definitions:
-  CreateConsentBody:
-    description: Create Consent Request Body
-    type: object
-    properties:
-      subscriber_id:
-        type: string
-      transaction_id:
-        type: string
-      app_id:
-        type: string
-      developer_id:
-        type: string
-      scopes:
-        type: array
-        items:
-          type: string
-      appname:
-        type: string
-    example:
-      subscriber_id: adad
-      transaction_id: asdad
-      app_id: asdad
-      developer_id: oidjfsd
-      scopes: ["a"]
-      appname: Valindo
-
   InternalServerError:
     description: Incase there are any errors in the Microservice that is not in the scope of this data
     type: object
@@ -794,6 +607,13 @@ definitions:
       error_code: InternalServerError
       error_message: Internal Server Error
 
+  BooleanStatusResponse:
+    type: object
+    properties:
+      status:
+        type: boolean
+    example:
+      status: true
   BadRequest:
     type: object
     properties:
