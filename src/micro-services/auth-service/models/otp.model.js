@@ -94,15 +94,35 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
           //  check any record exists with same app_id, uuid
           return SubscriberOTP.findOne({
             where: { uuid, app_id },
-            attributes: ["otp"],
+            attributes: ["otp", "resend_at", "resend_count"],
             status: 0
           }).then(oldOtp => {
             if (oldOtp && oldOtp.otp) {
               //  previously OTP exists
+              let difference = floodControlTimeValidity(
+                new Date(oldOtp.resend_at),
+                new Date()
+              );
+              console.log("-- DIFFERENCE : ", difference);
+              console.log(
+                "-- DIFFERENCE VALID:",
+                difference >= BLOCK_USER_LIMIT
+              );
               let newOtp = getNewOtp(uuid);
               //  get sms template
               let smsContent = getOtpMsgTemplate(newOtp);
-              //  Send OTP SMS
+              if (difference < BLOCK_USER_LIMIT && oldOtp.resend_count >= 3) {
+                console.log("**** WITHIN BLOCK TIME AND MORE THAN 3 TIMES ****");
+                return callback(
+                  {
+                    error_code: "Unauthorized",
+                    error_message: "Account Blocked, please try in 30 mins"
+                  },
+                  403
+                );
+              } else if(difference < BLOCK_USER_LIMIT && oldOtp.resend_count < 3) {
+                console.log("**** WITHIN BLOCK TIME AND LESS THAN 3 TIMES ****");
+                //  Send OTP SMS
               //  After successful SMS send Do transaction
               sendOtpSms(smsContent, msisdn, isSent => {
                 //  check for network error
@@ -122,7 +142,8 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                     {
                       otp: newOtp,
                       expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
-                      status: 0
+                      status: 0,
+                      resend_count: oldOtp.resend_count + 1 
                     },
                     { where: { uuid, app_id } }
                   )
@@ -147,6 +168,56 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                   );
                 }
               });
+              } else {
+                console.log("**** OUTSIDE BLOCK TIME ****");
+                //  Send OTP SMS
+              //  After successful SMS send Do transaction
+              sendOtpSms(smsContent, msisdn, isSent => {
+                //  check for network error
+                if (isSent == 500) {
+                  return callback(
+                    {
+                      error_code: "InternalServerError",
+                      error_message: "Internal Server Error"
+                    },
+                    500
+                  );
+                }
+                //  sms sending true
+                if (isSent) {
+                  //  update with new OTP
+                  return SubscriberOTP.update(
+                    {
+                      otp: newOtp,
+                      expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
+                      status: 0,
+                      resend_at: new Date(),
+                      resend_count: 1
+                    },
+                    { where: { uuid, app_id } }
+                  )
+                    .then(() =>
+                      //  return OTP response with callback
+                      {
+                        return callback(
+                          {
+                            subscriber_id: uuid,
+                            otp: newOtp,
+                            app_id: app_id
+                          },
+                          201
+                        );
+                      }
+                    )
+                    .catch(err => console.log(err));
+                } else {
+                  return callback(
+                    { status: `Sorry, unable to send otp to ${msisdn}` },
+                    400
+                  );
+                }
+              });
+              }
             } else {
               //  No record exists with requested uuid, app_id
               //  create new OTP record
@@ -295,7 +366,9 @@ function insertOtpRecord(msisdn, app_id, callback) {
             app_id,
             otp,
             expiration: addMinToDate(currentDate, OTP_EXPIRY_TIME),
-            status: 0
+            status: 0,
+            resend_at: currentDate,
+            resend_count: 1
           }).then(otpRecord => {
             return callback(
               {
@@ -377,7 +450,20 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
               })
                 .then(() => {
                   return invalidateOTP(subscriber_id, app_id, () => {
-                    return callback(null, 200);
+                    return SubscriberOTP.update(
+                      {
+                        resend_count: 0 
+                      },
+                      { where: { uuid: subscriber_id, app_id } }
+                    )
+                      .then(() =>
+                        //  return OTP response with callback
+                        {
+                          return callback(null, 200);
+                        }
+                      )
+                      .catch(err => console.log(err));
+                    
                   });
                 })
                 .catch(e =>
@@ -402,66 +488,69 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
           } else {
             // Update FloodControl to incrememnt retry
             // If Retry is > 3 block account
-            FloodControl.increment("retry", { where: { uuid: subscriber_id } });
-            return FloodControl.findOne({
-              where: {
-                uuid: subscriber_id
-              },
-              attributes: ["retry", "created_at"],
-              raw: true
-            })
-              .then(floodControl => {
-                console.table(floodControl);
-                if (floodControl.retry >= 3) {
-                  /**
-                   * Invalidate OTP here
-                   */
-                  return FloodControl.update(
-                    { status: 1 },
-                    { where: { uuid: subscriber_id } }
-                  )
-                    .then(() => {
-                      return invalidateOTP(subscriber_id, app_id, () => {
-                        console.log("**** ACCOUNT BLOCKED ****");
-                        return callback(
-                          {
-                            error_code: "Unauthorized",
-                            error_message:
-                              "Account Blocked, please try in 30 mins"
-                          },
-                          403
-                        );
-                      });
-                    })
-                    .catch(e =>
-                      callback(
-                        {
-                          error_code: "InternalServerError",
-                          error_message: "Internal Server Error"
-                        },
-                        500
-                      )
-                    );
-                } else {
-                  console.log("**** INVALID OTP ****");
-                  return callback(
-                    {
-                      error_code: "Unauthorized",
-                      error_message: "OTP Verification Failed"
-                    },
-                    403
-                  );
-                }
+            FloodControl.increment("retry", 
+            { where: { uuid: subscriber_id } })
+            .then(()=> {
+              return FloodControl.findOne({
+                where: {
+                  uuid: subscriber_id
+                },
+                attributes: ["retry", "created_at"],
+                raw: true
               })
-              .catch(e =>
-                callback(
-                  {
-                    error_code: "InternalServerError",
-                    error_message: "Internal Server Error"
-                  },
-                  500
-                )
-              );
+                .then(floodControl => {
+                  console.table(floodControl);
+                  if (floodControl.retry >= 3) {
+                    /**
+                     * Invalidate OTP here
+                     */
+                    return FloodControl.update(
+                      { status: 1 },
+                      { where: { uuid: subscriber_id } }
+                    )
+                      .then(() => {
+                        return invalidateOTP(subscriber_id, app_id, () => {
+                          console.log("**** ACCOUNT BLOCKED ****");
+                          return callback(
+                            {
+                              error_code: "Unauthorized",
+                              error_message:
+                                "Account Blocked, please try in 30 mins"
+                            },
+                            403
+                          );
+                        });
+                      })
+                      .catch(e =>
+                        callback(
+                          {
+                            error_code: "InternalServerError",
+                            error_message: "Internal Server Error"
+                          },
+                          500
+                        )
+                      );
+                  } else {
+                    console.log("**** INVALID OTP ****");
+                    return callback(
+                      {
+                        error_code: "Unauthorized",
+                        error_message: "OTP Verification Failed"
+                      },
+                      403
+                    );
+                  }
+                })
+                .catch(e =>
+                  callback(
+                    {
+                      error_code: "InternalServerError",
+                      error_message: "Internal Server Error"
+                    },
+                    500
+                  )
+                );
+            })
           }
         })
         .catch(e =>

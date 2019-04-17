@@ -70,3 +70,7 @@ CREATE TABLE public.transaction_data (
 	updated_at timestamp NULL,
 	status int4 NULL
 );
+
+ALTER TABLE "subscriber_otps"
+ADD "resend_at" timestamp NULL,
+ADD "resend_count" int4 NOT NULL DEFAULT 0;
