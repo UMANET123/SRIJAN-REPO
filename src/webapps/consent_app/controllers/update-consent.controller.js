@@ -39,7 +39,7 @@ module.exports = function(req, res, next) {
         } else {
           res_data.success_redirect_uri = response.headers.location;
           // console.log({ sess });
-          // ! for local only  ------- ************
+          // // ! need to comment before push (for local only) ************
           // sess.success_redirect_uri = response.headers.location.replace(
           //   "13.232.77.36",
           //   "localhost"
@@ -48,7 +48,7 @@ module.exports = function(req, res, next) {
           //   "13.232.77.36",
           //   "localhost"
           // );
-          // ! for local only  ------- ************
+          // // ! need to comment before push (for local only) ************
           res_data.message = "Success.";
           return res.status(response.statusCode).send(res_data);
         }
