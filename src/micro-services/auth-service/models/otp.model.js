@@ -37,14 +37,16 @@ const OTP_EXPIRY_TIME = 5;
  * @param {function} resolve Callback on return
  * @returns {function} Call back with message and status
  */
-function generateTOtp(msisdn, app_id, blacklist) {
+function generateTOtp(msisdn, app_id, blacklistCheckOn) {
   msisdn = updatePhoneNo(msisdn);
   //  update otp settings
   configureOTP();
-  //  blacklist checking option is enabled
-  if (blacklist) {
-    return new Promise((resolve, reject) => {
-      checkBlackListApp(msisdn, app_id, isBlackListed => {
+  //  blacklistCheckOn checking option is enabled
+  if (blacklistCheckOn) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let isBlackListed = await checkBlackListApp(msisdn, app_id);
+        console.log(isBlackListed);
         if (isBlackListed) {
           return resolve({
             status: 403,
@@ -58,7 +60,9 @@ function generateTOtp(msisdn, app_id, blacklist) {
           let createOtpResponse = alwaysCreateOTP(msisdn, app_id);
           return resolve(createOtpResponse);
         }
-      });
+      } catch (err) {
+        reject(err);
+      }
     });
   } else {
     //  generate OTP when blacklist check = false

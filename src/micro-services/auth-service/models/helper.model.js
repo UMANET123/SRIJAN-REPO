@@ -1,4 +1,4 @@
-/*jshint esversion: 6 */
+/*jshint esversion: 8 */
 require("dotenv").config();
 const crypto = require("crypto");
 const otplib = require("otplib");
@@ -51,34 +51,38 @@ function configureOTP() {
  * @param {Function} callback
  * @returns {Function} returns callback with boolean value
  */
-function checkBlackListApp(msisdn, app_id, callback) {
-  serviceHost = process.env.CONSENT_SERVICE_HOST;
-  // get uuid from phone
-  return getServiceResolvedUrl(`${serviceHost}`)
-    .then(url =>
-      verifyUser(msisdn, null, response => {
+function checkBlackListApp(msisdn, app_id) {
+  let serviceHost = process.env.CONSENT_SERVICE_HOST;
+  return new Promise(async (resolve, reject) => {
+    try {
+      let serviceUrl = await getServiceResolvedUrl(serviceHost);
+      verifyUser(msisdn, null, async response => {
         if (response && response.subscriber_id) {
           //  do a query to check blacklist api with uuid and msisdn
-          let reqUrl = `${url}/blacklist/${response.subscriber_id}/${app_id}`;
-          return axios
-            .get(reqUrl, { headers: {
-              'Authorization': getAuthorizationHeader(consent_client_id, consent_secret_message)
+          let reqUrl = `${serviceUrl}/blacklist/${
+            response.subscriber_id
+          }/${app_id}`;
+          try {
+            let { data } = await axios.get(reqUrl, {
+              headers: {
+                Authorization: getAuthorizationHeader(
+                  consent_client_id,
+                  consent_secret_message
+                )
               }
-            })
-            .then(({ data }) => {
-              if (data) {
-                return callback(true);
-              }
-              return callback(false);
-            })
-            .catch(function(error) {
-              console.log(error);
             });
+            console.log(data);
+            if (data) return resolve(true);
+          } catch (err) {
+            return reject(err);
+          }
         }
-        return callback(false);
-      })
-    )
-    .catch(e => console.log(e));
+        return resolve(false);
+      });
+    } catch (err) {
+      return reject(err);
+    }
+  });
 }
 /**
  *
