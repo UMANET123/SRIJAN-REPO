@@ -55,13 +55,15 @@ function generateTOtp(msisdn, app_id, blacklist) {
           });
         } else {
           //  generate OTP
-          return resolve(alwaysCreateOTP(msisdn, app_id));
+          let createOtpResponse = alwaysCreateOTP(msisdn, app_id);
+          return resolve(createOtpResponse);
         }
       });
     });
   } else {
     //  generate OTP when blacklist check = false
-    return resolve(alwaysCreateOTP(msisdn, app_id));
+    let createOtpResponse = alwaysCreateOTP(msisdn, app_id);
+    return resolve(createOtpResponse);
   }
   //  get uuid by phone number
 }
@@ -75,16 +77,16 @@ function generateTOtp(msisdn, app_id, blacklist) {
  */
 function alwaysCreateOTP(msisdn, app_id) {
   return new Promise((resolve, reject) => {
-    return verifyUser(msisdn, null, response => {
+    return verifyUser(msisdn, null, async response => {
       if (response && response.subscriber_id) {
         //   user exists
         let uuid = response.subscriber_id;
 
         //  check flood control
-        return processFloodControl(uuid, isBlocked => {
-          // user is blocked
+        try {
+          const isBlocked = await processFloodControl(uuid);
           console.log("**** IS BLOCKED: ", isBlocked);
-          if (isBlocked && typeof isBlocked == "boolean") {
+          if (isBlocked) {
             return resolve({
               status: 403,
               body: {
@@ -92,150 +94,131 @@ function alwaysCreateOTP(msisdn, app_id) {
                 error_message: "Account Blocked, please try in 30 mins"
               }
             });
-          } else if (!isBlocked && typeof isBlocked == "boolean") {
+          } else {
             //  user not blocked
             //  check any record exists with same app_id, uuid
-            return SubscriberOTP.findOne({
+            //  proceed further as account is valid
+            //  find account from subscriber OTP table
+            // Resend OTP control logic
+            const oldOtp = await SubscriberOTP.findOne({
               where: { uuid, app_id },
               attributes: ["otp", "resend_at", "resend_count"],
               status: 0
-            }).then(async oldOtp => {
-              if (oldOtp && oldOtp.otp) {
-                //  previously OTP exists
-                let difference = floodControlTimeValidity(
-                  new Date(oldOtp.resend_at),
-                  new Date()
-                );
-                console.log("-- DIFFERENCE : ", difference);
+            });
+            if (oldOtp && oldOtp.otp) {
+              //  previously OTP exists
+              //  check resend OTP process
+              //  find the time difference for Resend OTP
+              let difference = floodControlTimeValidity(
+                new Date(oldOtp.resend_at),
+                new Date()
+              );
+              console.log("-- DIFFERENCE : ", difference);
+              console.log(
+                "-- DIFFERENCE VALID:",
+                difference >= BLOCK_USER_LIMIT
+              );
+              let newOtp = getNewOtp(uuid);
+              //  get sms template
+              let smsContent = getOtpMsgTemplate(newOtp);
+              if (difference < BLOCK_USER_LIMIT && oldOtp.resend_count >= 3) {
                 console.log(
-                  "-- DIFFERENCE VALID:",
-                  difference >= BLOCK_USER_LIMIT
+                  "**** WITHIN BLOCK TIME AND MORE THAN 3 TIMES ****"
                 );
-                let newOtp = getNewOtp(uuid);
-                //  get sms template
-                let smsContent = getOtpMsgTemplate(newOtp);
-                if (difference < BLOCK_USER_LIMIT && oldOtp.resend_count >= 3) {
-                  console.log(
-                    "**** WITHIN BLOCK TIME AND MORE THAN 3 TIMES ****"
+                return resolve({
+                  body: {
+                    error_code: "Unauthorized",
+                    error_message: "Account Blocked, please try in 30 mins"
+                  },
+                  status: 403
+                });
+              } else if (
+                difference < BLOCK_USER_LIMIT &&
+                oldOtp.resend_count < 3
+              ) {
+                console.log(
+                  "**** WITHIN BLOCK TIME AND LESS THAN 3 TIMES ****"
+                );
+                //  ==== Send OTP SMS
+                //  After successful SMS send Do transaction
+                // update OTP table
+                // return Response
+                let isSmsSent = await sendOtpSms(smsContent, msisdn);
+                if (isSmsSent) {
+                  //  update with new OTP
+                  await SubscriberOTP.update(
+                    {
+                      otp: newOtp,
+                      expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
+                      status: 0,
+                      resend_count: oldOtp.resend_count + 1
+                    },
+                    { where: { uuid, app_id } }
+                  );
+                  //  return OTP response with callback
+                  return resolve({
+                    body: {
+                      subscriber_id: uuid,
+                      otp: newOtp,
+                      app_id: app_id
+                    },
+                    status: 201
+                  });
+                } else {
+                  return resolve({
+                    body: {
+                      status: `Sorry, unable to send otp to ${msisdn}`
+                    },
+                    status: 400
+                  });
+                }
+              } else {
+                console.log("**** OUTSIDE BLOCK TIME ****");
+                //  Send OTP SMS
+                //  After successful SMS send Do transaction
+                let isSmsSent = await sendOtpSms(smsContent, msisdn);
+                //  sms sending true
+                if (isSmsSent) {
+                  //  update with new OTP
+                  await SubscriberOTP.update(
+                    {
+                      otp: newOtp,
+                      expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
+                      status: 0,
+                      resend_at: new Date(),
+                      resend_count: 1
+                    },
+                    { where: { uuid, app_id } }
                   );
                   return resolve({
                     body: {
-                      error_code: "Unauthorized",
-                      error_message: "Account Blocked, please try in 30 mins"
+                      subscriber_id: uuid,
+                      otp: newOtp,
+                      app_id: app_id
                     },
-                    status: 403
+                    status: 201
                   });
-                } else if (
-                  difference < BLOCK_USER_LIMIT &&
-                  oldOtp.resend_count < 3
-                ) {
-                  console.log(
-                    "**** WITHIN BLOCK TIME AND LESS THAN 3 TIMES ****"
-                  );
-                  //  Send OTP SMS
-                  //  After successful SMS send Do transaction
-                  // update OTP table
-                  // return Response
-                  try {
-                    let isSmsSent = await sendOtpSms(smsContent, msisdn);
-                    if (isSmsSent) {
-                      //  update with new OTP
-                      await SubscriberOTP.update(
-                        {
-                          otp: newOtp,
-                          expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
-                          status: 0,
-                          resend_count: oldOtp.resend_count + 1
-                        },
-                        { where: { uuid, app_id } }
-                      );
-                      //  return OTP response with callback
-                      return resolve({
-                        body: {
-                          subscriber_id: uuid,
-                          otp: newOtp,
-                          app_id: app_id
-                        },
-                        status: 201
-                      });
-                    } else {
-                      return resolve({
-                        body: {
-                          status: `Sorry, unable to send otp to ${msisdn}`
-                        },
-                        status: 400
-                      });
-                    }
-                  } catch (err) {
-                    console.log(err);
-                    // return {
-                    //   body: {
-                    //     error_code: "InternalServerError",
-                    //     error_message: "Internal Server Error"
-                    //   },
-                    //   status: 500
-                    // };
-                    return reject("InternalServerError");
-                  }
                 } else {
-                  console.log("**** OUTSIDE BLOCK TIME ****");
-                  //  Send OTP SMS
-                  //  After successful SMS send Do transaction
-                  try {
-                    let isSmsSent = await sendOtpSms(smsContent, msisdn);
-                    //  sms sending true
-                    if (isSmsSent) {
-                      //  update with new OTP
-                      await SubscriberOTP.update(
-                        {
-                          otp: newOtp,
-                          expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
-                          status: 0,
-                          resend_at: new Date(),
-                          resend_count: 1
-                        },
-                        { where: { uuid, app_id } }
-                      );
-                      return resolve({
-                        body: {
-                          subscriber_id: uuid,
-                          otp: newOtp,
-                          app_id: app_id
-                        },
-                        status: 201
-                      });
-                    } else {
-                      return resolve({
-                        body: {
-                          status: `Sorry, unable to send otp to ${msisdn}`
-                        },
-                        status: 400
-                      });
-                    }
-                  } catch (err) {
-                    console.log(err);
-                    // return {
-                    //   body: {
-                    //     error_code: "InternalServerError",
-                    //     error_message: "Internal Server Error"
-                    //   },
-                    //   status: 500
-                    // };
-                    return reject("InternalServerError");
-                  }
+                  return resolve({
+                    body: {
+                      status: `Sorry, unable to send otp to ${msisdn}`
+                    },
+                    status: 400
+                  });
                 }
-              } else {
-                //  No record exists with requested uuid, app_id
-                //  create new OTP record
-                return insertOtpRecord(msisdn, app_id, (body, status) => {
-                  return resolve({ body, status });
-                });
               }
-            });
+            } else {
+              //  No record exists with requested uuid, app_id
+              //  create new OTP record
+              return insertOtpRecord(msisdn, app_id, (body, status) => {
+                return resolve({ body, status });
+              });
+            }
           }
-        });
-        //  create new OTP
-        //  update OTP
+        } catch (err) {
+          console.log(err);
+          return reject("InternalServerError");
+        }
       } else {
         //  No record exists with requested uuid, app_id
         //  create new OTP record
@@ -254,23 +237,24 @@ function alwaysCreateOTP(msisdn, app_id) {
  * @param {function} callback Callback Function
  * @returns {funciton} callback returns boolean and null if internal server error
  */
-function processFloodControl(uuid, callback) {
+function processFloodControl(uuid) {
   //  query to find the user
-  console.log("*** UUID : ", uuid);
-  FloodControl.findOrCreate({
-    where: { uuid: uuid },
-    attributes: ["status", "created_at"]
-  })
-    .spread((floodControl, created) => {
-      console.log("*** FLOOD CONTROL CREATED : ", created);
-      console.log("*** FLOOD CONTROL DATA : ", floodControl);
+  return new Promise(async (resolve, reject) => {
+    console.log("*** UUID : ", uuid);
+    try {
+      //  find OR create Flood controll record
+      const [floodControl, created] = await FloodControl.findOrCreate({
+        where: { uuid: uuid },
+        attributes: ["status", "created_at"]
+      });
+      //  for Old Record flood control
       if (!created) {
         //  record already exists
         //  flood control record is blocked === 1 check
         console.log("***** FLOOD CONTROL STATUS : ", floodControl.status);
-
+        // status == 1 == user blocked and need to check time difference
         if (floodControl.status === parseInt(1)) {
-          //  check time validity
+          //  check time duration difference
           let difference = floodControlTimeValidity(
             new Date(floodControl.created_at),
             new Date()
@@ -281,42 +265,31 @@ function processFloodControl(uuid, callback) {
             "**** DIFFERENCE VALID? : ",
             difference >= BLOCK_USER_LIMIT
           );
-
+          //  time difference is > block user limit
           if (difference >= BLOCK_USER_LIMIT) {
-            console.log("**** I DONT REACH US ****");
             // unblock it / reset the record
-            //  delete the record
-            return FloodControl.destroy({
+            //  delete and create a new record with same uuid
+            await FloodControl.destroy({
               where: {
                 uuid
               }
-            })
-              .then(result =>
-                //  create a record for the user
-                {
-                  console.log("**** DELETE RESULT : ", result);
-                  console.log("**** FLOOD CONTROL LIMIT REACHED : ", result);
-                  return FloodControl.create({
-                    uuid
-                  })
-                    .then(() => callback(false))
-                    .catch(e => console.log(e));
-                }
-              )
-              .catch(e => callback(null));
-          } else {
-            //  block it isBlocked === true
-            return callback(true);
+            });
+            await FloodControl.create({
+              uuid
+            });
+            console.log("****  User unblocked ****");
+            return resolve(false);
           }
         }
-        return callback(false);
-      } else {
-        return callback(false);
       }
-    })
-    .catch(err => {
-      return callback(null);
-    });
+
+      return resolve(false);
+    } catch (err) {
+      return reject(InternalServerError);
+    }
+
+    // }
+  });
 }
 /**
  * Returns difference between two datetime inputs

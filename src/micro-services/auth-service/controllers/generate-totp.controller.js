@@ -23,5 +23,9 @@ module.exports = async function(req, res, next) {
     return res.status(status).send(body);
   } catch (err) {
     console.log(err);
+    return res.status(500).send({
+      error_code: "InternalServerError",
+      error_message: "Internal Server Error"
+    });
   }
 };
