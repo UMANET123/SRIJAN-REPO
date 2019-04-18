@@ -24,6 +24,7 @@ function getServiceResolvedUrl(
   serviceDefaultPath = process.env.CONSENT_SERVICE_BASEPATH,
   protocolStr = "http://"
 ) {
+  console.log({ serviceHost, serviceDefaultPath, serviceEndpointUri });
   return new Promise((resolve, reject) => {
     // TODO: Need to add a mapping logic for service Endpoint, DefaultPath, Host
     if (!serviceHost || !serviceDefaultPath || !serviceEndpointUri)

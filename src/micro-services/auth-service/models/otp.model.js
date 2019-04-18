@@ -34,7 +34,7 @@ const OTP_EXPIRY_TIME = 5;
  * @param {string} msisdn Mobile Number
  * @param {string} app_id App ID
  * @param {boolean} blacklist Blacklist condition
- * @param {function} callback Callback on return
+ * @param {function} resolve Callback on return
  * @returns {function} Call back with message and status
  */
 function generateTOtp(msisdn, app_id, blacklist, callback) {
@@ -96,7 +96,7 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
             where: { uuid, app_id },
             attributes: ["otp", "resend_at", "resend_count"],
             status: 0
-          }).then(oldOtp => {
+          }).then(async oldOtp => {
             if (oldOtp && oldOtp.otp) {
               //  previously OTP exists
               let difference = floodControlTimeValidity(
@@ -112,7 +112,9 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
               //  get sms template
               let smsContent = getOtpMsgTemplate(newOtp);
               if (difference < BLOCK_USER_LIMIT && oldOtp.resend_count >= 3) {
-                console.log("**** WITHIN BLOCK TIME AND MORE THAN 3 TIMES ****");
+                console.log(
+                  "**** WITHIN BLOCK TIME AND MORE THAN 3 TIMES ****"
+                );
                 return callback(
                   {
                     error_code: "Unauthorized",
@@ -120,13 +122,45 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                   },
                   403
                 );
-              } else if(difference < BLOCK_USER_LIMIT && oldOtp.resend_count < 3) {
-                console.log("**** WITHIN BLOCK TIME AND LESS THAN 3 TIMES ****");
+              } else if (
+                difference < BLOCK_USER_LIMIT &&
+                oldOtp.resend_count < 3
+              ) {
+                console.log(
+                  "**** WITHIN BLOCK TIME AND LESS THAN 3 TIMES ****"
+                );
                 //  Send OTP SMS
-              //  After successful SMS send Do transaction
-              sendOtpSms(smsContent, msisdn, isSent => {
-                //  check for network error
-                if (isSent == 500) {
+                //  After successful SMS send Do transaction
+                try {
+                  let isSmsSent = await sendOtpSms(smsContent, msisdn);
+                  if (isSmsSent) {
+                    //  update with new OTP
+                    await SubscriberOTP.update(
+                      {
+                        otp: newOtp,
+                        expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
+                        status: 0,
+                        resend_count: oldOtp.resend_count + 1
+                      },
+                      { where: { uuid, app_id } }
+                    );
+                    //  return OTP response with callback
+                    return callback(
+                      {
+                        subscriber_id: uuid,
+                        otp: newOtp,
+                        app_id: app_id
+                      },
+                      201
+                    );
+                  } else {
+                    return callback(
+                      { status: `Sorry, unable to send otp to ${msisdn}` },
+                      400
+                    );
+                  }
+                } catch (err) {
+                  console.log(err);
                   return callback(
                     {
                       error_code: "InternalServerError",
@@ -135,46 +169,41 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                     500
                   );
                 }
-                //  sms sending true
-                if (isSent) {
-                  //  update with new OTP
-                  return SubscriberOTP.update(
-                    {
-                      otp: newOtp,
-                      expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
-                      status: 0,
-                      resend_count: oldOtp.resend_count + 1 
-                    },
-                    { where: { uuid, app_id } }
-                  )
-                    .then(() =>
-                      //  return OTP response with callback
-                      {
-                        return callback(
-                          {
-                            subscriber_id: uuid,
-                            otp: newOtp,
-                            app_id: app_id
-                          },
-                          201
-                        );
-                      }
-                    )
-                    .catch(err => console.log(err));
-                } else {
-                  return callback(
-                    { status: `Sorry, unable to send otp to ${msisdn}` },
-                    400
-                  );
-                }
-              });
               } else {
                 console.log("**** OUTSIDE BLOCK TIME ****");
                 //  Send OTP SMS
-              //  After successful SMS send Do transaction
-              sendOtpSms(smsContent, msisdn, isSent => {
-                //  check for network error
-                if (isSent == 500) {
+                //  After successful SMS send Do transaction
+                try {
+                  let isSmsSent = await sendOtpSms(smsContent, msisdn);
+                  //  sms sending true
+                  if (isSmsSent) {
+                    //  update with new OTP
+                    await SubscriberOTP.update(
+                      {
+                        otp: newOtp,
+                        expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
+                        status: 0,
+                        resend_at: new Date(),
+                        resend_count: 1
+                      },
+                      { where: { uuid, app_id } }
+                    );
+                    return callback(
+                      {
+                        subscriber_id: uuid,
+                        otp: newOtp,
+                        app_id: app_id
+                      },
+                      201
+                    );
+                  } else {
+                    return callback(
+                      { status: `Sorry, unable to send otp to ${msisdn}` },
+                      400
+                    );
+                  }
+                } catch (err) {
+                  console.log(err);
                   return callback(
                     {
                       error_code: "InternalServerError",
@@ -183,40 +212,6 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                     500
                   );
                 }
-                //  sms sending true
-                if (isSent) {
-                  //  update with new OTP
-                  return SubscriberOTP.update(
-                    {
-                      otp: newOtp,
-                      expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
-                      status: 0,
-                      resend_at: new Date(),
-                      resend_count: 1
-                    },
-                    { where: { uuid, app_id } }
-                  )
-                    .then(() =>
-                      //  return OTP response with callback
-                      {
-                        return callback(
-                          {
-                            subscriber_id: uuid,
-                            otp: newOtp,
-                            app_id: app_id
-                          },
-                          201
-                        );
-                      }
-                    )
-                    .catch(err => console.log(err));
-                } else {
-                  return callback(
-                    { status: `Sorry, unable to send otp to ${msisdn}` },
-                    400
-                  );
-                }
-              });
               }
             } else {
               //  No record exists with requested uuid, app_id
@@ -328,7 +323,7 @@ function floodControlTimeValidity(createdDate, currentDate) {
  * @param {function} callback Function Callback
  * @returns {callback} returns created record along with status
  */
-function insertOtpRecord(msisdn, app_id, callback) {
+async function insertOtpRecord(msisdn, app_id, callback) {
   //  insert flood control record
   //  New User
   //  get new Secret
@@ -338,30 +333,23 @@ function insertOtpRecord(msisdn, app_id, callback) {
   let smsContent = getOtpMsgTemplate(otp);
 
   //  send sms
-  sendOtpSms(smsContent, msisdn, isSent => {
-    if (isSent == 500) {
-      return callback(
-        {
-          error_code: "InternalServerError",
-          error_message: "Internal Server Error"
-        },
-        500
-      );
-    }
-    //  otp sending successful
-    if (isSent) {
+  try {
+    let isSmsSent = sendOtpSms(smsContent, msisdn);
+    if (isSmsSent) {
+      // * isSmsSent: true
       //  Send OTP SMS
       //  After successful SMS send Do transaction
       //  insert records to the table
       let currentDate = new Date();
       //  query to find the user
       //  insert record to subscriber data mask
-      return SubscriberDataMask.findOrCreate({
+      await SubscriberDataMask.findOrCreate({
         where: { uuid, phone_no: msisdn, status: 0 },
         attributes: ["uuid"]
-      })
-        .spread((mask, created) => {
-          SubscriberOTP.create({
+      });
+      (async () => {
+        try {
+          await SubscriberOTP.create({
             uuid,
             app_id,
             otp,
@@ -369,19 +357,17 @@ function insertOtpRecord(msisdn, app_id, callback) {
             status: 0,
             resend_at: currentDate,
             resend_count: 1
-          }).then(otpRecord => {
-            return callback(
-              {
-                subscriber_id: uuid,
-                otp,
-                app_id
-              },
-              201
-            );
           });
-        })
-        .catch(err => {
-          console.log({ err });
+          return callback(
+            {
+              subscriber_id: uuid,
+              otp,
+              app_id
+            },
+            201
+          );
+        } catch (err) {
+          console.log(err);
           return callback(
             {
               error_code: "InternalServerError",
@@ -389,14 +375,25 @@ function insertOtpRecord(msisdn, app_id, callback) {
             },
             500
           );
-        });
+        }
+      })();
     } else {
+      // * isSmsSent: false
       return callback(
         { status: `Sorry, unable to send otp to ${msisdn}` },
         400
       );
     }
-  });
+  } catch (err) {
+    console.log(err);
+    return callback(
+      {
+        error_code: "InternalServerError",
+        error_message: "Internal Server Error"
+      },
+      500
+    );
+  }
 }
 //  verify OTP
 /**
@@ -452,7 +449,7 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
                   return invalidateOTP(subscriber_id, app_id, () => {
                     return SubscriberOTP.update(
                       {
-                        resend_count: 0 
+                        resend_count: 0
                       },
                       { where: { uuid: subscriber_id, app_id } }
                     )
@@ -463,7 +460,6 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
                         }
                       )
                       .catch(err => console.log(err));
-                    
                   });
                 })
                 .catch(e =>
@@ -488,9 +484,9 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
           } else {
             // Update FloodControl to incrememnt retry
             // If Retry is > 3 block account
-            FloodControl.increment("retry", 
-            { where: { uuid: subscriber_id } })
-            .then(()=> {
+            FloodControl.increment("retry", {
+              where: { uuid: subscriber_id }
+            }).then(() => {
               return FloodControl.findOne({
                 where: {
                   uuid: subscriber_id
@@ -550,7 +546,7 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
                     500
                   )
                 );
-            })
+            });
           }
         })
         .catch(e =>
@@ -615,39 +611,41 @@ function invalidateOTP(subscriber_id, app_id, callback) {
  * Send Otp to address/mobile number and return boolean/500
  * as per the response
  */
-function sendOtpSms(message, address, callback) {
+function sendOtpSms(message, address) {
   //  find sms service status from enviroment
   let smsIsActive = process.env.SMS_SERVICE_ACTIVE == "true";
   //  check SMS service is not active
   //  then skip sms api call
-  if (!smsIsActive) return callback(true);
-  //  else proceed
-  let options = {
-    method: "POST",
-    url: process.env.SMS_API_ENDPOINT,
-    headers: {
-      "cache-control": "no-cache",
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    form: {
-      message,
-      address,
-      passphrase: process.env.SMS_PASSPHRASE,
-      app_id: process.env.SMS_APP_ID,
-      app_secret: process.env.SMS_APP_SECRET
-    }
-  };
-  request(options)
-    .then(smsResponse => {
-      let {
-        outboundSMSMessageRequest: { address }
-      } = JSON.parse(smsResponse);
-      if (address) return callback(true);
-      return callback(false);
-    })
-    .catch(() => {
-      return callback(500);
-    });
+  //  create a promise will return response
+  return new Promise((resolve, reject) => {
+    // setTimeout(() => resolve("done!"), 1000);
+    if (!smsIsActive) return resolve(true);
+    //  else proceed
+    let options = {
+      method: "POST",
+      url: process.env.SMS_API_ENDPOINT,
+      headers: {
+        "cache-control": "no-cache",
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      form: {
+        message,
+        address,
+        passphrase: process.env.SMS_PASSPHRASE,
+        app_id: process.env.SMS_APP_ID,
+        app_secret: process.env.SMS_APP_SECRET
+      }
+    };
+    request(options)
+      .then(smsResponse => {
+        let {
+          outboundSMSMessageRequest: { address }
+        } = JSON.parse(smsResponse);
+        if (address) return resolve(true);
+        return resolve(false);
+      })
+      .catch(() => reject(new Error("SMS is not Sent!")));
+  });
 }
 /**
  *
