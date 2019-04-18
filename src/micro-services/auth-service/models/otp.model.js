@@ -37,29 +37,31 @@ const OTP_EXPIRY_TIME = 5;
  * @param {function} resolve Callback on return
  * @returns {function} Call back with message and status
  */
-function generateTOtp(msisdn, app_id, blacklist, callback) {
+function generateTOtp(msisdn, app_id, blacklist) {
   msisdn = updatePhoneNo(msisdn);
   //  update otp settings
   configureOTP();
   //  blacklist checking option is enabled
   if (blacklist) {
-    checkBlackListApp(msisdn, app_id, isBlackListed => {
-      if (isBlackListed) {
-        return callback(
-          {
-            error_code: "Forbidden",
-            error_message: "App is blacklisted"
-          },
-          403
-        );
-      } else {
-        //  generate OTP
-        return alwaysCreateOTP(msisdn, app_id, callback);
-      }
+    return new Promise((resolve, reject) => {
+      checkBlackListApp(msisdn, app_id, isBlackListed => {
+        if (isBlackListed) {
+          return resolve({
+            status: 403,
+            body: {
+              error_code: "Forbidden",
+              error_message: "App is blacklisted"
+            }
+          });
+        } else {
+          //  generate OTP
+          return resolve(alwaysCreateOTP(msisdn, app_id));
+        }
+      });
     });
   } else {
     //  generate OTP when blacklist check = false
-    return alwaysCreateOTP(msisdn, app_id, callback);
+    return resolve(alwaysCreateOTP(msisdn, app_id));
   }
   //  get uuid by phone number
 }
@@ -71,168 +73,178 @@ function generateTOtp(msisdn, app_id, blacklist, callback) {
  * @param {function} callback  Callback Function
  * @returns(function) callback Callback Function
  */
-function alwaysCreateOTP(msisdn, app_id, callback) {
-  return verifyUser(msisdn, null, response => {
-    if (response && response.subscriber_id) {
-      //   user exists
-      let uuid = response.subscriber_id;
+function alwaysCreateOTP(msisdn, app_id) {
+  return new Promise((resolve, reject) => {
+    return verifyUser(msisdn, null, response => {
+      if (response && response.subscriber_id) {
+        //   user exists
+        let uuid = response.subscriber_id;
 
-      //  check flood control
-      return processFloodControl(uuid, isBlocked => {
-        // user is blocked
-        console.log("**** IS BLOCKED: ", isBlocked);
-        if (isBlocked && typeof isBlocked == "boolean") {
-          return callback(
-            {
-              error_code: "Unauthorized",
-              error_message: "Account Blocked, please try in 30 mins"
-            },
-            403
-          );
-        } else if (!isBlocked && typeof isBlocked == "boolean") {
-          //  user not blocked
-          //  check any record exists with same app_id, uuid
-          return SubscriberOTP.findOne({
-            where: { uuid, app_id },
-            attributes: ["otp", "resend_at", "resend_count"],
-            status: 0
-          }).then(async oldOtp => {
-            if (oldOtp && oldOtp.otp) {
-              //  previously OTP exists
-              let difference = floodControlTimeValidity(
-                new Date(oldOtp.resend_at),
-                new Date()
-              );
-              console.log("-- DIFFERENCE : ", difference);
-              console.log(
-                "-- DIFFERENCE VALID:",
-                difference >= BLOCK_USER_LIMIT
-              );
-              let newOtp = getNewOtp(uuid);
-              //  get sms template
-              let smsContent = getOtpMsgTemplate(newOtp);
-              if (difference < BLOCK_USER_LIMIT && oldOtp.resend_count >= 3) {
+        //  check flood control
+        return processFloodControl(uuid, isBlocked => {
+          // user is blocked
+          console.log("**** IS BLOCKED: ", isBlocked);
+          if (isBlocked && typeof isBlocked == "boolean") {
+            return resolve({
+              status: 403,
+              body: {
+                error_code: "Unauthorized",
+                error_message: "Account Blocked, please try in 30 mins"
+              }
+            });
+          } else if (!isBlocked && typeof isBlocked == "boolean") {
+            //  user not blocked
+            //  check any record exists with same app_id, uuid
+            return SubscriberOTP.findOne({
+              where: { uuid, app_id },
+              attributes: ["otp", "resend_at", "resend_count"],
+              status: 0
+            }).then(async oldOtp => {
+              if (oldOtp && oldOtp.otp) {
+                //  previously OTP exists
+                let difference = floodControlTimeValidity(
+                  new Date(oldOtp.resend_at),
+                  new Date()
+                );
+                console.log("-- DIFFERENCE : ", difference);
                 console.log(
-                  "**** WITHIN BLOCK TIME AND MORE THAN 3 TIMES ****"
+                  "-- DIFFERENCE VALID:",
+                  difference >= BLOCK_USER_LIMIT
                 );
-                return callback(
-                  {
-                    error_code: "Unauthorized",
-                    error_message: "Account Blocked, please try in 30 mins"
-                  },
-                  403
-                );
-              } else if (
-                difference < BLOCK_USER_LIMIT &&
-                oldOtp.resend_count < 3
-              ) {
-                console.log(
-                  "**** WITHIN BLOCK TIME AND LESS THAN 3 TIMES ****"
-                );
-                //  Send OTP SMS
-                //  After successful SMS send Do transaction
-                try {
-                  let isSmsSent = await sendOtpSms(smsContent, msisdn);
-                  if (isSmsSent) {
-                    //  update with new OTP
-                    await SubscriberOTP.update(
-                      {
-                        otp: newOtp,
-                        expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
-                        status: 0,
-                        resend_count: oldOtp.resend_count + 1
-                      },
-                      { where: { uuid, app_id } }
-                    );
-                    //  return OTP response with callback
-                    return callback(
-                      {
-                        subscriber_id: uuid,
-                        otp: newOtp,
-                        app_id: app_id
-                      },
-                      201
-                    );
-                  } else {
-                    return callback(
-                      { status: `Sorry, unable to send otp to ${msisdn}` },
-                      400
-                    );
-                  }
-                } catch (err) {
-                  console.log(err);
-                  return callback(
-                    {
-                      error_code: "InternalServerError",
-                      error_message: "Internal Server Error"
-                    },
-                    500
+                let newOtp = getNewOtp(uuid);
+                //  get sms template
+                let smsContent = getOtpMsgTemplate(newOtp);
+                if (difference < BLOCK_USER_LIMIT && oldOtp.resend_count >= 3) {
+                  console.log(
+                    "**** WITHIN BLOCK TIME AND MORE THAN 3 TIMES ****"
                   );
+                  return resolve({
+                    body: {
+                      error_code: "Unauthorized",
+                      error_message: "Account Blocked, please try in 30 mins"
+                    },
+                    status: 403
+                  });
+                } else if (
+                  difference < BLOCK_USER_LIMIT &&
+                  oldOtp.resend_count < 3
+                ) {
+                  console.log(
+                    "**** WITHIN BLOCK TIME AND LESS THAN 3 TIMES ****"
+                  );
+                  //  Send OTP SMS
+                  //  After successful SMS send Do transaction
+                  // update OTP table
+                  // return Response
+                  try {
+                    let isSmsSent = await sendOtpSms(smsContent, msisdn);
+                    if (isSmsSent) {
+                      //  update with new OTP
+                      await SubscriberOTP.update(
+                        {
+                          otp: newOtp,
+                          expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
+                          status: 0,
+                          resend_count: oldOtp.resend_count + 1
+                        },
+                        { where: { uuid, app_id } }
+                      );
+                      //  return OTP response with callback
+                      return resolve({
+                        body: {
+                          subscriber_id: uuid,
+                          otp: newOtp,
+                          app_id: app_id
+                        },
+                        status: 201
+                      });
+                    } else {
+                      return resolve({
+                        body: {
+                          status: `Sorry, unable to send otp to ${msisdn}`
+                        },
+                        status: 400
+                      });
+                    }
+                  } catch (err) {
+                    console.log(err);
+                    // return {
+                    //   body: {
+                    //     error_code: "InternalServerError",
+                    //     error_message: "Internal Server Error"
+                    //   },
+                    //   status: 500
+                    // };
+                    return reject("InternalServerError");
+                  }
+                } else {
+                  console.log("**** OUTSIDE BLOCK TIME ****");
+                  //  Send OTP SMS
+                  //  After successful SMS send Do transaction
+                  try {
+                    let isSmsSent = await sendOtpSms(smsContent, msisdn);
+                    //  sms sending true
+                    if (isSmsSent) {
+                      //  update with new OTP
+                      await SubscriberOTP.update(
+                        {
+                          otp: newOtp,
+                          expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
+                          status: 0,
+                          resend_at: new Date(),
+                          resend_count: 1
+                        },
+                        { where: { uuid, app_id } }
+                      );
+                      return resolve({
+                        body: {
+                          subscriber_id: uuid,
+                          otp: newOtp,
+                          app_id: app_id
+                        },
+                        status: 201
+                      });
+                    } else {
+                      return resolve({
+                        body: {
+                          status: `Sorry, unable to send otp to ${msisdn}`
+                        },
+                        status: 400
+                      });
+                    }
+                  } catch (err) {
+                    console.log(err);
+                    // return {
+                    //   body: {
+                    //     error_code: "InternalServerError",
+                    //     error_message: "Internal Server Error"
+                    //   },
+                    //   status: 500
+                    // };
+                    return reject("InternalServerError");
+                  }
                 }
               } else {
-                console.log("**** OUTSIDE BLOCK TIME ****");
-                //  Send OTP SMS
-                //  After successful SMS send Do transaction
-                try {
-                  let isSmsSent = await sendOtpSms(smsContent, msisdn);
-                  //  sms sending true
-                  if (isSmsSent) {
-                    //  update with new OTP
-                    await SubscriberOTP.update(
-                      {
-                        otp: newOtp,
-                        expiration: addMinToDate(new Date(), OTP_EXPIRY_TIME),
-                        status: 0,
-                        resend_at: new Date(),
-                        resend_count: 1
-                      },
-                      { where: { uuid, app_id } }
-                    );
-                    return callback(
-                      {
-                        subscriber_id: uuid,
-                        otp: newOtp,
-                        app_id: app_id
-                      },
-                      201
-                    );
-                  } else {
-                    return callback(
-                      { status: `Sorry, unable to send otp to ${msisdn}` },
-                      400
-                    );
-                  }
-                } catch (err) {
-                  console.log(err);
-                  return callback(
-                    {
-                      error_code: "InternalServerError",
-                      error_message: "Internal Server Error"
-                    },
-                    500
-                  );
-                }
+                //  No record exists with requested uuid, app_id
+                //  create new OTP record
+                return insertOtpRecord(msisdn, app_id, (body, status) => {
+                  return resolve({ body, status });
+                });
               }
-            } else {
-              //  No record exists with requested uuid, app_id
-              //  create new OTP record
-              return insertOtpRecord(msisdn, app_id, (response, status) => {
-                return callback(response, status);
-              });
-            }
-          });
-        }
-      });
-      //  create new OTP
-      //  update OTP
-    } else {
-      //  No record exists with requested uuid, app_id
-      //  create new OTP record
-      return insertOtpRecord(msisdn, app_id, (response, status) => {
-        return callback(response, status);
-      });
-      //  insert the user
-    }
+            });
+          }
+        });
+        //  create new OTP
+        //  update OTP
+      } else {
+        //  No record exists with requested uuid, app_id
+        //  create new OTP record
+        return insertOtpRecord(msisdn, app_id, (body, status) => {
+          return resolve({ body, status });
+        });
+        //  insert the user
+      }
+    });
   });
 }
 
