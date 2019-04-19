@@ -4,7 +4,7 @@ const request = require("request-promise");
  *
  * @param {string} message OTP sms
  * @param {string} address mobile number
- * @returns {function} Callback function with argument as boolean
+ * @returns {Promise} boolean in a Promise Object
  *
  * Send Otp to address/mobile number and return boolean/500
  * as per the response

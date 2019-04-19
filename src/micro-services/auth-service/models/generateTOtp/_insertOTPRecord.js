@@ -9,8 +9,7 @@ const { OTP_EXPIRY_TIME } = require("./_constants");
  * Insert OTP into subscriber_otps and subscriber_mask table
  * @param {string} msisdn Mobile Number
  * @param {string} app_id App ID
- * @param {function} callback Function Callback
- * @returns {callback} returns created record along with status
+ * @returns {Promise} Response Object
  */
 module.exports = function(msisdn, app_id) {
   //  insert flood control record

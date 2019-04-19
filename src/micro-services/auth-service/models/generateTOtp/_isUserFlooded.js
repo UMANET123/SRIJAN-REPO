@@ -1,7 +1,13 @@
-const { floodControlTimeValidity } = require("./_util");
+const { timeDifferenceInMin } = require("./_util");
 const { FloodControl } = require("../../config/models");
 const { BLOCK_USER_LIMIT } = require("./_constants");
 
+/**
+ *
+ * Is User Flooded / Blocked Checking
+ * @param {string} uuid Subscriber ID
+ * @returns {Promise} Boolean in Promise
+ */
 module.exports = function(uuid) {
   //  query to find the user
   return new Promise(async (resolve, reject) => {
@@ -20,7 +26,7 @@ module.exports = function(uuid) {
         // status == 1 == user blocked and need to check time difference
         if (floodControl.status === parseInt(1)) {
           //  check time duration difference
-          let difference = floodControlTimeValidity(
+          let difference = timeDifferenceInMin(
             new Date(floodControl.created_at),
             new Date()
           );

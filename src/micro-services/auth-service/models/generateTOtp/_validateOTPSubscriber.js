@@ -2,6 +2,13 @@ const { verifyUser } = require("../auth.model");
 const isUserFlooded = require("./_isUserFlooded");
 const resendOtpHandler = require("./_resendOTPHandler");
 const insertOtpRecord = require("./_insertOTPRecord");
+/**
+ *
+ * validate OTP subscriber
+ * @param {string} msisdn Mobile Number
+ * @param {string} app_id App Id
+ * @returns {Promise} Response Object
+ */
 module.exports = function(msisdn, app_id) {
   return new Promise((resolve, reject) => {
     return verifyUser(msisdn, null, async response => {

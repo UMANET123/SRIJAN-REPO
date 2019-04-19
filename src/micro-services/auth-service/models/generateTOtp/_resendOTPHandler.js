@@ -1,8 +1,16 @@
-const { floodControlTimeValidity } = require("./_util");
+const { timeDifferenceInMin } = require("./_util");
 const { BLOCK_USER_LIMIT, OTP_RETRY_LIMIT } = require("./_constants");
 const updateOtpRecord = require("./_updateOtpRecord");
 const insertOtpRecord = require("./_insertOTPRecord");
 const { SubscriberOTP } = require("../../config/models");
+/**
+ *
+ * validate request against resend OTP and process the next step
+ * @param {string} uuid Subscriber Id
+ * @param {string} app_id App Id
+ * @param {string} msisdn Mobile Number
+ * @returns {Promise} Promise Holding another Promise as Function
+ */
 module.exports = function(uuid, app_id, msisdn) {
   return new Promise(async (resolve, reject) => {
     //  user not blocked
@@ -20,7 +28,7 @@ module.exports = function(uuid, app_id, msisdn) {
         //  previously OTP exists
         //  check resend OTP process
         //  find the time difference for Resend OTP
-        let difference = floodControlTimeValidity(
+        let difference = timeDifferenceInMin(
           new Date(oldOtp.resend_at),
           new Date()
         );

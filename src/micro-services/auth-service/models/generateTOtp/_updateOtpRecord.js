@@ -4,9 +4,19 @@ const addMinToDate = require("../../helpers/add-minute-to-date");
 const { SubscriberOTP } = require("../../config/models");
 const sendOtpSms = require("./_sendOTPSms");
 const { OTP_EXPIRY_TIME } = require("./_constants");
+/**
+ *
+ * update Subscriber OTP record and return JSON response
+ * @param {string} msisdn Mobile Number
+ * @param {string} uuid Subscriber Id
+ * @param {string} app_id App id
+ * @param {number} resend_count Number of OTP resend / try request
+ * @returns {Promise} Response Object in a Promise
+ */
 module.exports = function(msisdn, uuid, app_id, resend_count) {
   //   console.log({ msisdn, uuid, app_id, resend_count });
   //  get sms template
+
   let otp = getNewOtp(uuid);
   let smsContent = getOtpMsgTemplate(otp);
   return new Promise(async (resolve, reject) => {
