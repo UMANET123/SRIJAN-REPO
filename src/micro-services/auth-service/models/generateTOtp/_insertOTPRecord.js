@@ -1,3 +1,10 @@
+const { getNewSecret, getNewOtp } = require("../helper.model");
+const { getOtpMsgTemplate } = require("./_util");
+const sendOtpSms = require("./_sendOTPSms");
+const addMinToDate = require("../../helpers/add-minute-to-date");
+const { SubscriberDataMask, SubscriberOTP } = require("../../config/models");
+const { OTP_EXPIRY_TIME } = require("./_constants");
+
 /**
  * Insert OTP into subscriber_otps and subscriber_mask table
  * @param {string} msisdn Mobile Number
@@ -5,13 +12,6 @@
  * @param {function} callback Function Callback
  * @returns {callback} returns created record along with status
  */
-const { getNewSecret, getNewOtp } = require("../helper.model");
-const { getOtpMsgTemplate } = require("./_util");
-const sendOtpSms = require("./_sendOTPSMS");
-const addMinToDate = require("../../helpers/add-minute-to-date");
-const { SubscriberDataMask, SubscriberOTP } = require("../../config/models");
-const { OTP_EXPIRY_TIME } = require("./_constants");
-
 module.exports = function(msisdn, app_id) {
   //  insert flood control record
   //  New User

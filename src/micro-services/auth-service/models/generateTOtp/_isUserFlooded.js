@@ -25,20 +25,16 @@ module.exports = function(uuid) {
             new Date()
           );
           //  check time difference with block limit time
-          console.log("**** DIFFERENCE : ", difference);
-          console.log(
-            "**** DIFFERENCE VALID? : ",
-            difference >= BLOCK_USER_LIMIT
-          );
           //  time difference is > block user limit
           if (difference >= BLOCK_USER_LIMIT) {
             // unblock it / reset the record
-            //  delete and create a new record with same uuid
+            //  delete record
             await FloodControl.destroy({
               where: {
                 uuid
               }
             });
+            // create a new record with same uuid
             await FloodControl.create({
               uuid
             });

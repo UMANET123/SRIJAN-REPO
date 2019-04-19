@@ -1,6 +1,6 @@
 const { verifyUser } = require("../auth.model");
 const isUserFlooded = require("./_isUserFlooded");
-const processUnblockUserOTP = require("./_processUnblockUserOTP");
+const resendOtpHandler = require("./_resendOTPHandler");
 const insertOtpRecord = require("./_insertOTPRecord");
 module.exports = function(msisdn, app_id) {
   return new Promise((resolve, reject) => {
@@ -22,15 +22,16 @@ module.exports = function(msisdn, app_id) {
               }
             });
           } else {
-            return resolve(processUnblockUserOTP(uuid, app_id, msisdn));
+            //  App-user is not blocked
+            return resolve(resendOtpHandler(uuid, app_id, msisdn));
           }
         } catch (err) {
           console.log(err);
           return reject(err);
         }
       } else {
-        //  No record exists with requested uuid, app_id
-        //  create new OTP record
+        // * No record exists with requested uuid, app_id
+        // * create new OTP record
         return resolve(insertOtpRecord(msisdn, app_id));
         //  insert the user
       }

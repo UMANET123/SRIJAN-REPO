@@ -1,6 +1,6 @@
 const { floodControlTimeValidity } = require("./_util");
-const { BLOCK_USER_LIMIT } = require("./_constants");
-const getUnblockUserOTP = require("./_getUnblockUserOTP");
+const { BLOCK_USER_LIMIT, OTP_RETRY_LIMIT } = require("./_constants");
+const updateOtpRecord = require("./_updateOtpRecord");
 const insertOtpRecord = require("./_insertOTPRecord");
 const { SubscriberOTP } = require("../../config/models");
 module.exports = function(uuid, app_id, msisdn) {
@@ -28,8 +28,11 @@ module.exports = function(uuid, app_id, msisdn) {
         console.log("-- DIFFERENCE VALID:", difference >= BLOCK_USER_LIMIT);
 
         if (difference < BLOCK_USER_LIMIT) {
-          console.log({ old: oldOtp.resend_count });
-          if (oldOtp.resend_count >= 3) {
+          //  Active user time is less than Block Time
+          //  check OTP has been hit more than limit
+
+          if (oldOtp.resend_count >= OTP_RETRY_LIMIT) {
+            //  Block OTP generate Request
             console.log("**** WITHIN BLOCK TIME AND MORE THAN 3 TIMES ****");
             return resolve({
               body: {
@@ -39,13 +42,16 @@ module.exports = function(uuid, app_id, msisdn) {
               status: 403
             });
           } else {
+            // Update OTP
+            //  increate Retry Count
             return resolve(
-              getUnblockUserOTP(msisdn, uuid, app_id, oldOtp.resend_count + 1)
+              updateOtpRecord(msisdn, uuid, app_id, oldOtp.resend_count + 1)
             );
           }
         } else {
-          // console.log("**** OUTSIDE BLOCK TIME ****");
-          return resolve(getUnblockUserOTP(msisdn, uuid, app_id, 1));
+          // Update OTP
+          // reset Retry Count
+          return resolve(updateOtpRecord(msisdn, uuid, app_id, 1));
         }
       } else {
         //  No record exists with requested uuid, app_id
