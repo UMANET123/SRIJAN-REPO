@@ -1,4 +1,4 @@
-const { generateTOtp } = require("../models/otp.model");
+const generateTOtp = require("../models/generateTOtp/generateTOtp");
 const subscriberNumber = require("../helpers/subscriber");
 
 module.exports = async function(req, res, next) {
