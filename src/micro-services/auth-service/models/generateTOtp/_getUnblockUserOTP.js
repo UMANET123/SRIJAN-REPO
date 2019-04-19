@@ -1,7 +1,9 @@
-const getNewOtp = require("../helper.model");
-const { getOtpMsgTemplate, sendOtpSms } = require("./_util");
+const { getNewOtp } = require("../helper.model");
+const { getOtpMsgTemplate } = require("./_util");
 const addMinToDate = require("../../helpers/add-minute-to-date");
 const { SubscriberOTP } = require("../../config/models");
+const sendOtpSms = require("./_sendOTPSms");
+const { OTP_EXPIRY_TIME } = require("./_constants");
 module.exports = function(msisdn, uuid, app_id, resend_count) {
   //   console.log({ msisdn, uuid, app_id, resend_count });
   //  get sms template

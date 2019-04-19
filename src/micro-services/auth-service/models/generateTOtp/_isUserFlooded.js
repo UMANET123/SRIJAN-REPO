@@ -1,4 +1,4 @@
-const floodControlTimeValidity = require("./_util");
+const { floodControlTimeValidity } = require("./_util");
 const { FloodControl } = require("../../config/models");
 const { BLOCK_USER_LIMIT } = require("./_constants");
 

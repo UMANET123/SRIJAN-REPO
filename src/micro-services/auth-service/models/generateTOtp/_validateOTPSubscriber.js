@@ -22,7 +22,7 @@ module.exports = function(msisdn, app_id) {
               }
             });
           } else {
-            return processUnblockUserOTP(uuid, app_id, msisdn);
+            return resolve(processUnblockUserOTP(uuid, app_id, msisdn));
           }
         } catch (err) {
           console.log(err);
