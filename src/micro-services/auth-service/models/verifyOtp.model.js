@@ -10,17 +10,17 @@ const { FloodControl, SubscriberOTP, Op } = require("../config/models");
  * @param {string} subscriber_id Subscriber ID or UUID
  * @param {string} otp 6 digit OTP number
  * @param {string} app_id App ID
- * @param {function} callback returns message and status code
- * @returns {function} returns message and status code
+ * @returns {Promise} response Object {status, body} wrapped in Promise
  */
 module.exports = (subscriber_id, otp, app_id) => {
   return new Promise(async (resolve, reject) => {
     //  User Flood Control check
 
     try {
+      //  check user is blocked
       let isUserBlocked = await isUserFlooded(subscriber_id);
       if (isUserBlocked) {
-        console.log("**** ACCOUNT BLOCKED ****");
+        // ("**** ACCOUNT BLOCKED ****");
         return resolve({
           body: {
             error_code: "Unauthorized",
@@ -29,7 +29,7 @@ module.exports = (subscriber_id, otp, app_id) => {
           status: 403
         });
       } else {
-        // find OTP
+        // find OTP Record
         let otpResponse = await SubscriberOTP.findOne({
           where: {
             otp: otp,
@@ -53,16 +53,17 @@ module.exports = (subscriber_id, otp, app_id) => {
             });
             //  invalidate OTP
             await invalidateOTP(subscriber_id, app_id);
-            //  reset OTP record resend Count
+            //  reset OTP record resend Count to 0
             await SubscriberOTP.update(
               {
                 resend_count: 0
               },
               { where: { uuid: subscriber_id, app_id } }
             );
+            //  return response
             return resolve({ body: null, status: 200 });
           } else {
-            // NO valid Record exists
+            // NO valid Record exists i.e. inactive record == status != 0
             return resolve({
               body: {
                 error_code: "InvalidOTP",
@@ -89,13 +90,17 @@ module.exports = (subscriber_id, otp, app_id) => {
           //  otp verification try >= 3
           if (retry >= 3) {
             /**
-             * Invalidate OTP here
+             * Invalidate Flood Control Record
              */
             await FloodControl.update(
               { status: 1 },
               { where: { uuid: subscriber_id } }
             );
+            /**
+             * Invalidate OTP Record here
+             */
             await invalidateOTP(subscriber_id, app_id);
+            //  block user with message
             return resolve({
               body: {
                 error_code: "Unauthorized",
@@ -104,7 +109,8 @@ module.exports = (subscriber_id, otp, app_id) => {
               status: 403
             });
           } else {
-            console.log("**** INVALID OTP ****");
+            // "**** INVALID OTP ****"
+            //  OTP verification failed
             return resolve({
               body: {
                 error_code: "Unauthorized",
@@ -120,173 +126,18 @@ module.exports = (subscriber_id, otp, app_id) => {
       return reject(err);
     }
   });
-
-  // return isUserFlooded(subscriber_id, isBlocked => {
-  //   if (isBlocked) {
-  //     console.log("**** ACCOUNT BLOCKED ****");
-  //     return callback(
-  //       {
-  //         error_code: "Unauthorized",
-  //         error_message: "Account Blocked, please try in 30 mins"
-  //       },
-  //       403
-  //     );
-  //   } else {
-  //     // find OTP
-  //     return SubscriberOTP.findOne({
-  //       where: {
-  //         otp: otp,
-  //         uuid: subscriber_id,
-  //         app_id: app_id,
-  //         expiration: {
-  //           [Op.gt]: new Date()
-  //         }
-  //       },
-  //       attributes: [
-  //         "uuid",
-  //         "app_id",
-  //         "developer_id",
-  //         "otp",
-  //         "expiration",
-  //         "status"
-  //       ],
-  //       raw: true
-  //     })
-  //       .then(result => {
-  //         if (result) {
-  //           if (result.status == 0) {
-  //             // Delete the flood control
-  //             // Create a transaction and send
-
-  //             return FloodControl.destroy({
-  //               where: { uuid: subscriber_id }
-  //             })
-  //               .then(() => {
-  //                 return invalidateOTP(subscriber_id, app_id, () => {
-  //                   return SubscriberOTP.update(
-  //                     {
-  //                       resend_count: 0
-  //                     },
-  //                     { where: { uuid: subscriber_id, app_id } }
-  //                   )
-  //                     .then(() =>
-  //                       //  return OTP response with callback
-  //                       {
-  //                         return callback(null, 200);
-  //                       }
-  //                     )
-  //                     .catch(err => console.log(err));
-  //                 });
-  //               })
-  //               .catch(e =>
-  //                 callback(
-  //                   {
-  //                     error_code: "InternalServerError",
-  //                     error_message: "Internal Server Error"
-  //                   },
-  //                   500
-  //                 )
-  //               );
-  //           } else {
-  //             console.log("**** INVALID OTP ****");
-  //             return callback(
-  //               {
-  //                 error_code: "InvalidOTP",
-  //                 error_message: "OTP Invalid, Please Generate a new one"
-  //               },
-  //               400
-  //             );
-  //           }
-  //         } else {
-  //           // Update FloodControl to incrememnt retry
-  //           // If Retry is > 3 block account
-  //           FloodControl.increment("retry", {
-  //             where: { uuid: subscriber_id }
-  //           }).then(() => {
-  //             return FloodControl.findOne({
-  //               where: {
-  //                 uuid: subscriber_id
-  //               },
-  //               attributes: ["retry", "created_at"],
-  //               raw: true
-  //             })
-  //               .then(floodControl => {
-  //                 console.table(floodControl);
-  //                 if (floodControl.retry >= 3) {
-  //                   /**
-  //                    * Invalidate OTP here
-  //                    */
-  //                   return FloodControl.update(
-  //                     { status: 1 },
-  //                     { where: { uuid: subscriber_id } }
-  //                   )
-  //                     .then(() => {
-  //                       return invalidateOTP(subscriber_id, app_id, () => {
-  //                         console.log("**** ACCOUNT BLOCKED ****");
-  //                         return callback(
-  //                           {
-  //                             error_code: "Unauthorized",
-  //                             error_message:
-  //                               "Account Blocked, please try in 30 mins"
-  //                           },
-  //                           403
-  //                         );
-  //                       });
-  //                     })
-  //                     .catch(e =>
-  //                       callback(
-  //                         {
-  //                           error_code: "InternalServerError",
-  //                           error_message: "Internal Server Error"
-  //                         },
-  //                         500
-  //                       )
-  //                     );
-  //                 } else {
-  //                   console.log("**** INVALID OTP ****");
-  //                   return callback(
-  //                     {
-  //                       error_code: "Unauthorized",
-  //                       error_message: "OTP Verification Failed"
-  //                     },
-  //                     403
-  //                   );
-  //                 }
-  //               })
-  //               .catch(e =>
-  //                 callback(
-  //                   {
-  //                     error_code: "InternalServerError",
-  //                     error_message: "Internal Server Error"
-  //                   },
-  //                   500
-  //                 )
-  //               );
-  //           });
-  //         }
-  //       })
-  //       .catch(e =>
-  //         callback(
-  //           {
-  //             error_code: "InternalServerError",
-  //             error_message: "Internal Server Error"
-  //           },
-  //           500
-  //         )
-  //       );
-  //   }
-  // });
 };
 
 /**
  * Invalidated an OTP after it has been verified/blocked
  * @param {string} subscriber_id Subscriber ID
  * @param {string} app_id App ID
- * @returns {function} returns a boolean value as a function argument
+ * @returns {Promise} boolean in Promise Object
  */
 function invalidateOTP(subscriber_id, app_id) {
   return new Promise(async (resolve, reject) => {
     try {
+      // invalidate OTP record i.e. from update status 0 to 1
       await SubscriberOTP.update(
         { status: 1 },
         {
