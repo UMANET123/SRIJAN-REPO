@@ -46,7 +46,7 @@ module.exports = function(msisdn, app_id) {
         // * isSmsSent: false
         return resolve({
           body: `Sorry, unable to send otp to ${msisdn}`,
-          status: 417
+          status: 503
         });
       }
     } catch (err) {
