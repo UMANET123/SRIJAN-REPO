@@ -539,12 +539,12 @@ paths:
         403:
           description: Should return when access to app is forbidden, in case of consent expiry
 
-  "/revoke/app/single":
+  "/reset/app/single":
     post:
-      operationId: RevokeSingleAppConsentAndToken
+      operationId: ResetSingleAppConsentAndToken
       tags:
-        - Revoke a Single App's Token and Consent
-      description: Revoke a single app's tokens and consent by passing the app_id and the portal basic auth header
+        - Reset a Single App's Token and Consent
+      description: Reset a single app's tokens and consent by passing the app_id and the portal basic auth header
       parameters:
         - in: header
           name: X-Auth-Header
@@ -568,12 +568,12 @@ paths:
         500:
           $ref: "#/definitions/InternalServerError"
 
-  "/revoke/app/all":
+  "/reset/app/all":
     post:
-      operationId: RevokeAllAppConsentAndAuthToken
+      operationId: ResetAllAppConsentAndAuthToken
       tags:
-        - Revoke All Apps Consent and Tokens
-      description: Revoke all apps consent and tokens
+        - Reset All Apps Consent and Tokens
+      description: Reset all apps consent and tokens
       parameters:
         - in: header
           name: X-Auth-Header
