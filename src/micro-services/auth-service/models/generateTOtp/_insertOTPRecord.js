@@ -1,6 +1,6 @@
 const { getNewSecret, getNewOtp } = require("../helper.model");
 const { getOtpMsgTemplate } = require("./_util");
-const sendOtpSms = require("./_sendOTPSms");
+const sendOtpSms = require("./_sendOTPSMS");
 const addMinToDate = require("../../helpers/add-minute-to-date");
 const { SubscriberDataMask, SubscriberOTP } = require("../../config/models");
 const { OTP_EXPIRY_TIME } = require("./_constants");
