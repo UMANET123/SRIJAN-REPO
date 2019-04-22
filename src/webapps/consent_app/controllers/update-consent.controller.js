@@ -1,9 +1,13 @@
 const {
   APIGEE_CREDS: { apigeeBaseURL },
-  APIGEE_ENDPOINTS: { updateConsent }
+  APIGEE_ENDPOINTS: { updateConsent },
+  APIGEE_CREDS: { clientID }, 
+  APIGEE_CREDS: { clientSecret }
 } = require("../config/environment");
 // const session = require("express-session");
 const request = require("request");
+var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
+var authorizationHeaderString = 'Basic ' + encodedData;
 module.exports = function(req, res, next) {
   sess = req.session;
   let { subscriber_consent } = req.body;
@@ -12,6 +16,7 @@ module.exports = function(req, res, next) {
     url: `${apigeeBaseURL}/${updateConsent}`,
     headers: {
       "cache-control": "no-cache",
+      "Authorization": authorizationHeaderString,
       "Content-Type": "application/x-www-form-urlencoded"
     },
     form: {
@@ -34,7 +39,7 @@ module.exports = function(req, res, next) {
         } else {
           res_data.success_redirect_uri = response.headers.location;
           // console.log({ sess });
-          // ! for local only  ------- ************
+          // // ! need to comment before push (for local only) ************
           // sess.success_redirect_uri = response.headers.location.replace(
           //   "13.232.77.36",
           //   "localhost"
@@ -43,7 +48,7 @@ module.exports = function(req, res, next) {
           //   "13.232.77.36",
           //   "localhost"
           // );
-          // ! for local only  ------- ************
+          // // ! need to comment before push (for local only) ************
           res_data.message = "Success.";
           return res.status(response.statusCode).send(res_data);
         }

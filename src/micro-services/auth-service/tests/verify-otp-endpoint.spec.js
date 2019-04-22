@@ -3,6 +3,13 @@ const chaiHTTP = require("chai-http");
 const app = require("../app");
 const { expect } = chai;
 chai.use(chaiHTTP);
+const {
+  AUTH_KEYS: { auth_client_id, auth_secret_message }
+} = require("../config/environment");
+const AUTH_CLIENT_ID = auth_client_id;
+const AUTH_CLIENT_SECRET = auth_secret_message;
+const { getAuthorizationHeader } = require("../helpers/authorization");
+const token = getAuthorizationHeader(AUTH_CLIENT_ID, AUTH_CLIENT_SECRET);
 
 const endpoints = {
   generate: "/auth/v1/generate/totp",
@@ -26,12 +33,14 @@ describe("Testing Verify TOTP Endpoint", () => {
       chai
         .request(app)
         .post(endpoints.generate)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
           chai
             .request(app)
             .post(endpoints.verify)
+            .set({'Authorization': token})
             .type("application/json")
             .send(res.body)
             .end((err, res) => {
@@ -44,6 +53,7 @@ describe("Testing Verify TOTP Endpoint", () => {
       chai
         .request(app)
         .put(endpoints.verify)
+        .set({'Authorization': token})
         .type("application/json")
         .send({})
         .end((err, res) => {
@@ -55,6 +65,7 @@ describe("Testing Verify TOTP Endpoint", () => {
       chai
         .request(app)
         .patch(endpoints.verify)
+        .set({'Authorization': token})
         .type("application/json")
         .send({})
         .end((err, res) => {
@@ -66,6 +77,7 @@ describe("Testing Verify TOTP Endpoint", () => {
       chai
         .request(app)
         .delete(endpoints.verify)
+        .set({'Authorization': token})
         .type("application/json")
         .send({})
         .end((err, res) => {
@@ -77,6 +89,7 @@ describe("Testing Verify TOTP Endpoint", () => {
       chai
         .request(app)
         .get(endpoints.verify)
+        .set({'Authorization': token})
         .type("application/json")
         .end((err, res) => {
           expect(res).to.have.status(404);
@@ -95,6 +108,7 @@ describe("Testing Verify TOTP Endpoint", () => {
       chai
         .request(app)
         .post(endpoints.verify)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -106,11 +120,13 @@ describe("Testing Verify TOTP Endpoint", () => {
       let body = {
         subscriber_id: "IU3VCMTWJJIHKNBWJNKU4STQN5FTGSKD",
         otp: "972623",
-        app_id: ""
+        app_id: "",
+        transaction_id: "fdfdfdffdd"
       };
       chai
         .request(app)
         .post(endpoints.verify)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -122,11 +138,13 @@ describe("Testing Verify TOTP Endpoint", () => {
       let body = {
         subscriber_id: "IU3VCMTWJJIHKNBWJNKU4STQN5FTGSKD",
         otp: "",
-        app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24"
+        app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
+        transaction_id: "fdfdfdffdd"
       };
       chai
         .request(app)
         .post(endpoints.verify)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -138,11 +156,13 @@ describe("Testing Verify TOTP Endpoint", () => {
       let body = {
         subscriber_id: "IU3VCMTWJJIHKNBWJNKU4STQN5FTGSKD",
         otp: "9726",
-        app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24"
+        app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
+        transaction_id: "fdfdfdffdd"
       };
       chai
         .request(app)
         .post(endpoints.verify)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -154,11 +174,13 @@ describe("Testing Verify TOTP Endpoint", () => {
       let body = {
         subscriber_id: "IU3VCMTWJJIHKNBWJNKU4STQN5FTGSKD",
         otp: "9726432",
-        app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24"
+        app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
+        transaction_id: "fdfdfdffdd"
       };
       chai
         .request(app)
         .post(endpoints.verify)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -169,22 +191,26 @@ describe("Testing Verify TOTP Endpoint", () => {
   });
 
   describe("Testing Verifying a TOTP", () => {
+    //manish comment: added transaction_id in body
     it("Should Successfully Verify a TOTP", done => {
       let body = {
         msisdn: "639234500090",
         app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
-        blacklist: true
+        blacklist: true,
+        transaction_id: "fdfdfdffdd"
       };
 
       chai
         .request(app)
         .post(endpoints.generate)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
           chai
             .request(app)
             .post(endpoints.verify)
+            .set({'Authorization': token})
             .type("application/json")
             .send(res.body)
             .end((err, res) => {
@@ -204,12 +230,14 @@ describe("Testing Verify TOTP Endpoint", () => {
       chai
         .request(app)
         .post(endpoints.generate)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .then((res) => {
           chai
             .request(app)
             .post(endpoints.verify)
+            .set({'Authorization': token})
             .type("application/json")
             .send(
               JSON.stringify({
@@ -222,6 +250,7 @@ describe("Testing Verify TOTP Endpoint", () => {
               chai
                 .request(app)
                 .post(endpoints.verify)
+                .set({'Authorization': token})
                 .type("application/json")
                 .send(
                   JSON.stringify({
@@ -234,6 +263,7 @@ describe("Testing Verify TOTP Endpoint", () => {
                   chai
                     .request(app)
                     .post(endpoints.verify)
+                    .set({'Authorization': token})
                     .type("application/json")
                     .send(
                       JSON.stringify({
@@ -246,6 +276,7 @@ describe("Testing Verify TOTP Endpoint", () => {
                       chai
                         .request(app)
                         .post(endpoints.verify)
+                        .set({'Authorization': token})
                         .type("application/json")
                         .send(JSON.stringify(res.body))
                         .then(res => {

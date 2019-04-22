@@ -31,5 +31,17 @@ const DB_SETTINGS = {
     port : ENV.DB_PORT || "5432",
     database: ENV.DB_NAME
 }
+
+//Authentication data
+const AUTH_KEYS = {
+    auth_client_id: ENV.AUTH_CLIENT_ID,
+    auth_secret_message: ENV.AUTH_CLIENT_SECRET
+}
+//Consent Authentication Keys
+const CONSENT_KEYS = {
+    consent_client_id: ENV.CONSENT_CLIENT_ID,
+    consent_secret_message: ENV.CONSENT_CLIENT_SECRET
+}
 const AUTH_BASE_PATH = `/auth/v1`;
-module.exports = { NODE_SETTINGS, OTP_SETTINGS, DB_SETTINGS, EMAIL_SETTINGS, AUTH_BASE_PATH};
+const AUTHENTICATION_ACTIVE = ENV.AUTHENTICATION_ACTIVE || 'false';
+module.exports = { NODE_SETTINGS, OTP_SETTINGS, DB_SETTINGS, EMAIL_SETTINGS, AUTH_BASE_PATH, AUTH_KEYS, CONSENT_KEYS, AUTHENTICATION_ACTIVE};

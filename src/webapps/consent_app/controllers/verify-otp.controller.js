@@ -1,10 +1,15 @@
 /* jshint esversion:9 */
 const {
   APIGEE_CREDS: { apigeeBaseURL },
+  APIGEE_CREDS: { clientID },
+  APIGEE_CREDS: { clientSecret },
   APIGEE_ENDPOINTS: { verifyOTP }
 } = require("../config/environment");
 
 const request = require("request");
+const session = require("express-session");
+var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
+var authorizationHeaderString = 'Basic ' + encodedData;
 // const session = require("express-session");
 module.exports = function(req, res, next) {
   let { otp, transaction_id } = req.body;
@@ -14,7 +19,7 @@ module.exports = function(req, res, next) {
     url: `${apigeeBaseURL}/${verifyOTP}`,
     headers: {
       "cache-control": "no-cache",
-      //  Authorization: authorizationHeaderString,
+      "Authorization": authorizationHeaderString,
       "Content-Type": "application/x-www-form-urlencoded"
     },
     form: { otp, transaction_id }
@@ -24,29 +29,43 @@ module.exports = function(req, res, next) {
     if (error) throw new Error(error);
     var res_data = {};
     res_data.statusCode = response.statusCode;
+    // succees rseponse
     if (response.statusCode == 302) {
       res_data.message = "Success.";
       sess = req.session;
       sess.sessionid = transaction_id;
       let location = response.headers.location;
+      let authCode = getQueryParamByName(location, "code");
       // * set sessions code, state
-      // console.log({ verify_location: location });
-      sess.code = getQueryParamByName(location, "code");
-      sess.app_name = getQueryParamByName(location, "app_name");
-      sess.app_message = getQueryParamByName(location, "app_message");
       res_data.redirect = location;
-
-      // // ! need to comment before push for local only  -------
+      // // ! need to comment before push (for local only)  -------
       // res_data.redirect = location.replace("13.232.77.36", "localhost");
-      // // ! need to comment before push for local only  -------
-      // console.log(res_data.redirect);
+      // // ! need to comment before push (for local only)  -------
+      // (authCode == true) means its cosent skip case
+      // need to redirect URL to developer App
+      if (authCode) {
+        //  destroy session
+        req.session.destroy(function(err) {
+          if (err) {
+            console.log(err);
+          } else {
+            return res.status(response.statusCode).send(res_data);
+          }
+        });
+      } else {
+        //  set app name, message to session
+        sess.app_name = getQueryParamByName(location, "app_name");
+        sess.app_message = getQueryParamByName(location, "app_message");
+        return res.status(response.statusCode).send(res_data);
+      }
     } else if (response.statusCode == 403) {
-      // let errorResponseBody = response.body;
+      // forbidden response
       return res.status(response.statusCode).send(JSON.parse(body));
     } else {
+      //  any other errors
       res_data.error_message = "Invalid OTP.";
+      return res.status(response.statusCode).send(res_data);
     }
-    return res.status(response.statusCode).send(res_data);
   });
 };
 /**
