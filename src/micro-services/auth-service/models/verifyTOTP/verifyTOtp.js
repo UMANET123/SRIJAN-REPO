@@ -21,7 +21,7 @@ module.exports = (subscriber_id, otp, app_id) => {
 
     try {
       //  check user is blocked
-      let isUserBlocked = await isUserFlooded(subscriber_id);
+      let isUserBlocked = await isUserFlooded(subscriber_id, app_id);
       if (isUserBlocked) {
         // ("**** ACCOUNT BLOCKED ****");
         return resolve({
@@ -59,10 +59,10 @@ module.exports = (subscriber_id, otp, app_id) => {
           //  NO OTP record exists
           //  OTP failure cases
           //  increase retry count
-          let retry = await invalidOTPHandler(subscriber_id);
+          let retry = await invalidOTPHandler(subscriber_id, app_id);
           //  otp verification try >= 3
-          if (retry >= 3) {
-            await invalidateFloodControl(subscriber_id, 1);
+          if (retry && retry >= 3) {
+            await invalidateFloodControl(subscriber_id, app_id, 1);
             /**
              * Invalidate OTP Record here
              */

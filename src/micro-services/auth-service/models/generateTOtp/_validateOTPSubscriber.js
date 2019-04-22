@@ -18,7 +18,7 @@ module.exports = function(msisdn, app_id) {
 
         //  check flood control
         try {
-          const isBlocked = await isUserFlooded(uuid);
+          const isBlocked = await isUserFlooded(uuid, app_id);
           console.log("**** IS BLOCKED: ", isBlocked);
           if (isBlocked) {
             return resolve({

@@ -6,16 +6,17 @@ const { BLOCK_USER_LIMIT } = require("./_constants");
  *
  * Is User Flooded / Blocked Checking
  * @param {string} uuid Subscriber ID
+ * @param {string} app_id App ID
  * @returns {Promise} Boolean in Promise
  */
-module.exports = function(uuid) {
+module.exports = function(uuid, app_id) {
   //  query to find the user
   return new Promise(async (resolve, reject) => {
     console.log("*** UUID : ", uuid);
     try {
       //  find OR create Flood controll record
       const [floodControl, created] = await FloodControl.findOrCreate({
-        where: { uuid: uuid },
+        where: { uuid, app_id },
         attributes: ["status", "created_at"]
       });
       //  for Old Record flood control
@@ -37,12 +38,14 @@ module.exports = function(uuid) {
             //  delete record
             await FloodControl.destroy({
               where: {
-                uuid
+                uuid,
+                app_id
               }
             });
             // create a new record with same uuid
             await FloodControl.create({
-              uuid
+              uuid,
+              app_id
             });
             console.log("****  User unblocked ****");
             return resolve(false);

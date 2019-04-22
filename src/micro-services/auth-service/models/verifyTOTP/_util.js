@@ -56,25 +56,30 @@ function findOTPRecord(otp, subscriber_id, app_id, date) {
  *
  *
  * @param {string} subscriber_id Subscriber ID
+ * @param {string} app_id App Id
  * @param {number} [status=1] Status default value 1 to invalidate
  * @returns {Promise}
  */
-function invalidateFloodControl(subscriber_id, status = 1) {
+function invalidateFloodControl(subscriber_id, app_id, status = 1) {
   /**
    * Invalidate Flood Control Record
    */
-  return FloodControl.update({ status }, { where: { uuid: subscriber_id } });
+  return FloodControl.update(
+    { status },
+    { where: { uuid: subscriber_id, app_id } }
+  );
 }
 
 /**
  *
  * delete flood control record by subscriber id
  * @param {string} uuid Subscriber Id
+ * @param {string} app_id App Id
  * @returns {Promise}
  */
-function deleteFloodControl(uuid) {
+function deleteFloodControl(uuid, app_id) {
   return FloodControl.destroy({
-    where: { uuid }
+    where: { uuid, app_id }
   });
 }
 /**
@@ -97,23 +102,26 @@ function resetResendOTPCount(uuid, app_id, resend_count = 0) {
  *
  * increment Flood Control  Retry
  * @param {string} uuid Subscriber ID
+ * @param {string} app_id App Id
  * @returns {Promise}
  */
-function incrementFloodControlRetry(uuid) {
+function incrementFloodControlRetry(uuid, app_id) {
   return FloodControl.increment("retry", {
-    where: { uuid }
+    where: { uuid, app_id }
   });
 }
 /**
  *
  *
  * @param {string} uuid Subscriber Id
+ * @param {string} app_id App Id
  * @returns {Promise}
  */
-function getRetryByUuid(uuid) {
+function getRetryByUuid(uuid, app_id) {
   return FloodControl.findOne({
     where: {
-      uuid
+      uuid,
+      app_id
     },
     attributes: ["retry"],
     raw: true
