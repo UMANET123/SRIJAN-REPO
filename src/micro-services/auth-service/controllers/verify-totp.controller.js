@@ -1,4 +1,4 @@
-const verifyTOtp = require("../models/verifyOtp.model");
+const verifyTOtp = require("../models/verifyTOTP/verifyTOtp");
 module.exports = async (req, res) => {
   let { subscriber_id, otp, app_id } = req.body;
   //  OTP string length Must be 6
