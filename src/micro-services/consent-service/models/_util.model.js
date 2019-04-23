@@ -21,10 +21,12 @@ function createAppMetaData(
   developer_id,
   appname,
   created,
+  consent_expiry_local,
   callback,
   short_description,
   long_description,
-  developer_name
+  developer_name,
+  consent_expiry_global
 ) {
   //  create app meta transaction
   //  findOrCreate app meta data
@@ -45,7 +47,8 @@ function createAppMetaData(
           created,
           short_description,
           long_description,
-          developer_name
+          developer_name,
+          consent_expiry_local
         })
           .then(() => callback(true))
           .catch(() => callback(500));
