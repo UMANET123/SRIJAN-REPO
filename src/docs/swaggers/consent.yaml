@@ -527,6 +527,7 @@ paths:
           in: query
           required: true
           type: array
+          collectionFormat: csv
           items:
             type: string
       responses:
