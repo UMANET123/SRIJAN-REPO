@@ -96,6 +96,12 @@ const AppMetaData = sequelize.define(
     developer_name: {
       type: STRING
     },
+    consent_expiry_local:{
+      type: STRING
+    },
+    consent_expiry_global:{
+      type: STRING
+    },
     created: {
       type: DATE
     },
