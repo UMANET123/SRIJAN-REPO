@@ -39,7 +39,7 @@ let generateHash = function() {
     .digest("hex");
 };
 
-describe.only("Testing all apps consent reset", () => {
+describe("Testing all apps consent reset", () => {
   it("Should test reset of all apps consent", done => {
     /**
      * This test case should do the following
