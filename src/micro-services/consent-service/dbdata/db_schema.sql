@@ -36,3 +36,7 @@ create table apps_metadata(
    created date,
    updated date
 );
+
+
+ALTER TABLE subscriber_consent ADD consent_expiry varchar(255) NULL DEFAULT NULL;
+ALTER TABLE subscriber_consent ADD consent_type varchar(255) NULL DEFAULT NULL;

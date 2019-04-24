@@ -23,10 +23,10 @@ services:
     volumes:
       - .:/usr/src/app
       - $HOME/logs:/var/log
-    # depends_on:
-    #   - db
-    # links:
-    #   - db
+    depends_on:
+      - dcms
+    links:
+      - dcms
     ports:
       - "3002:3002"
     environment:
@@ -38,22 +38,30 @@ services:
       - DB_NAME=${ENV_DB_NAME}
       - DB_HOST=${ENV_DB_HOST}
       - DB_PORT=${ENV_DB_PORT}
+      - AUTH_CLIENT_ID=${ENV_AUTH_CLIENT_ID}
+      - AUTH_CLIENT_SECRET=${ENV_AUTH_CLIENT_SECRET}
+      - CONSENT_CLIENT_ID=${ENV_CONSENT_CLIENT_ID}
+      - CONSENT_CLIENT_SECRET=${ENV_CONSENT_CLIENT_SECRET}
+      - AUTHENTICATION_ACTIVE=${ENV_AUTHENTICATION_ACTIVE}
     networks:
       - consentserivce_default
-  # db:
-  #   restart: always
-  #   image: postgres:10
-  #   environment:
-  #   - POSTGRES_USER=wakanda_consent_user
-  #   - POSTGRES_PASSWORD=12345
-  #   - POSTGRES_DB=wakanda_consent
-  #   volumes:
-  #   - ./postgres-data/postgres:/var/lib/postgresql/data
-  #   - ./dbdata:/docker-entrypoint-initdb.d/
-  #   ports:
-  #   - "5432:5434"
-  #   expose:
-  #   - "5434"
+  dcms:
+    container_name: dcms
+    restart: always
+    image: postgres:10
+    environment:
+      - POSTGRES_USER=${ENV_DB_USERNAME}
+      - POSTGRES_PASSWORD=${ENV_DB_PASSWORD}
+      - POSTGRES_DB=${ENV_DB_NAME}
+    volumes:
+      - ./postgres-data/postgres:/var/lib/postgresql/data
+      - ./dbdata:/docker-entrypoint-initdb.d/
+    ports:
+      - "5434:5432"
+    expose:
+      - "5434"
+    networks:
+      - consentserivce_default
 
 networks:
   consentserivce_default:

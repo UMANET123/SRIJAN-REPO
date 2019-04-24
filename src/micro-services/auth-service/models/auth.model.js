@@ -2,6 +2,7 @@
 const { SubscriberDataMask } = require("../config/models");
 const logger = require("../logger");
 const updatePhoneNo = require("../helpers/mobile-number.modify");
+
 /**
  * Returns UUID of a user if exists else null
  * @param {string} phone_no  User msisdn

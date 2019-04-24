@@ -1,75 +1,61 @@
 const {
-  NODE_SETTINGS,
   APIGEE_CREDS: { apigeeBaseURL },
-  APIGEE_CREDS: { clientID },
-  APIGEE_CREDS: { clientSecret },
-  APIGEE_ENDPOINTS: { updateConsent }
+  APIGEE_ENDPOINTS: { updateConsent },
+  APIGEE_CREDS: { clientID }, 
+  APIGEE_CREDS: { clientSecret }
 } = require("../config/environment");
-
-var request = require("request");
-var session = require("express-session");
+// const session = require("express-session");
+const request = require("request");
+var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
+var authorizationHeaderString = 'Basic ' + encodedData;
 module.exports = function(req, res, next) {
-  let subscriber_id = req.body.subscriber_id;
   sess = req.session;
-  console.log("subscriber id - ");
-  console.log(sess.subscriber_id);
-  let scopes = req.body.scopes;
-  let client_id = sess.client_id;
-  var encodedData = Buffer.from(clientID + ":" + clientSecret).toString(
-    "base64"
-  );
-  var authorizationHeaderString = "Basic " + encodedData;
-  console.log(authorizationHeaderString);
-  var options = {
+  let { subscriber_consent } = req.body;
+  let options = {
     method: "POST",
     url: `${apigeeBaseURL}/${updateConsent}`,
     headers: {
       "cache-control": "no-cache",
-      Authorization: authorizationHeaderString,
+      "Authorization": authorizationHeaderString,
       "Content-Type": "application/x-www-form-urlencoded"
     },
     form: {
-      subscriber_id: sess.subscriber_id,
-      //  subscriber_consent: '["LOCATION"]',
-      subscriber_consent: scopes,
-      response_type: "code",
-      redirect_uri: sess.redirect_uri,
-      transaction_id: sess.transaction_id
-    },
-    qs: { client_id: client_id }
+      subscriber_consent,
+      transaction_id: sess.sessionid
+    }
   };
-  console.log(options);
+  // console.log(options);
   request(options, function(error, response, body) {
     if (error) throw new Error(error);
-    console.log(response.statusCode, response.headers.location);
-
-    //  for local dev
-    // let req_uri = `curl -X POST "https://globeslingshot-dev-labs.apigee.net/auth/v1/generate/token" -H "Authorization: Basic REPLACE_BASE64_TOKEN_CLIENT_ID_SECRET_ID" -H "Cache-Control: no-cache" -H "Content-Type: application/x-www-form-urlencoded" -d "subscriber_id=${
-    //   sess.subscriber_id
-    // }&grant_type=authorization_code&code=${response.headers.location
-    //   .split("=")[1]
-    //   .trim()}&redirect_uri=http%3A%2F%2F13.232.77.36%3A5560&transaction_id=${
-    //   sess.transaction_id
-    // }"`;
-    // console.log({
-    //   base64token_cmd: `echo -n "$client_id:$secret_id" | base64`
-    // });
-    // console.log({ access_token_url: req_uri });
-    // for local dev
-
-    var res_data = {};
+    let res_data = {};
     res_data.statusCode = response.statusCode;
-
+    // console.log({
+    //   location: response.headers.location
+    // });
     if (response.statusCode == 302) {
-      sess.success_redirect_uri = response.headers.location;
-
-      //   for local only  ------- ************
-      // res_data.redirect_uri = sess.redirect_uri.replace("13.232.77.36","localhost");
-      //   for local only  ------- ************
-      res.status(response.statusCode).send(res_data);
+      req.session.destroy(function(err) {
+        if (err) {
+          console.log(err);
+        } else {
+          res_data.success_redirect_uri = response.headers.location;
+          // console.log({ sess });
+          // // ! need to comment before push (for local only) ************
+          // sess.success_redirect_uri = response.headers.location.replace(
+          //   "13.232.77.36",
+          //   "localhost"
+          // );
+          // res_data.success_redirect_uri = response.headers.location.replace(
+          //   "13.232.77.36",
+          //   "localhost"
+          // );
+          // // ! need to comment before push (for local only) ************
+          res_data.message = "Success.";
+          return res.status(response.statusCode).send(res_data);
+        }
+      });
     } else {
       res_data.error_message = "Invalid request";
-      res.status(response.statusCode).send(res_data);
+      return res.status(response.statusCode).send(res_data);
     }
   });
 };

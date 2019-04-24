@@ -3,7 +3,13 @@ const chaiHTTP = require("chai-http");
 const app = require("../app");
 const { expect } = chai;
 chai.use(chaiHTTP);
-
+const {
+  AUTH_KEYS: { auth_client_id, auth_secret_message }
+} = require("../config/environment");
+const AUTH_CLIENT_ID = auth_client_id;
+const AUTH_CLIENT_SECRET = auth_secret_message;
+const { getAuthorizationHeader } = require("../helpers/authorization");
+const token = getAuthorizationHeader(AUTH_CLIENT_ID, AUTH_CLIENT_SECRET);
 const endpoints = {
   generate: "/auth/v1/generate/totp",
   verify: "/auth/v1/verify/totp",
@@ -12,22 +18,25 @@ const endpoints = {
 };
 
 describe("Testing Validate Endpoint", () => {
-  describe("Testing HTTP Method Responses", () => {
+  describe("Testing HTTP Method Responses", () => { 
     it("Should return 200/201 for GET", done => {
       let body = {
         msisdn: "639234423210",
         app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
-        blacklist: true
+        blacklist: true,
+        transaction_id: "fdfdfdffdd"
       };
       chai
         .request(app)
         .post(endpoints.generate)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .then(res => {
           chai
             .request(app)
             .post(endpoints.verify)
+            .set({'Authorization': token})
             .type("application/json")
             .send(res.body)
             .then(value => {
@@ -38,6 +47,7 @@ describe("Testing Validate Endpoint", () => {
                     res.body.subscriber_id
                   }/${res.body.app_id}`
                 )
+                .set({'Authorization': token})
                 .then(res => {
                   console.log(res.body);
                   expect(res).to.have.status(200);
@@ -50,6 +60,7 @@ describe("Testing Validate Endpoint", () => {
       chai
         .request(app)
         .put(endpoints.validate)
+        .set({'Authorization': token})
         .type("application/json")
         .send({})
         .end((err, res) => {
@@ -61,6 +72,7 @@ describe("Testing Validate Endpoint", () => {
       chai
         .request(app)
         .patch(endpoints.validate)
+        .set({'Authorization': token})
         .type("application/json")
         .send({})
         .end((err, res) => {
@@ -72,6 +84,7 @@ describe("Testing Validate Endpoint", () => {
       chai
         .request(app)
         .delete(endpoints.validate)
+        .set({'Authorization': token})
         .type("application/json")
         .send({})
         .end((err, res) => {
@@ -83,6 +96,7 @@ describe("Testing Validate Endpoint", () => {
       chai
         .request(app)
         .post(endpoints.validate)
+        .set({'Authorization': token})
         .type("application/json")
         .send({})
         .end((err, res) => {
@@ -90,23 +104,26 @@ describe("Testing Validate Endpoint", () => {
           done();
         });
     });
-  });
+  }); 
   describe("Should Test Validate Endpoint", () => {
     it("Should Return 200 with isValid true", done => {
       let body = {
         msisdn: "639234923990",
         app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
-        blacklist: true
+        blacklist: true,
+        transaction_id: "fdfdfdffdd"
       };
       chai
         .request(app)
         .post(endpoints.generate)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .then(res => {
           chai
             .request(app)
             .post(endpoints.verify)
+            .set({'Authorization': token})
             .type("application/json")
             .send(res.body)
             .then(value => {
@@ -117,6 +134,7 @@ describe("Testing Validate Endpoint", () => {
                     res.body.subscriber_id
                   }/${res.body.app_id}`
                 )
+                .set({'Authorization': token})
                 .then(res => {
                   console.log(res.body);
                   expect(res).to.have.status(200);
@@ -130,17 +148,20 @@ describe("Testing Validate Endpoint", () => {
       let body = {
         msisdn: "639234923990",
         app_id: "a46fa81d-9941-42c1-8b47-c8d57be4acc24",
-        blacklist: true
+        blacklist: true,
+        transaction_id: "fdfdfdffdd"
       };
       chai
         .request(app)
         .post(endpoints.generate)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .then(res => {
           chai
             .request(app)
             .post(endpoints.verify)
+            .set({'Authorization': token})
             .type("application/json")
             .send(res.body)
             .then(value => {
@@ -152,6 +173,7 @@ describe("Testing Validate Endpoint", () => {
                     endpoints.invalidate
                   }`
                 )
+                .set({'Authorization': token})
                 .send(
                   res.body
                 )
@@ -163,6 +185,7 @@ describe("Testing Validate Endpoint", () => {
                         res.body.subscriber_id
                       }/${res.body.app_id}`
                     )
+                    .set({'Authorization': token})
                     .then(data => {
                         console.log(data)
                       console.log(data.body);

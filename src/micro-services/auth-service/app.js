@@ -10,9 +10,12 @@ const app = express();
 
 // const httpPostOnlyMiddleware = require('./middleware/http-only-post.middleware');
 app.use(morgan("tiny",{stream: logger.stream}));
+const authMiddleware = require('./middleware/authMiddleware'); 
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(httpPostOnlyMiddleware);
+app.use(authMiddleware);
 app.use(AUTH_BASE_PATH, router);
 
 app.listen(portNumber, () => {
