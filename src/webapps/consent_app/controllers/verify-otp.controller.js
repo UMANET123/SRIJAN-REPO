@@ -1,59 +1,83 @@
+/* jshint esversion:9 */
 const {
-  NODE_SETTINGS,
   APIGEE_CREDS: { apigeeBaseURL },
   APIGEE_CREDS: { clientID },
   APIGEE_CREDS: { clientSecret },
   APIGEE_ENDPOINTS: { verifyOTP }
 } = require("../config/environment");
 
-var request = require("request");
-var session = require("express-session");
+const request = require("request");
+const session = require("express-session");
+var encodedData = Buffer.from(clientID + ':' + clientSecret).toString('base64');
+var authorizationHeaderString = 'Basic ' + encodedData;
+// const session = require("express-session");
 module.exports = function(req, res, next) {
-  let subscriber_id = req.body.subscriber_id;
-  let otp = req.body.otp;
-  let client_id = req.body.client_id;
+  let { otp, transaction_id } = req.body;
 
   var options = {
     method: "POST",
     url: `${apigeeBaseURL}/${verifyOTP}`,
     headers: {
       "cache-control": "no-cache",
-      //  Authorization: authorizationHeaderString,
+      "Authorization": authorizationHeaderString,
       "Content-Type": "application/x-www-form-urlencoded"
     },
-    form: { subscriber_id: subscriber_id, otp: otp },
-    qs: { client_id: client_id }
+    form: { otp, transaction_id }
   };
 
   request(options, function(error, response, body) {
     if (error) throw new Error(error);
     var res_data = {};
     res_data.statusCode = response.statusCode;
+    // succees rseponse
     if (response.statusCode == 302) {
       res_data.message = "Success.";
       sess = req.session;
-      sess.sessionid = subscriber_id;
-      sess.subscriber_id = subscriber_id;
-      sess.client_id = client_id;
-      console.log(subscriber_id);
-      console.log(response.headers.location);
-      res_data.redirect = response.headers.location;
-      //   for local only  ------- ************
-      // res_data.redirect = response.headers.location.replace(
-      //   "13.232.77.36",
-      //   "localhost"
-      // );
-      // //   for local only  ------- ************
-      console.log(res_data.redirect);
+      sess.sessionid = transaction_id;
+      let location = response.headers.location;
+      let authCode = getQueryParamByName(location, "code");
+      // * set sessions code, state
+      res_data.redirect = location;
+      // // ! need to comment before push (for local only)  -------
+      // res_data.redirect = location.replace("13.232.77.36", "localhost");
+      // // ! need to comment before push (for local only)  -------
+      // (authCode == true) means its cosent skip case
+      // need to redirect URL to developer App
+      if (authCode) {
+        //  destroy session
+        req.session.destroy(function(err) {
+          if (err) {
+            console.log(err);
+          } else {
+            return res.status(response.statusCode).send(res_data);
+          }
+        });
+      } else {
+        //  set app name, message to session
+        sess.app_name = getQueryParamByName(location, "app_name");
+        sess.app_message = getQueryParamByName(location, "app_message");
+        return res.status(response.statusCode).send(res_data);
+      }
     } else if (response.statusCode == 403) {
-      let errorResponseBody = response.body;
-      return res
-        .status(response.statusCode)
-        .send(JSON.parse(errorResponseBody));
+      // forbidden response
+      return res.status(response.statusCode).send(JSON.parse(body));
     } else {
+      //  any other errors
       res_data.error_message = "Invalid OTP.";
+      return res.status(response.statusCode).send(res_data);
     }
-    console.log(res_data);
-    return res.status(response.statusCode).send(res_data);
   });
 };
+/**
+ *
+ * * Get query string value by passing key
+ * @param {*} url URL string
+ * @param {*} keyName query string key name
+ * @returns {string} query string value of key
+ */
+function getQueryParamByName(url, keyName) {
+  var match = RegExp("[?&]" + keyName + "=([^&]*)").exec(url);
+  return (
+    match && decodeURIComponent(match[1].replace(/\+/g, " ").replace(/\t/g, ""))
+  );
+}

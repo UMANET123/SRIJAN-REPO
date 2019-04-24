@@ -11,6 +11,8 @@ const app = express();
 app.use(morgan('tiny',{stream: logger.stream}))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+const authMiddleware = require('./middleware/authMiddleware'); 
+app.use(authMiddleware);
 app.use(CONSENT_BASE_PATH, router);
 app.listen(portNumber, () => {
   console.log(`App running on port ${portNumber}`);

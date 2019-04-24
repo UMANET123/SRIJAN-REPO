@@ -3,7 +3,13 @@ const chaiHTTP = require("chai-http");
 const app = require("../app");
 const { expect } = chai;
 chai.use(chaiHTTP);
-
+const {
+  AUTH_KEYS: { auth_client_id, auth_secret_message }
+} = require("../config/environment");
+const AUTH_CLIENT_ID = auth_client_id;
+const AUTH_CLIENT_SECRET = auth_secret_message;
+const { getAuthorizationHeader } = require("../helpers/authorization");
+const token = getAuthorizationHeader(AUTH_CLIENT_ID, AUTH_CLIENT_SECRET);
 const endpoints = {
   generate: "/auth/v1/generate/totp",
   verify: "/auth/v1/verify/totp",
@@ -19,6 +25,7 @@ describe("Testing Verify User Endpoint", () => {
       chai
         .request(app)
         .post(endpoints.verifyUser)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -35,6 +42,7 @@ describe("Testing Verify User Endpoint", () => {
       chai
         .request(app)
         .put(endpoints.verifyUser)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -50,6 +58,7 @@ describe("Testing Verify User Endpoint", () => {
       chai
         .request(app)
         .patch(endpoints.verifyUser)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -61,6 +70,7 @@ describe("Testing Verify User Endpoint", () => {
       chai
         .request(app)
         .get(endpoints.verifyUser)
+        .set({'Authorization': token})
         .type("application/json")
         .end((err, res) => {
           expect(res).to.have.status(404);
@@ -75,6 +85,7 @@ describe("Testing Verify User Endpoint", () => {
       chai
         .request(app)
         .delete(endpoints.verifyUser)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -93,6 +104,7 @@ describe("Testing Verify User Endpoint", () => {
       chai
         .request(app)
         .post(endpoints.verifyUser)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -105,6 +117,7 @@ describe("Testing Verify User Endpoint", () => {
       chai
         .request(app)
         .post(endpoints.verifyUser)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {
@@ -122,6 +135,7 @@ describe("Testing Verify User Endpoint", () => {
       chai
         .request(app)
         .post(endpoints.verifyUser)
+        .set({'Authorization': token})
         .type("application/json")
         .send(JSON.stringify(body))
         .end((err, res) => {

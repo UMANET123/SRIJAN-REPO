@@ -24,6 +24,7 @@ function getServiceResolvedUrl(
   serviceDefaultPath = process.env.CONSENT_SERVICE_BASEPATH,
   protocolStr = "http://"
 ) {
+  console.log({ serviceHost, serviceDefaultPath, serviceEndpointUri });
   return new Promise((resolve, reject) => {
     // TODO: Need to add a mapping logic for service Endpoint, DefaultPath, Host
     if (!serviceHost || !serviceDefaultPath || !serviceEndpointUri)
@@ -32,6 +33,9 @@ function getServiceResolvedUrl(
           "(serviceHost,serviceEndpointUri,serviceDefaultPath) one of them are not passed"
         )
       );
+    if (serviceHost == "consentms") {
+      return resolve(serviceDefaultPath);
+    }
     //  hit for dns service discovery with host
     dns.resolveSrv(serviceHost, (err, addresses) => {
       //    reject the promise if error occurs

@@ -4,6 +4,14 @@ const app = require("../app");
 const { expect, should } = chai;
 chai.use(chaiHTTP);
 
+const {
+  CONSENT_KEYS: { consent_client_id, consent_secret_message }
+} = require("../config/environment");
+const CONSENT_CLIENT_ID = consent_client_id;
+const CONSENT_CLIENT_SECRET = consent_secret_message;
+const { getAuthorizationHeader } = require("../helpers/authorization");
+const token = getAuthorizationHeader(CONSENT_CLIENT_ID, CONSENT_CLIENT_SECRET);
+
 const endpoint = "/subscriber/v1/revoke/e73216f434e325d7f687260c2c272cd6";
 const contentType = "application/json";
 
@@ -17,6 +25,7 @@ describe("Testing Update Consent API Endpoint", () => {
       chai
         .request(app)
         .put(endpoint)
+        .set({'Authorization': token})
         .type(contentType)
         .send(data)
         .end((err, res) => {
@@ -45,6 +54,7 @@ describe("Testing Update Consent API Endpoint", () => {
       chai
         .request(app)
         .put("/subscriber/v1/revoke")
+        .set({'Authorization': token})
         .type(contentType)
         .send(
           JSON.stringify({
@@ -63,6 +73,7 @@ describe("Testing Update Consent API Endpoint", () => {
     chai
       .request(app)
       .put(endpoint)
+      .set({'Authorization': token})
       .type(contentType)
       .send(
         JSON.stringify({
@@ -82,6 +93,7 @@ describe("Testing Update Consent API Endpoint", () => {
     chai
       .request(app)
       .put(endpoint)
+      .set({'Authorization': token})
       .type(contentType)
       .send(
         JSON.stringify({

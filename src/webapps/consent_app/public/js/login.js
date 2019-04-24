@@ -22,7 +22,7 @@ $(document).ready(function() {
     } else {
       event.preventDefault();
       // Validate the phone no
-      $("#generate_otp").text("Resend OTP");
+      // $("#generate_otp").text("Resend OTP");
       generateOTP();
     }
   });
@@ -34,25 +34,18 @@ $(document).ready(function() {
     );
     return match && decodeURIComponent(match[1].replace(/\+/g, " "));
   }
-  var raw =
-    "http://localhost:5560/?client_id=dNBhms6AvdY6LKw1To1vLW5232HghPiD#";
-  console.log(qs(raw));
+
   function generateOTP() {
     $("#postResultDiv").html("");
     // PREPARE FORM DATA
-    var phone_no = $("#phone_no").val();
-    var client_id = $("#client_id").val();
-    console.log(phone_no);
-    var formData = {
-      phone_no: phone_no,
-      client_id: client_id
-    };
-    console.log(formData);
+    let msisdn = $("#phone_no").val();
+    let transaction_id = $("#transaction_id").val();
+    // console.log({ msisdn, transaction_id });
     $.ajax({
       type: "GET",
       contentType: "application/json",
       url: "/api/validateMobileNo",
-      data: { phone_no: phone_no },
+      data: { phone_no: msisdn },
       dataType: "json",
       success: function(subscriber) {
         // DO POST
@@ -60,10 +53,10 @@ $(document).ready(function() {
           type: "POST",
           contentType: "application/json",
           url: "/api/generate/otp",
-          data: JSON.stringify(formData),
+          data: JSON.stringify({ msisdn, transaction_id }),
           dataType: "json",
           success: function(subscriber) {
-            console.log('SUBSCRIBER, ',subscriber)
+            // console.log("SUBSCRIBER, ", subscriber);
             if (subscriber.statusCode == 200 || subscriber.statusCode == 201) {
               $("#postResultDiv").html(
                 "<p class='success'>" + subscriber.message + "</p>"
@@ -72,22 +65,23 @@ $(document).ready(function() {
               $("#generate_otp").removeClass("generate_otp");
               $("#otp_form_group").css("display", "flex");
               $("#verify_otp").css("display", "block");
+              $("#generate_otp").text("Resend OTP");
             } else {
               $("#postResultDiv").html(
                 "<p class='error'>" + subscriber.error_message + "</p>"
               );
-              if(subscriber.error_code == "InvalidClient"){
+              if (subscriber.error_code == "InvalidClient") {
                 $("#generate_otp").text("Generate OTP");
               }
             }
           },
           error: function(e) {
-            console.log(e)
+            // console.log(e);
             $("#postResultDiv").html(
               "<p class='error'>" +
                 "Error! an error occured during opt generation.<br>"
             );
-            
+
             console.log("ERROR: ", e);
           }
         });
@@ -97,7 +91,7 @@ $(document).ready(function() {
         $("#postResultDiv").html(
           "<p class='error'>" + `${error.error_message}<br>`
         );
-        if(error.error_code == "InvalidPhoneNo"){
+        if (error.error_code == "InvalidPhoneNo") {
           $("#generate_otp").text("Generate OTP");
         }
       }
@@ -107,12 +101,11 @@ $(document).ready(function() {
   function verifyOTP() {
     $("#postResultDiv").html("");
     // PREPARE FORM DATA
-    var formData = {
-      subscriber_id: $("#subscriber_id").val(),
-      client_id: $("#client_id").val(),
+    let formData = {
+      transaction_id: $("#transaction_id").val(),
       otp: $("#otp").val()
     };
-    console.log(formData);
+    // console.log(formData);
     // DO POST
     $.ajax({
       type: "POST",
@@ -121,7 +114,7 @@ $(document).ready(function() {
       data: JSON.stringify(formData),
       dataType: "json",
       success: function(subscriber) {
-        console.log("SUBSCRIBER ", subscriber);
+        // console.log("SUBSCRIBER ", subscriber);
         if (subscriber.statusCode == 302) {
           window.location.href = subscriber["redirect"];
           $("#postResultDiv").html(
@@ -146,8 +139,9 @@ $(document).ready(function() {
           );
         }
       },
-      complete: function(data){
-        console.log(JSON.parse(data));
+      complete: function(data) {
+        // console.log({ data });
+        // console.log(JSON.parse(data));
       }
     });
   }

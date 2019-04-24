@@ -1,12 +1,27 @@
-const { verifyTOtp } = require("../models/otp.model");
-module.exports = function(req, res) {
+const verifyTOtp = require("../models/verifyTOtp/verifyTOtp");
+module.exports = async (req, res) => {
   let { subscriber_id, otp, app_id } = req.body;
-  if (!subscriber_id || !otp || otp.length < 6 || otp.length > 6)
+  //  OTP string length Must be 6
+  // Subscriber ID , OTP, App ID must be in request payload
+  if (!subscriber_id || !otp || !app_id)
     return res.status(400).send({
       error_code: "BadRequest",
       error_message: "Bad Request"
     });
-  verifyTOtp(subscriber_id, otp, app_id, (response, status) => {
-    return res.status(status).send(response);
-  });
+  if (otp.length != 6) {
+    return res.status(400).send({
+      error_code: "BadRequest",
+      error_message: "Invalid OTP"
+    });
+  }
+  try {
+    let { status, body } = await verifyTOtp(subscriber_id, otp, app_id);
+    return res.status(status).send(body);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      error_code: "InternalServerError",
+      error_message: "Internal Server Error"
+    });
+  }
 };

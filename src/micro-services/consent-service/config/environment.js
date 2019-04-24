@@ -18,8 +18,6 @@ const DB_SETTINGS = {
     port : ENV.DB_PORT || "5432",
     database: ENV.DB_NAME
 }
-const CONSENT_BASE_PATH= `/subscriber/v1`;
-
 const S3_BUCKET_SETTINGS = {
     name:ENV.ENV_S3_BUCKET_NAME,
     access_key_id:ENV.ENV_S3_ACCESS_KEY_ID,
@@ -27,4 +25,16 @@ const S3_BUCKET_SETTINGS = {
     folder:ENV.ENV_S3_BUCKET_FOLDER
 }
 
-module.exports = { NODE_SETTINGS,  DB_SETTINGS, CONSENT_BASE_PATH, S3_BUCKET_SETTINGS };
+const AUTH_KEYS = {
+    auth_client_id: ENV.AUTH_CLIENT_ID,
+    auth_secret_message: ENV.AUTH_CLIENT_SECRET
+}
+//Consent Authentication Keys
+const CONSENT_KEYS = {
+    consent_client_id: ENV.CONSENT_CLIENT_ID,
+    consent_secret_message: ENV.CONSENT_CLIENT_SECRET
+}
+const CONSENT_BASE_PATH= `/subscriber/v1`;
+const AUTHENTICATION_ACTIVE = ENV.AUTHENTICATION_ACTIVE || "false";
+
+module.exports = { NODE_SETTINGS,  DB_SETTINGS, CONSENT_BASE_PATH,AUTH_KEYS, CONSENT_KEYS, AUTHENTICATION_ACTIVE,S3_BUCKET_SETTINGS};

@@ -16,7 +16,9 @@ module.exports = function(req, res) {
     app_id,
     developer_id,
     scopes,
-    appname
+    appname,
+    consent_expiry,
+    consent_type
   } = req.body;
   if (
     !access_token ||
@@ -41,6 +43,8 @@ module.exports = function(req, res) {
     developer_id,
     scopes,
     appname,
+    consent_expiry,
+    consent_type,
     (status, response) => {
       return res.status(status).send(response);
     }

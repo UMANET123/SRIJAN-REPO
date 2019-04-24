@@ -16,6 +16,8 @@ const arraysHaveSameItems = require("../helpers/compare-arrays.helper");
  * @param {string} developer_id Developer Id
  * @param {[]} scopes Scopes
  * @param {string} appname App Name
+ * @param {string} consent_expiry Expiry date in ISO format
+ * @param {string} consent_type Expiry type, ENUM [NO_EXPIRY, FIXED_EXPIRY, EVERYTIME_EXPIRY]
  * @param {function} callback Callback Function
  * Create a Consent,
  * Cases
@@ -33,6 +35,8 @@ function createConsent(
   scopes,
   appname,
   access_token,
+  consent_expiry,
+  consent_type,
   callback
 ) {
   let createdDate = new Date();
@@ -102,7 +106,9 @@ function createConsent(
           scopes,
           access_token,
           created: createdDate,
-          status: 1
+          status: 1,
+          consent_expiry: consent_expiry,
+          consent_type: consent_type
         })
           .then(() => {
             //  consent record is created
@@ -185,6 +191,8 @@ function updateConsent(
   developer_id,
   scopes,
   appname,
+  consent_expiry,
+  consent_type,
   callback
 ) {
   //  update query to run
