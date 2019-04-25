@@ -117,7 +117,7 @@ describe("Testing all apps consent reset", () => {
             `${endpoints.skipConsent(
               subscriber_id,
               app_id
-            )}?scopes=${scopes.join()}`
+            )}?scopes=${scopes.join(" ")}`
           )
           .set(Authorization)
           .end((err, res) => {

@@ -138,7 +138,7 @@ describe("Testing single app consent reset", () => {
                     `${endpoints.skipConsent(
                       subscriber_id,
                       app_id
-                    )}?scopes=${scopes.join()}`
+                    )}?scopes=${scopes.join(" ")}`
                   )
                   .set(Authorization)
                   .end((err, res) => {
@@ -174,7 +174,7 @@ describe("Testing single app consent reset", () => {
                                       `${endpoints.skipConsent(
                                         subscriber_id_2,
                                         app_id
-                                      )}?scopes=${scopes.join()}`
+                                      )}?scopes=${scopes.join(" ")}`
                                     )
                                     .set(Authorization)
                                     .end((err, res) => {
@@ -257,7 +257,7 @@ describe("Testing single app consent reset", () => {
                         `${endpoints.skipConsent(
                           subscriber_id,
                           app_id
-                        )}?scopes=${scopes.join()}`
+                        )}?scopes=${scopes.join(" ")}`
                       )
                       .set(Authorization)
                       .end((err, res) => {
