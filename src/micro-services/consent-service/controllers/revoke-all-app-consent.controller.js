@@ -14,7 +14,7 @@ module.exports = (req, res) => {
   //  throw bad request for absence of parameter
   if (!subscriber_id) {
     logger.log("warn", "RevokeAllAppConsentController:", {
-      message: "Invalid Parameters"
+      message: JSON.stringify({subscriber_id})
     });
     return res.status(400).send({
       error_code: "BadRequest",

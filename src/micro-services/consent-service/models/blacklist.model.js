@@ -31,12 +31,19 @@ function checkBlacklist({ subscriber_id, app_id }, callback) {
         return callback(204, null);
       }
     })
-    .catch(() => {
+    .catch(error => {
       logger.log(
         "error",
         "BlackListModel:CheckBlackList:SubscriberBlacklistApp:",
         {
           message: "Internal Server Error"
+        }
+      );
+      logger.log(
+        "error",
+        "BlackListModel:CheckBlackList:SubscriberBlacklistApp:",
+        {
+          message: `${error}`
         }
       );
       return callback(500, {
@@ -99,12 +106,19 @@ function createBlackList({ subscriber_id, app_id, developer_id }, callback) {
             // return access token with success response
             return callback(201, { revoked_tokens: [access_token] });
           })
-          .catch(() => {
+          .catch(error => {
             logger.log(
               "error",
-              "BlackListModel:CreateBlackList:SubscriberBlacklistApp.findOrCreate:",
+              "BlackListModel:CreateBlackList:SubscriberBlacklistApp.findOrCreate:InternalServerError ",
               {
-                message: "Internal Server Error"
+                message: JSON.stringify({ subscriber_id, app_id, developer_id })
+              }
+            );
+            logger.log(
+              "error",
+              "BlackListModel:CreateBlackList:SubscriberBlacklistApp.findOrCreate:InternalServerError ",
+              {
+                message: `${error}`
               }
             );
             return callback(500, {
@@ -117,12 +131,20 @@ function createBlackList({ subscriber_id, app_id, developer_id }, callback) {
         return callback(403, { status: "Forbidden" });
       }
     })
-    .catch(() => {
+    .catch(error => {
       logger.log(
         "error",
-        "BlackListModel:CreateBlackList:SubscriberConsent.update:",
+        "BlackListModel:CreateBlackList:SubscriberConsent.update:InternalServerError",
         {
-          message: "Internal Server Error"
+          message: JSON.stringify({ subscriber_id, app_id, developer_id })
+        }
+      );
+
+      logger.log(
+        "error",
+        "BlackListModel:CreateBlackList:SubscriberConsent.update:InternalServerError",
+        {
+          message: `${error}`
         }
       );
       return callback(500, {

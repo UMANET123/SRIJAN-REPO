@@ -41,12 +41,19 @@ function revokeSingle(subscriber_id, app_id, developer_id, callback) {
         return callback(403, { status: "Forbidden" });
       }
     })
-    .catch(() => {
+    .catch(error => {
       logger.log(
         "error",
         "RevokeModel:RevokeSingle:SubscriberConsent.update:",
         {
           message: "Internal Server Error"
+        }
+      );
+      logger.log(
+        "error",
+        "RevokeModel:RevokeSingle:SubscriberConsent.update:",
+        {
+          message: `${error}`
         }
       );
       return callback(500, {
@@ -92,9 +99,12 @@ function revokeAll(subscriber_id, callback) {
         callback(403, { status: "Forbidden" });
       }
     })
-    .catch(() => {
+    .catch(error => {
       logger.log("error", "RevokeModel:RevokeAll:SubscriberConsent.update:", {
         message: "Internal Server Error"
+      });
+      logger.log("error", "RevokeModel:RevokeAll:SubscriberConsent.update:", {
+        message: `${error}`
       });
       return callback(500, {
         error_code: "InternalServerError",

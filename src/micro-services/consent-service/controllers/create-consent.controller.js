@@ -21,8 +21,8 @@ module.exports = function(req, res) {
     consent_type
   } = req.body;
   if (!subscriber_id || !app_id || !developer_id || !scopes || !appname) {
-    logger.log("warn", "CreateConsentController:", {
-      message: "Invalid Parameters"
+    logger.log("warn", "CreateConsentController:InvalidParameters", {
+      message: JSON.stringify({subscriber_id, app_id, developer_id, scopes, appname})
     });
     return res.status(400).send({
       error_code: "BadRequest",

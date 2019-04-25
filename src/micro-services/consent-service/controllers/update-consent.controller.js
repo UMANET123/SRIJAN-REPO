@@ -28,8 +28,15 @@ module.exports = function(req, res) {
     !scopes ||
     !appname
   ) {
-    logger.log("warn", "UpdateConsentController:", {
-      message: "Invalid Parameters"
+    logger.log("warn", "UpdateConsentController:InvalidParameters", {
+      message: JSON.stringify({
+        access_token,
+        subscriber_id,
+        app_id,
+        developer_id,
+        scopes,
+        appname
+      })
     });
     return res.status(400).send({
       error_code: "BadRequest",

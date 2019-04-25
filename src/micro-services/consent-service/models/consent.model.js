@@ -86,9 +86,13 @@ function createConsent(
             .catch(() => {
               logger.log(
                 "error",
-                "ConsentModel:CreateConsent:SubscriberConsent.update:",
+                "ConsentModel:CreateConsent:SubscriberConsent.update:InternalServerError",
                 {
-                  message: "Internal Server Error"
+                  message: JSON.stringify({
+                    subscriber_id,
+                    app_id,
+                    developer_id
+                  })
                 }
               );
               return callback(500, {
@@ -110,7 +114,7 @@ function createConsent(
           consent_expiry: consent_expiry,
           consent_type: consent_type
         })
-          .then((data) => {
+          .then(data => {
             //  consent record is created
             //  create metadata
             createAppMetaData(
@@ -124,9 +128,15 @@ function createConsent(
                 if (isAppMetaCreated == 500) {
                   logger.log(
                     "error",
-                    "ConsentModel:CreateConsent:CreateAppMetaData.create:",
+                    "ConsentModel:CreateConsent:CreateAppMetaData.Create:InternalServerError",
                     {
-                      message: "Internal Server Error"
+                      message: JSON.stringify(
+                        app_id,
+                        developer_id,
+                        appname,
+                        createdDate,
+                        consent_expiry
+                      )
                     }
                   );
                   return callback(500, {
@@ -144,9 +154,18 @@ function createConsent(
           .catch(() => {
             logger.log(
               "error",
-              "ConsentModel:CreateConsent:SubscriberConsent.create:",
+              "ConsentModel:CreateConsent:SubscriberConsent.Create:InternalServerError",
               {
-                message: "Internal Server Error"
+                message: JSON.stringify({
+                  subscriber_id,
+                  app_id,
+                  developer_id,
+                  scopes,
+                  access_token,
+                  createdDate,
+                  consent_expiry,
+                  consent_type
+                })
               }
             );
             return callback(500, {
@@ -156,12 +175,19 @@ function createConsent(
           });
       }
     })
-    .catch(() => {
+    .catch((error) => {
       logger.log(
         "error",
-        "ConsentModel:CreateConsent:SubscriberConsent.findOne:",
+        "ConsentModel:CreateConsent:SubscriberConsent.findOne:InternalServerError",
         {
-          message: "Internal Server Error"
+          message: JSON.stringify({ subscriber_id, app_id, developer_id })
+        }
+      );
+      logger.log(
+        "error",
+        "ConsentModel:CreateConsent:SubscriberConsent.findOne:InternalServerError",
+        {
+          message: `${error}`
         }
       );
       return callback(500, {
@@ -232,12 +258,25 @@ function updateConsent(
         return callback(403, { status: "Forbidden" });
       }
     })
-    .catch(() => {
+    .catch(error => {
       logger.log(
         "error",
-        "ConsentModel:UpdateConsent:SubscriberConsent.update:",
+        "ConsentModel:UpdateConsent:SubscriberConsent.Update:InternalServerError",
         {
-          message: "Internal Server Error"
+          message: JSON.stringify({
+            scopes,
+            access_token,
+            subscriber_id,
+            app_id,
+            developer_id
+          })
+        }
+      );
+      logger.log(
+        "error",
+        "ConsentModel:UpdateConsent:SubscriberConsent.Update:InternalServerError",
+        {
+          message: `${error}`
         }
       );
       return callback(500, {
@@ -319,10 +358,21 @@ function getConsentList(
         });
       }
     })
-    .catch(() => {
-      logger.log("error", "ConsentModel:GetConsentList:Conset.Select:", {
-        message: "Internal Server Error"
-      });
+    .catch(error => {
+      logger.log(
+        "error",
+        "ConsentModel:GetConsentList:Conset.Select:InternalServerError",
+        {
+          message: JSON.stringify({ subscriber_id, limit, offset, appname })
+        }
+      );
+      logger.log(
+        "error",
+        "ConsentModel:GetConsentList:Conset.Select:InternalServerError",
+        {
+          message: `${error}`
+        }
+      );
       return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"

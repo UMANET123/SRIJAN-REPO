@@ -1,4 +1,4 @@
-const logger = require('../logger');
+const logger = require("../logger");
 const { SubscriberConsent, AppMetaData } = require("../config/models");
 /**
  *
@@ -55,23 +55,43 @@ function skipConsent(req, callback) {
           let today = Date.parse(new Date());
           if (appData.consent_expiry_local != null) {
             let app_expiry_local = Date.parse(appData.consent_expiry_local);
-            let consent_created = Date.parse(result.created)
+            let consent_created = Date.parse(result.created);
             console.log(result.created);
-            console.log(consent_created)
-            console.log(app_expiry_local)
+            console.log(consent_created);
+            console.log(app_expiry_local);
             if (app_expiry_local > consent_created) {
-              console.log("Consent Expired via APP");
+              logger.log(
+                "info",
+                "SkipConsentModel:SkipConsent:AppConsentExpired",
+                {
+                  message: `${app_id} : ${subscriber_id} : Consent Expired Via App`
+                }
+              );
               return callback({ status: false }, 200);
             }
-            console.log('Consent of App Not Revoked')
+            logger.log(
+              "info",
+              "SkipConsentModel:SkipConsent:AppConsentNOTExpired",
+              {
+                message: `${app_id} : ${subscriber_id} : Consent NOT Expired Via App`
+              }
+            );
           }
 
           switch (result.consent_type) {
             case "FIXED_EXPIRY":
-              console.log("Fixed Expiry");
+              logger.log("info", "SkipConsentModel:SkipConsent:FIXED_EXPIRY", {
+                message: `${app_id} : ${subscriber_id} : FIXED_EXPIRY detected`
+              });
               let expiry = Date.parse(result.consent_expiry);
               if (expiry <= today) {
-                console.log("Consent Expired");
+                logger.log(
+                  "info",
+                  "SkipConsentModel:SkipConsent:ConsentExpired",
+                  {
+                    message: `${app_id} : ${subscriber_id} : Consent Expired Via Expiry Date`
+                  }
+                );
                 return callback({ status: false }, 200);
               }
               //check for scopes
@@ -82,20 +102,35 @@ function skipConsent(req, callback) {
                 let state = true;
                 scopes.map(scope => {
                   if (!result.scopes.includes(scope)) {
-                    console.log("Consent Mismatch");
+                    logger.log(
+                      "info",
+                      "SkipConsentModel:SkipConsent:FIXED_EXPIRY",
+                      {
+                        message: `${app_id} : ${subscriber_id} : Consent Scopes Mismatch`
+                      }
+                    );
                     state = false;
                   }
                 });
                 return callback({ status: state }, 200);
               } else if (result.scopes.length < scopes.length) {
                 console.log("Consent present < Consent Recieved");
+                logger.log(
+                  "info",
+                  "SkipConsentModel:SkipConsent:FIXED_EXPIRY",
+                  {
+                    message: `${app_id} : ${subscriber_id} : Consent present < Consent Recieved`
+                  }
+                );
                 return callback({ status: false }, 200);
               }
               //default
               return callback({ status: false }, 200);
 
             case "NO_EXPIRY":
-              console.log("No Expiry");
+              logger.log("info", "SkipConsentModel:SkipConsent:NO_EXPIRY", {
+                message: `${app_id} : ${subscriber_id} : NO_EXPIRY detected`
+              });
               if (
                 result.scopes.length > scopes.length ||
                 result.scopes.length == scopes.length
@@ -103,19 +138,33 @@ function skipConsent(req, callback) {
                 let state = true;
                 scopes.map(scope => {
                   if (!result.scopes.includes(scope)) {
-                    console.log("Consent Mismatch");
+                    logger.log(
+                      "info",
+                      "SkipConsentModel:SkipConsent:NO_EXPIRY",
+                      {
+                        message: `${app_id} : ${subscriber_id} : Consent Scopes Mismatch`
+                      }
+                    );
                     state = false;
                   }
                 });
                 return callback({ status: state }, 200);
               } else if (result.scopes.length < scopes.length) {
-                console.log("Consent present < Consent Recieved");
+                logger.log(
+                  "info",
+                  "SkipConsentModel:SkipConsent:NO_EXPIRY",
+                  {
+                    message: `${app_id} : ${subscriber_id} : Consent present < Consent Recieved`
+                  }
+                );
                 return callback({ status: false }, 200);
               }
               //default
               return callback({ status: false }, 200);
             case "EVERYTIME_EXPIRY":
-              console.log("Everytime Expiry");
+              logger.log("info", "SkipConsentModel:SkipConsent:EVERYTIME_EXPIRY", {
+                message: `${app_id} : ${subscriber_id} : EVERYTIME_EXPIRY detected`
+              });
               return callback({ status: false }, 200);
           }
         });
@@ -130,6 +179,13 @@ function skipConsent(req, callback) {
         "SkipConsentModel:SkipConsent:SubscriberConsent.findOne:",
         {
           message: "Internal Server Error"
+        }
+      );
+      logger.log(
+        "error",
+        "SkipConsentModel:SkipConsent:SubscriberConsent.findOne:",
+        {
+          message: `${e}`
         }
       );
       return callback({

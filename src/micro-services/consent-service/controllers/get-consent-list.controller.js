@@ -20,8 +20,8 @@ module.exports = (req, res) => {
     // console.log({ order });
     if (!ORDER_TYPES.includes(order)) {
       // for invalid order type
-      logger.log("warn", "GetConsentListController:", {
-        message: "Invalid Parameters"
+      logger.log("warn", "GetConsentListController:InvalidParameters", {
+        message: JSON.stringify({order})
       });
       return res.status(400).send({
         error_code: "BadRequest",

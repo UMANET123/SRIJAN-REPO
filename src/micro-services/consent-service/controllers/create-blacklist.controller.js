@@ -14,8 +14,8 @@ module.exports = (req, res) => {
   let { subscriber_id, app_id, developer_id } = req.body;
   //  reject the response for absense of any required elements
   if (!subscriber_id || !app_id || !developer_id) {
-    logger.log("warn", "CreateBlackListController:", {
-      message: "Invalid Parameters"
+    logger.log("warn", "CreateBlackListController:InvalidParameters", {
+      message: JSON.stringify({subscriber_id, app_id, developer_id})
     });
     return res.status(400).send({
       error_code: "BadRequest",

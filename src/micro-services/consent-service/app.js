@@ -16,6 +16,13 @@ app.use(authMiddleware);
 app.use(CONSENT_BASE_PATH, router);
 app.listen(portNumber, () => {
   console.log(`App running on port ${portNumber}`);
+  logger.log(
+    "info",
+    "App",
+    {
+      message: `APP running on port ${portNumber}`
+    }
+  );
 });
 
 module.exports = app;

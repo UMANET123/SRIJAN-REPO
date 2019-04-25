@@ -14,8 +14,8 @@ module.exports = (req, res) => {
   let { app_id, developer_id } = req.body;
   // reject request for absense of any above elements
   if (!subscriber_id || !app_id || !developer_id) {
-    logger.log("warn", "RevokeAppConsentController:", {
-      message: "Invalid Parameters"
+    logger.log("warn", "RevokeAppConsentController:InvalidParameters", {
+      message: JSON.stringify({app_id, developer_id, subscriber_id})
     });
     return res.status(400).send({
       error_code: "BadRequest",
