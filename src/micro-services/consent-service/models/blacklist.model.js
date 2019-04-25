@@ -3,6 +3,7 @@ const {
   SubscriberBlacklistApp,
   SubscriberConsent
 } = require("../config/models");
+const logger = require("../logger");
 //  need to remove after modification
 // const pool = require("../config/db");
 /**
@@ -30,12 +31,26 @@ function checkBlacklist({ subscriber_id, app_id }, callback) {
         return callback(204, null);
       }
     })
-    .catch(() =>
-      callback(500, {
+    .catch(error => {
+      logger.log(
+        "error",
+        "BlackListModel:CheckBlackList:SubscriberBlacklistApp:",
+        {
+          message: "Internal Server Error"
+        }
+      );
+      logger.log(
+        "error",
+        "BlackListModel:CheckBlackList:SubscriberBlacklistApp:",
+        {
+          message: `${error}`
+        }
+      );
+      return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
-      })
-    );
+      });
+    });
 }
 
 //  create black list record
@@ -91,23 +106,52 @@ function createBlackList({ subscriber_id, app_id, developer_id }, callback) {
             // return access token with success response
             return callback(201, { revoked_tokens: [access_token] });
           })
-          .catch(() =>
-            callback(500, {
+          .catch(error => {
+            logger.log(
+              "error",
+              "BlackListModel:CreateBlackList:SubscriberBlacklistApp.findOrCreate:InternalServerError ",
+              {
+                message: JSON.stringify({ subscriber_id, app_id, developer_id })
+              }
+            );
+            logger.log(
+              "error",
+              "BlackListModel:CreateBlackList:SubscriberBlacklistApp.findOrCreate:InternalServerError ",
+              {
+                message: `${error}`
+              }
+            );
+            return callback(500, {
               error_code: "InternalServerError",
               error_message: "Internal Server Error"
-            })
-          );
+            });
+          });
       } else {
         //  no updated record, forbid it
         return callback(403, { status: "Forbidden" });
       }
     })
-    .catch(() =>
-      callback(500, {
+    .catch(error => {
+      logger.log(
+        "error",
+        "BlackListModel:CreateBlackList:SubscriberConsent.update:InternalServerError",
+        {
+          message: JSON.stringify({ subscriber_id, app_id, developer_id })
+        }
+      );
+
+      logger.log(
+        "error",
+        "BlackListModel:CreateBlackList:SubscriberConsent.update:InternalServerError",
+        {
+          message: `${error}`
+        }
+      );
+      return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
-      })
-    );
+      });
+    });
 }
 
 module.exports = { checkBlacklist, createBlackList };

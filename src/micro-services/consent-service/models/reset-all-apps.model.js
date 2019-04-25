@@ -1,6 +1,7 @@
 const { AppMetaData, SubscriberConsent } = require("../config/models");
 const axios = require("axios");
 const { CONSENT_REVOKE_APP_URL } = require("../config/environment");
+const logger = require("../logger");
 
 function resetAllApps(auth_header, callback) {
   return AppMetaData.update(
@@ -20,8 +21,21 @@ function resetAllApps(auth_header, callback) {
       callback({ status: true }, 200);
     })
     .catch(error => {
-      console.log(error);
-      callback(
+      logger.log(
+        "error",
+        "ResetAllAppsModel:ResetAllApps:AppMetaData.Update:InternalServerError ",
+        {
+          message: JSON.stringify({ auth_header })
+        }
+      );
+      logger.log(
+        "error",
+        "ResetAllAppsModel:ResetAllApps:AppMetaData.Update:InternalServerError ",
+        {
+          message: `${error}`
+        }
+      );
+      return callback(
         {
           error_code: "InternalServerError",
           error_message: "Internal Server Error"
@@ -46,14 +60,40 @@ function revokeTokensApigee(app_ids, auth_header) {
           })
             .then(response => {
               console.log(`APP : ${app_id} Tokens was revoked`);
+              logger.log(
+                "info",
+                "ResetAllAppsModel:RevokeTokensApigee:SubscriberBlacklistApp.Update:Success ",
+                {
+                  message: `${app_id} : Token Was revoked`
+                }
+              );
             })
             .catch(error => {
-              console.log(error);
-              console.log(`APP : ${app_id} Tokens was revoked`);
+              logger.log(
+                "error",
+                "ResetAllAppsModel:RevokeTokensApigee:SubscriberBlackListApp.Update:InternalServerError ",
+                {
+                  message: `${app_id} : Token Was NOT revoked`
+                }
+              );
+
+              logger.log(
+                "error",
+                "ResetAllAppsModel:RevokeTokensApigee:SubscriberBlackListApp.Update:InternalServerError ",
+                {
+                  message: error
+                }
+              );
             });
         })
         .catch(error => {
-          console.log(error);
+          logger.log(
+            "error",
+            "ResetAllAppsModel:RevokeTokensApigee:SubscriberBlackListApp.Update:InternalServerError ",
+            {
+              message: `${error}`
+            }
+          );
         });
     });
   }, 100);

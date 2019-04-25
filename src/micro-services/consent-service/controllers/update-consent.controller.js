@@ -1,5 +1,6 @@
 /* jshint esversion:6 */
 const { updateConsent } = require("../models/consent.model");
+const logger = require("../logger");
 /**
  * Update Consent Controller
  * @param {object} req Http Request
@@ -27,6 +28,16 @@ module.exports = function(req, res) {
     !scopes ||
     !appname
   ) {
+    logger.log("warn", "UpdateConsentController:InvalidParameters", {
+      message: JSON.stringify({
+        access_token,
+        subscriber_id,
+        app_id,
+        developer_id,
+        scopes,
+        appname
+      })
+    });
     return res.status(400).send({
       error_code: "BadRequest",
       error_message: "Bad Request"

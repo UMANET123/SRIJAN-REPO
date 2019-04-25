@@ -1,5 +1,6 @@
 /* jshint esversion:6 */
 const { createConsent } = require("../models/consent.model");
+const logger = require('../logger');
 /**
  *
  * Create Consent Controller
@@ -20,6 +21,9 @@ module.exports = function(req, res) {
     consent_type
   } = req.body;
   if (!subscriber_id || !app_id || !developer_id || !scopes || !appname) {
+    logger.log("warn", "CreateConsentController:InvalidParameters", {
+      message: JSON.stringify({subscriber_id, app_id, developer_id, scopes, appname})
+    });
     return res.status(400).send({
       error_code: "BadRequest",
       error_message: "Bad Request"

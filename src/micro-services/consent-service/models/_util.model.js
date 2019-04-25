@@ -1,6 +1,7 @@
 /* jshint esversion:6 */
 
 const { AppMetaData } = require("../config/models");
+const logger = require("../logger");
 // const pool = require("../config/db");
 /**
  *
@@ -51,11 +52,45 @@ function createAppMetaData(
           consent_expiry_local
         })
           .then(() => callback(true))
-          .catch(() => callback(500));
+          .catch(() => {
+            logger.log(
+              "error",
+              "_utilModel:CreateAppMetaData:Consent.Create:InternalServerError",
+              {
+                message: JSON.stringify({
+                  app_id,
+                  developer_id,
+                  appname,
+                  created,
+                  short_description,
+                  long_description,
+                  developer_name,
+                  consent_expiry_local
+                })
+              }
+            );
+            return callback(500);
+          });
       }
       return callback(true);
     })
-    .catch(() => callback(500));
+    .catch(error => {
+      logger.log(
+        "error",
+        "_utilModel:CreateAppMetaData:Consent.findOne:InternalServerError",
+        {
+          message: JSON.stringify({ app_id, developer_id, appname })
+        }
+      );
+      logger.log(
+        "error",
+        "_utilModel:CreateAppMetaData:Consent.findOne:InternalServerError",
+        {
+          message: `${error}`
+        }
+      );
+      return callback(500);
+    });
 }
 
 module.exports = { createAppMetaData };

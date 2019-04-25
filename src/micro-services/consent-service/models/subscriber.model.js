@@ -1,5 +1,6 @@
 /* jshint esversion:6 */
 const sequelize = require("../config/orm.database");
+const logger = require("../logger");
 //  get subscriber apps
 /**
  *
@@ -29,12 +30,26 @@ function getSubscriberApps(subscriber_id, appname, callback) {
       let appArray = app.map(({ appname }) => appname);
       callback(200, { appname: appArray });
     })
-    .catch(() =>
-      callback(500, {
+    .catch(error => {
+      logger.log(
+        "error",
+        "SubscriberModel:getSubscriberApps:SubscriberConsent.SELECT:",
+        {
+          message: "Internal Server Error"
+        }
+      );
+      logger.log(
+        "error",
+        "SubscriberModel:getSubscriberApps:SubscriberConsent.SELECT:",
+        {
+          message: `${error}`
+        }
+      );
+      return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
-      })
-    );
+      });
+    });
 }
 
 module.exports = { getSubscriberApps };

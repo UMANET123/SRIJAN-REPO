@@ -1,7 +1,7 @@
 const { AppMetaData, SubscriberConsent } = require("../config/models");
 const axios = require("axios");
 const { CONSENT_REVOKE_APP_URL } = require("../config/environment");
-
+const logger = require("../logger");
 function resetSingleApp(app_id, auth_header, callback) {
   return AppMetaData.update(
     {
@@ -15,7 +15,13 @@ function resetSingleApp(app_id, auth_header, callback) {
       return callback({ status: true }, 200);
     })
     .catch(error => {
-      console.log(error);
+      logger.log(
+        "error",
+        "ResetSingleAppsModel:ResetingSingleApp:AppMetaData.Update:InternalServerError ",
+        {
+          message: `${error}`
+        }
+      );
       return callback(
         {
           error_code: "InternalServerError",
@@ -39,15 +45,46 @@ function revokeTokenApigee(app_id, auth_header) {
           }
         })
           .then(response => {
-            console.log(`APP : ${app_id} Tokens was revoked`);
+            logger.log(
+              "info",
+              "ResetSingleAppsModel:RevokeTokenApigee:SubscriberConsent.Update:Success ",
+              {
+                message: `${app_id} Token was reset`
+              }
+            );
           })
           .catch(error => {
-            console.log(error);
-            console.log(`APP : ${app_id} Tokens was revoked`);
+            logger.log(
+              "error",
+              "ResetSingleAppsModel:RevokeTokenApigee:SubscriberConsent.Update:InternalServerError ",
+              {
+                message: JSON.stringify({ auth_header, app_id })
+              }
+            );
+            logger.log(
+              "error",
+              "ResetSingleAppsModel:RevokeTokenApigee:SubscriberConsent.Update:InternalServerError ",
+              {
+                message: `${error}`
+              }
+            );
           });
       })
       .catch(error => {
-        console.log(error);
+        logger.log(
+          "error",
+          "ResetAllAppsModel:ResetAllApps:AppMetaData.Update:InternalServerError ",
+          {
+            message: `${error}`
+          }
+        );
+        logger.log(
+          "error",
+          "ResetAllAppsModel:ResetAllApps:AppMetaData.Update:InternalServerError ",
+          {
+            message: JSON.stringify({ app_id, auth_header })
+          }
+        );
       });
   }, 100);
 }

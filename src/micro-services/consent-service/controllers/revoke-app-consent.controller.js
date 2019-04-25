@@ -1,5 +1,6 @@
 /* jshint esversion:6 */
 const { revokeSingle } = require("../models/revoke.model");
+const logger = require("../logger");
 /**
  * RevokeSingleAppConsent Controller
  * @param {object} req Http Request
@@ -12,11 +13,15 @@ module.exports = (req, res) => {
   let { subscriber_id } = req.params;
   let { app_id, developer_id } = req.body;
   // reject request for absense of any above elements
-  if (!subscriber_id || !app_id || !developer_id)
+  if (!subscriber_id || !app_id || !developer_id) {
+    logger.log("warn", "RevokeAppConsentController:InvalidParameters", {
+      message: JSON.stringify({app_id, developer_id, subscriber_id})
+    });
     return res.status(400).send({
       error_code: "BadRequest",
       error_message: "Bad Request"
     });
+  }
   revokeSingle(subscriber_id, app_id, developer_id, (status, response) => {
     return res.status(status).send(response);
   });
