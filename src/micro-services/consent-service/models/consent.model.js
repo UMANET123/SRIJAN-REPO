@@ -102,7 +102,7 @@ function createConsent(
           consent_expiry: consent_expiry,
           consent_type: consent_type
         })
-          .then(() => {
+          .then((data) => {
             //  consent record is created
             //  create metadata
             createAppMetaData(
@@ -110,6 +110,7 @@ function createConsent(
               developer_id,
               appname,
               createdDate,
+              consent_expiry,
               isAppMetaCreated => {
                 //  500 internal server error
                 if (isAppMetaCreated == 500)

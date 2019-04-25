@@ -1,4 +1,4 @@
-const { SubscriberConsent } = require("../config/models");
+const { SubscriberConsent, AppMetaData } = require("../config/models");
 /**
  *
  * Status Codes:  -1, 0, 1
@@ -21,17 +21,19 @@ const { SubscriberConsent } = require("../config/models");
 function skipConsent(req, callback) {
   let { subscriber_id, app_id } = req.params;
   let { scopes } = req.query;
-  let returnStatus = false;
   /**
    * Parse Scopes only if they exist
    */
+
   if (scopes) {
-    scopes = JSON.parse(scopes).sort();
+    // scopes = JSON.parse(scopes).sort();
+    scopes = scopes.split(' ').sort();
   }
   SubscriberConsent.findOne({
     where: {
       uuid: subscriber_id,
-      app_id: app_id
+      app_id: app_id,
+      status: 0
     },
     attributes: [
       "uuid",
@@ -41,66 +43,86 @@ function skipConsent(req, callback) {
       "scopes",
       "status",
       "consent_expiry",
-      "consent_type"
+      "consent_type",
+      "created"
     ]
   })
     .then(result => {
       if (result) {
-        switch (result.consent_type) {
-          case "FIXED_EXPIRY":
-            console.log("Fixed Expiry");
-            let expiry = Date.parse(result.consent_expiry);
-            let today = Date.parse(new Date());
-            if (expiry <= today) {
-              console.log("Consent Expired");
+        AppMetaData.findOne({
+          where: { app_id: app_id },
+          attributes: ["consent_expiry_local", "consent_expiry_global"]
+        }).then(appData => {
+          let today = Date.parse(new Date());
+          if (appData.consent_expiry_local != null) {
+            let app_expiry_local = Date.parse(appData.consent_expiry_local);
+            let consent_created = Date.parse(result.created)
+            console.log(result.created);
+            console.log(consent_created)
+            console.log(app_expiry_local)
+            if (app_expiry_local > consent_created && appData.consent_expiry_global != null) {
+              console.log("Consent Expired via APP");
               return callback({ status: false }, 200);
             }
-            //check for scopes
-            if (
-              result.scopes.length > scopes.length ||
-              result.scopes.length == scopes.length
-            ) {
-              let state = true;
-              scopes.map(scope => {
-                if (!result.scopes.includes(scope)) {
-                  console.log("Consent Mismatch");
-                  state = false;
-                }
-              });
-              return callback({ status: state }, 200);
-            } else if (result.scopes.length < scopes.length) {
-              console.log("Consent present < Consent Recieved");
+            console.log('Consent of App Not Revoked')
+          }
+
+          switch (result.consent_type) {
+            case "FIXED_EXPIRY":
+              console.log("Fixed Expiry");
+              let expiry = Date.parse(result.consent_expiry);
+              if (expiry <= today) {
+                console.log("Consent Expired");
+                return callback({ status: false }, 200);
+              }
+              //check for scopes
+              if (
+                result.scopes.length > scopes.length ||
+                result.scopes.length == scopes.length
+              ) {
+                let state = true;
+                scopes.map(scope => {
+                  if (!result.scopes.includes(scope)) {
+                    console.log("Consent Mismatch");
+                    state = false;
+                  }
+                });
+                return callback({ status: state }, 200);
+              } else if (result.scopes.length < scopes.length) {
+                console.log("Consent present < Consent Recieved");
+                return callback({ status: false }, 200);
+              }
+              //default
               return callback({ status: false }, 200);
-            }
-            //default
-            return callback({ status: false }, 200);
-          case "NO_EXPIRY":
-            console.log("No Expiry");
-            if (
-              result.scopes.length > scopes.length ||
-              result.scopes.length == scopes.length
-            ) {
-              let state = true;
-              scopes.map(scope => {
-                if (!result.scopes.includes(scope)) {
-                  console.log("Consent Mismatch");
-                  state = false;
-                }
-              });
-              return callback({ status: state }, 200);
-            } else if (result.scopes.length < scopes.length) {
-              console.log("Consent present < Consent Recieved");
+
+            case "NO_EXPIRY":
+              console.log("No Expiry");
+              if (
+                result.scopes.length > scopes.length ||
+                result.scopes.length == scopes.length
+              ) {
+                let state = true;
+                scopes.map(scope => {
+                  if (!result.scopes.includes(scope)) {
+                    console.log("Consent Mismatch");
+                    state = false;
+                  }
+                });
+                return callback({ status: state }, 200);
+              } else if (result.scopes.length < scopes.length) {
+                console.log("Consent present < Consent Recieved");
+                return callback({ status: false }, 200);
+              }
+              //default
               return callback({ status: false }, 200);
-            }
-            //default
-            return callback({ status: false }, 200);
-          case "EVERYTIME_EXPIRY":
-            console.log("Everytime Expiry");
-            return callback({ status: false }, 200);
-        }
+            case "EVERYTIME_EXPIRY":
+              console.log("Everytime Expiry");
+              return callback({ status: false }, 200);
+          }
+        });
       } else {
         // Don't skip if the record is not present
-        return callback({ status: returnStatus }, 200);
+        return callback({ status: false }, 200);
       }
     })
     .catch(error => {

@@ -40,3 +40,10 @@ create table apps_metadata(
 
 ALTER TABLE subscriber_consent ADD consent_expiry varchar(255) NULL DEFAULT NULL;
 ALTER TABLE subscriber_consent ADD consent_type varchar(255) NULL DEFAULT NULL;
+
+
+ALTER TABLE apps_metadata ADD consent_expiry_local varchar(255) NULL DEFAULT NULL;
+ALTER TABLE apps_metadata ADD consent_expiry_global varchar(255) NULL DEFAULT NULL;
+
+ALTER TABLE subscriber_consent ALTER COLUMN created TYPE TIMESTAMP;
+ALTER TABLE subscriber_consent ALTER COLUMN created SET DEFAULT now();

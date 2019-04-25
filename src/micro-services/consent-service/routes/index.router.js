@@ -10,6 +10,10 @@ const consentList = require("../controllers/get-consent-list.controller");
 const getSubscriberApps = require("../controllers/get-subscriber-apps.controller");
 const checkskipConsent = require('../controllers/check-consent-bypass.controller');
 
+const resetAppSingleController = require('../controllers/reset-app-single.controller');
+const resetAllAppsController = require('../controllers/reset-app-all.controller');
+
+
 router.post(`/consent`, createConsent);
 router.put(`/consent`, updateConsent);
 router.get(`/blacklist/:subscriber_id/:app_id`, checkBlackList);
@@ -19,5 +23,8 @@ router.put(`/revoke/:subscriber_id`, revokeSingle);
 router.get(`/consent/:subscriber_id/list`, consentList);
 router.get(`/app/search/:subscriber_id`, getSubscriberApps);
 router.get ('/app/consent_bypass/:subscriber_id/:app_id', checkskipConsent);
+
+router.post('/reset/app/single', resetAppSingleController);
+router.post('/reset/app/all', resetAllAppsController);
 
 module.exports = router;
