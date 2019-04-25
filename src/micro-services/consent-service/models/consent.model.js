@@ -42,7 +42,7 @@ function createConsent(
   let createdDate = new Date();
   //  find Existing consent ...
   return SubscriberConsent.findOne({
-    where: { uuid: subscriber_id, app_id, developer_id },
+    where: { uuid: subscriber_id, app_id, developer_id, status:0 },
     attributes: ["app_id", "scopes"]
   })
     .then(consent => {
