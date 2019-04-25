@@ -50,7 +50,6 @@ module.exports = function(msisdn, uuid, app_id, resend_count) {
             status: 201
           });
         } catch (err) {
-          console.log(err);
           return reject(err);
         }
       } else {

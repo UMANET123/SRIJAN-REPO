@@ -46,8 +46,8 @@ function generateTOtp(msisdn, app_id, blacklist, callback) {
   if (blacklist) {
     checkBlackListApp(msisdn, app_id, isBlackListed => {
       if (isBlackListed) {
-        logger.log("warn", "OtpModel:GenerateOTP:AppBlacklist", {
-          message: `:${app_id} is blacklisted`
+        logger.log("warn", "OtpModel:GenerateOTP:AppBlacklist:Blacklisted", {
+          message: `${app_id} is blacklisted`
         });
         return callback(
           {
@@ -85,9 +85,13 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
       return processFloodControl(uuid, isBlocked => {
         // user is blocked
         if (isBlocked && typeof isBlocked == "boolean") {
-          logger.log("warn", "OtpModel:AlwaysCreateOTP:ProcessFloodControl:", {
-            message: `${uuid} is blocked`
-          });
+          logger.log(
+            "warn",
+            "OtpModel:AlwaysCreateOTP:ProcessFloodControl:Unauthorized",
+            {
+              message: `${uuid} is blocked`
+            }
+          );
           return callback(
             {
               error_code: "Unauthorized",
@@ -113,9 +117,13 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
               sendOtpSms(smsContent, msisdn, isSent => {
                 //  check for network error
                 if (isSent == 500) {
-                  logger.log("error", "OtpModel:AlwaysCreateOTP:sendOtpSms:", {
-                    message: `Internal Server Error`
-                  });
+                  logger.log(
+                    "error",
+                    "OtpModel:AlwaysCreateOTP:sendOtpSms:InternalServerError",
+                    {
+                      message: `Internal Server Error`
+                    }
+                  );
                   return callback(
                     {
                       error_code: "InternalServerError",
@@ -151,9 +159,9 @@ function alwaysCreateOTP(msisdn, app_id, callback) {
                     .catch(err =>
                       logger.log(
                         "error",
-                        "OtpModel:AlwaysCreateOTP:sendOtpSms:SubscriberOtp.update:",
+                        "OtpModel:AlwaysCreateOTP:sendOtpSms:SubscriberOtp.update:InternalServerError",
                         {
-                          message: err
+                          message: `${err}`
                         }
                       )
                     );
@@ -233,9 +241,9 @@ function processFloodControl(uuid, callback) {
                     .catch(e =>
                       logger.log(
                         "error",
-                        "OtpModel:ProcessFloodControl:FloodControl.findOrCreate:",
+                        "OtpModel:ProcessFloodControl:FloodControl.findOrCreate:InternalServerError",
                         {
-                          message: e
+                          message: `${e}`
                         }
                       )
                     );
@@ -285,6 +293,11 @@ function insertOtpRecord(msisdn, app_id, callback) {
   //  send sms
   sendOtpSms(smsContent, msisdn, isSent => {
     if (isSent == 500) {
+      logger.log(
+        "error",
+        "OtopModel:insertOtpRecord:sendOtpSms:InternalServerError",
+        { message: `${e}` }
+      );
       return callback(
         {
           error_code: "InternalServerError",
@@ -324,9 +337,13 @@ function insertOtpRecord(msisdn, app_id, callback) {
           });
         })
         .catch(err => {
-          logger.log("error", "OtpModel:sendOTPSms:SubscriberOtp.create:", {
-            message: err
-          });
+          logger.log(
+            "error",
+            "OtpModel:sendOTPSms:SubscriberOtp.create:InternalServerError",
+            {
+              message: `${err}`
+            }
+          );
           return callback(
             {
               error_code: "InternalServerError",
@@ -397,15 +414,22 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
                     return callback(null, 200);
                   });
                 })
-                .catch(e =>
-                  callback(
+                .catch(e => {
+                  logger.log(
+                    "error",
+                    "OtpModel:verifyTotp:processFloodControl:FloodControl.destroy:InternalServerError",
+                    {
+                      message: `${e}`
+                    }
+                  );
+                  return callback(
                     {
                       error_code: "InternalServerError",
                       error_message: "Internal Server Error"
                     },
                     500
-                  )
-                );
+                  );
+                });
             } else {
               return callback(
                 {
@@ -447,15 +471,22 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
                         );
                       });
                     })
-                    .catch(e =>
-                      callback(
+                    .catch(e => {
+                      logger.log(
+                        "error",
+                        "OtpModel:verifyTotp:processFloodControl:FloodControl.update:InternalServerError",
+                        {
+                          message: `${e}`
+                        }
+                      );
+                      return callback(
                         {
                           error_code: "InternalServerError",
                           error_message: "Internal Server Error"
                         },
                         500
-                      )
-                    );
+                      );
+                    });
                 } else {
                   return callback(
                     {
@@ -466,27 +497,48 @@ function verifyTOtp(subscriber_id, otp, app_id, callback) {
                   );
                 }
               })
-              .catch(e =>
-                callback(
+              .catch(e => {
+                logger.log(
+                  "warn",
+                  "OtpModel:verifyTotp:processFloodControl:FloodControl.increment:InternalServerError",
+                  {
+                    message: `${e}`
+                  }
+                );
+                return callback(
                   {
                     error_code: "InternalServerError",
                     error_message: "Internal Server Error"
                   },
                   500
-                )
-              );
+                );
+              });
           }
         })
-        .catch(e =>
-          callback(
+        .catch(e => {
+          logger.log(
+            "error",
+            "OtpModel:verifytotp:processFloodControl:SubscriberOTP.findone:InternalServerError",
+            {
+              message: `${e}`
+            }
+          );
+          return callback(
             {
               error_code: "InternalServerError",
               error_message: "Internal Server Error"
             },
             500
-          )
-        );
+          );
+        });
     } else {
+      logger.log(
+        "error",
+        "OtpModel:verifyToTP:processfloodcontrol:InternalServerError",
+        {
+          message: "Internal Server Error"
+        }
+      );
       return callback(
         {
           error_code: "InternalServerError",
@@ -519,15 +571,22 @@ function invalidateOTP(subscriber_id, app_id, callback) {
     .then(() => {
       return callback(true);
     })
-    .catch(e =>
-      callback(
+    .catch(e => {
+      logger.log(
+        "error",
+        "OtpModel:invalidateOtp:SubscriberOtp.update:InternalServerError",
+        {
+          message: `${e}`
+        }
+      );
+      return callback(
         {
           error_code: "InternalServerError",
           error_message: "Internal Server Error"
         },
         500
-      )
-    );
+      );
+    });
 }
 /**
  *
@@ -569,7 +628,10 @@ function sendOtpSms(message, address, callback) {
       if (address) return callback(true);
       return callback(false);
     })
-    .catch(() => {
+    .catch(error => {
+      logger.log("error", "OtpModel:sendOTPSms:request:InternalServerError", {
+        message: `${error}`
+      });
       return callback(500);
     });
 }

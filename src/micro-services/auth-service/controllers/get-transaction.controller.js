@@ -12,8 +12,8 @@ module.exports = function(req, res) {
   //  invoke create transaction model for transaction
   let { transaction_id } = req.params;
   if (!transaction_id) {
-    logger.log("error", "GetTransactionController", {
-      message: `Bad Request : Invalid Parameters Supplied`
+    logger.log("warn", "GetTransactionController:InvalidParameters", {
+      message: JSON.stringify({transaction_id})
     });
     return res
       .status(400)

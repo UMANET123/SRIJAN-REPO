@@ -31,10 +31,10 @@ const DB_SETTINGS = {
 };
 
 const S3_BUCKET_SETTINGS = {
-  name: ENV.ENV_S3_BUCKET_NAME,
-  access_key_id: ENV.ENV_S3_ACCESS_KEY_ID,
-  secret_key_id: ENV.ENV_SECRET_ACCESS_KEY,
-  folder: ENV.ENV_S3_BUCKET_FOLDER
+  name: ENV.S3_BUCKET_NAME,
+  access_key_id: ENV.S3_ACCESS_KEY_ID,
+  secret_key_id: ENV.SECRET_ACCESS_KEY,
+  folder: ENV.S3_BUCKET_FOLDER
 };
 const AUTH_BASE_PATH = `/auth/v1`;
 //Authentication data

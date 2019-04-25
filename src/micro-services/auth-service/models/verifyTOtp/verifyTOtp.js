@@ -89,7 +89,6 @@ module.exports = (subscriber_id, otp, app_id) => {
         }
       }
     } catch (err) {
-      console.log(err);
       return reject(err);
     }
   });

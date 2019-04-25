@@ -5,8 +5,8 @@ module.exports = function(req, res) {
   let { msisdn, subscriber_id } = req.body;
   console.log("*****", req.body);
   if ((!msisdn && !subscriber_id) || (msisdn && subscriber_id)) {
-    logger.log("error", "VerifyUserController", {
-      message: `Bad Request : Invalid Parameters Supplied`
+    logger.log("warn", "VerifyUserController:InvalidParameters", {
+      message: JSON.stringify({msisdn, subscriber_id})
     });
     return res
       .status(400)

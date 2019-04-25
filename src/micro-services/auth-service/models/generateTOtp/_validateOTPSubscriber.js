@@ -33,7 +33,6 @@ module.exports = function(msisdn, app_id) {
             return resolve(resendOtpHandler(uuid, app_id, msisdn));
           }
         } catch (err) {
-          console.log(err);
           return reject(err);
         }
       } else {

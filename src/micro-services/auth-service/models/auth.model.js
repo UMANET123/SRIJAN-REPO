@@ -32,8 +32,8 @@ function verifyUser(phone_no, uuid, callback) {
         }
       })
       .catch(e => {
-        logger.log("error", "AuthModel:SubscriberDataMash.findOne", {
-          message: `Internal Server Error : SubscriberDataMake.findOne`
+        logger.log("error", "AuthModel:SubscriberDataMash.findOne:InternalServerError", {
+          message: `${e}`
         });
         return callback(
           {
@@ -62,8 +62,8 @@ function verifyUser(phone_no, uuid, callback) {
         }
       })
       .catch(e => {
-        logger.log("error", "AuthModel:SubscriberDataMask.findOne", {
-          message: `Internal Server Error`
+        logger.log("error", "AuthModel:SubscriberDataMask.findOne:InternalServerError", {
+          message: `${e}`
         });
         return callback(
           {

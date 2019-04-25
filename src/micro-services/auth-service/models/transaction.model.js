@@ -49,9 +49,9 @@ function createTransaction(reqBody, callback) {
     .catch(e => {
       logger.log(
         "error",
-        "TransactionModel:CreateTransaction:TransactionData.create:",
+        "TransactionModel:CreateTransaction:TransactionData.create:InternalServerError",
         {
-          message: `Internal Server Error`
+          message: `${e}`
         }
       );
       return callback(
@@ -82,8 +82,8 @@ function createTransaction(reqBody, callback) {
 function getTransaction(transactionId, callback) {
   //  check if there is transaction id has falsy/null values
   if (!transactionId) {
-    logger.log("warn", "TransactionModel:GetTransaction", {
-      message: `Bad Request : Invalid Parameters Supplied`
+    logger.log("warn", "TransactionModel:GetTransaction:InvalidParameters", {
+      message: JSON.stringify({transactionId})
     });
     return callback(
       {
@@ -144,9 +144,9 @@ function getTransaction(transactionId, callback) {
       console.log(e);
       logger.log(
         "error",
-        "TransactionModel:GetTransaction:TransactionData.findOne:",
+        "TransactionModel:GetTransaction:TransactionData.findOne:InternalServerError",
         {
-          message: e
+          message: `${e}`
         }
       );
       return callback(500, {
@@ -194,9 +194,9 @@ function validateTransaction(...args) {
     .catch(e => {
       logger.log(
         "error",
-        "TransactionModel:ValidateTransaction:TransactionData.findOne",
+        "TransactionModel:ValidateTransaction:TransactionData.findOne:InternalServerError",
         {
-          message: e
+          message: `${e}`
         }
       );
       return callback(500, {
@@ -250,9 +250,9 @@ function invalidateTransaction(transactionId, callback) {
     .catch(e => {
       logger.log(
         "error",
-        "TransactionModel:InvalidateTransaction:TransactionData.update:",
+        "TransactionModel:InvalidateTransaction:TransactionData.update:InternalServerError",
         {
-          message: e
+          message: `${e}`
         }
       );
       return callback(500, {
@@ -336,9 +336,9 @@ function updateTransaction(transactionId, reqBody, callback) {
     .catch(e => {
       logger.log(
         "error",
-        "TransactionModel:UpdateTransaction:TransactionData.update:",
+        "TransactionModel:UpdateTransaction:TransactionData.update:InternalServerError",
         {
-          message: e
+          message: `${e}`
         }
       );
       return callback(500, {
