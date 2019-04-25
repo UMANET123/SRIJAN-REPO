@@ -24,8 +24,10 @@ function skipConsent(req, callback) {
   /**
    * Parse Scopes only if they exist
    */
+
   if (scopes) {
-    scopes = JSON.parse(scopes).sort();
+    // scopes = JSON.parse(scopes).sort();
+    scopes = scopes.split(' ').sort();
   }
   SubscriberConsent.findOne({
     where: {
@@ -58,7 +60,7 @@ function skipConsent(req, callback) {
             console.log(result.created);
             console.log(consent_created)
             console.log(app_expiry_local)
-            if (app_expiry_local > consent_created) {
+            if (app_expiry_local > consent_created && appData.consent_expiry_global != null) {
               console.log("Consent Expired via APP");
               return callback({ status: false }, 200);
             }
