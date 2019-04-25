@@ -27,7 +27,7 @@ function skipConsent(req, callback) {
 
   if (scopes) {
     // scopes = JSON.parse(scopes).sort();
-    scopes = scopes.split(',').sort();
+    scopes = scopes.split(' ').sort();
   }
   SubscriberConsent.findOne({
     where: {
