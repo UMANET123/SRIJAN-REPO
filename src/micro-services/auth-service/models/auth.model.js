@@ -1,5 +1,6 @@
 /*jshint esversion: 6 */
 const { SubscriberDataMask } = require("../config/models");
+const logger = require("../logger");
 const updatePhoneNo = require("../helpers/mobile-number.modify");
 
 /**
@@ -24,10 +25,16 @@ function verifyUser(phone_no, uuid, callback) {
           return callback({ subscriber_id: mask.uuid }, 200);
         } else {
           //  not found
+          logger.log("warn", "AuthModel:SubscriberDataMash.findOne", {
+            message: ` Failed for number ${phone_no}`
+          });
           return callback(null, 204);
         }
       })
       .catch(e => {
+        logger.log("error", "AuthModel:SubscriberDataMash.findOne:InternalServerError", {
+          message: `${e}`
+        });
         return callback(
           {
             error_code: "InternalServerError",
@@ -48,10 +55,16 @@ function verifyUser(phone_no, uuid, callback) {
           return callback({ msisdn: mask.phone_no }, 200);
         } else {
           //  not found
+          logger.log("warn", "AuthModel:SubscriberDataMask.findOne", {
+            message: `no user found with uuid ${uuid}`
+          });
           return callback(null, 204);
         }
       })
       .catch(e => {
+        logger.log("error", "AuthModel:SubscriberDataMask.findOne:InternalServerError", {
+          message: `${e}`
+        });
         return callback(
           {
             error_code: "InternalServerError",

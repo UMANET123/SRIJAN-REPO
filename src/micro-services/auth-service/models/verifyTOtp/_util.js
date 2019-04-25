@@ -22,7 +22,6 @@ function invalidateOTP(subscriber_id, app_id) {
       );
       return resolve(true);
     } catch (err) {
-      console.log(err);
       return reject(err);
     }
   });

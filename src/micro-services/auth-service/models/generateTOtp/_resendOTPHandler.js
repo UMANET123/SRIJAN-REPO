@@ -67,7 +67,6 @@ module.exports = function(uuid, app_id, msisdn) {
         return resolve(insertOtpRecord(msisdn, app_id));
       }
     } catch (err) {
-      console.log(err);
       return reject(err);
     }
   });

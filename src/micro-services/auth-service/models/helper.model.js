@@ -6,7 +6,6 @@ const otplib = require("otplib");
 const {
   OTP_SETTINGS: { timer, step }
 } = require("../config/environment");
-
 /**
  * This function will generate an OTP using a secret
  * @param {string} secret Secret Hash String

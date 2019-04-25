@@ -1,6 +1,7 @@
 /* jshint esversion:9 */
 // const pool = require("../config/db");
 const { TransactionData } = require("../config/models");
+const logger = require("../logger");
 // const { getNewSecret, getRandomString } = require("../models/helper.model");
 const uuidv4 = require("uuid/v4");
 /**
@@ -46,7 +47,13 @@ function createTransaction(reqBody, callback) {
   })
     .then(() => callback({ transaction_id: transactionId }, 201))
     .catch(e => {
-      console.log(e);
+      logger.log(
+        "error",
+        "TransactionModel:CreateTransaction:TransactionData.create:InternalServerError",
+        {
+          message: `${e}`
+        }
+      );
       return callback(
         {
           error_code: "InternalServerError",
@@ -74,7 +81,10 @@ function createTransaction(reqBody, callback) {
  */
 function getTransaction(transactionId, callback) {
   //  check if there is transaction id has falsy/null values
-  if (!transactionId)
+  if (!transactionId) {
+    logger.log("warn", "TransactionModel:GetTransaction:InvalidParameters", {
+      message: JSON.stringify({transactionId})
+    });
     return callback(
       {
         error_code: "BadRequest",
@@ -82,6 +92,7 @@ function getTransaction(transactionId, callback) {
       },
       400
     );
+  }
   //  find transaction
   return TransactionData.findOne({
     where: {
@@ -131,6 +142,13 @@ function getTransaction(transactionId, callback) {
     })
     .catch(e => {
       console.log(e);
+      logger.log(
+        "error",
+        "TransactionModel:GetTransaction:TransactionData.findOne:InternalServerError",
+        {
+          message: `${e}`
+        }
+      );
       return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
@@ -174,6 +192,13 @@ function validateTransaction(...args) {
       }
     })
     .catch(e => {
+      logger.log(
+        "error",
+        "TransactionModel:ValidateTransaction:TransactionData.findOne:InternalServerError",
+        {
+          message: `${e}`
+        }
+      );
       return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
@@ -223,7 +248,13 @@ function invalidateTransaction(transactionId, callback) {
       }
     })
     .catch(e => {
-      console.log("ERROR IN INVALIDATE : ", e);
+      logger.log(
+        "error",
+        "TransactionModel:InvalidateTransaction:TransactionData.update:InternalServerError",
+        {
+          message: `${e}`
+        }
+      );
       return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
@@ -303,7 +334,13 @@ function updateTransaction(transactionId, reqBody, callback) {
       });
     })
     .catch(e => {
-      console.log("ERROR IN UPDATE : ", e);
+      logger.log(
+        "error",
+        "TransactionModel:UpdateTransaction:TransactionData.update:InternalServerError",
+        {
+          message: `${e}`
+        }
+      );
       return callback(500, {
         error_code: "InternalServerError",
         error_message: "Internal Server Error"
