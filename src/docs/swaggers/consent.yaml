@@ -519,17 +519,20 @@ paths:
           type: string
           required: true
           in: path
+          description: Subscriber ID of a user
         - name: app_id
           in: path
           required: true
           type: string
+          description: App Id of an app
         - name: scopes
           in: query
           required: true
           type: array
-          collectionFormat: csv
+          collectionFormat: ssv
           items:
             type: string
+          description: Space seperated variables eg. CONTACT LOCATION SUBSCRIBER
       responses:
         500:
           $ref: "#/definitions/InternalServerError"
