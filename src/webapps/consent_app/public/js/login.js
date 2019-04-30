@@ -67,6 +67,12 @@ $(document).ready(function() {
               $("#verify_otp").css("display", "block");
               $("#generate_otp").text("Resend OTP");
             } else {
+              //  blacklist
+              if (subscriber.redirect_blacklist_uri) {
+                //  app is used blacklisted
+                window.location.href = subscriber.redirect_blacklist_uri;
+                return;
+              }
               $("#postResultDiv").html(
                 "<p class='error'>" + subscriber.error_message + "</p>"
               );
@@ -79,7 +85,7 @@ $(document).ready(function() {
             // console.log(e);
             $("#postResultDiv").html(
               "<p class='error'>" +
-                "Error! an error occured during opt generation.<br>"
+                "Error! an error occured during otp generation.<br>"
             );
 
             console.log("ERROR: ", e);
