@@ -1,16 +1,11 @@
 /* jshint esversion:9 */
 const {
   APIGEE_CREDS: { apigeeBaseURL },
-  APIGEE_CREDS: { clientID },
-  APIGEE_CREDS: { clientSecret },
   APIGEE_ENDPOINTS: { verifyOTP }
 } = require("../config/environment");
 
 const request = require("request");
-// const session = require("express-session");
-var encodedData = Buffer.from(clientID + ":" + clientSecret).toString("base64");
-var authorizationHeaderString = "Basic " + encodedData;
-// const session = require("express-session");
+const getEncodedString = require("../utility/get-encoded-data");
 module.exports = function(req, res, next) {
   let { otp, transaction_id } = req.body;
 
@@ -19,7 +14,7 @@ module.exports = function(req, res, next) {
     url: `${apigeeBaseURL}/${verifyOTP}`,
     headers: {
       "cache-control": "no-cache",
-      Authorization: authorizationHeaderString,
+      Authorization: `Basic ${getEncodedString()}`,
       "Content-Type": "application/x-www-form-urlencoded"
     },
     form: { otp, transaction_id }
@@ -38,9 +33,11 @@ module.exports = function(req, res, next) {
       let authCode = getQueryParamByName(location, "code");
       // * set sessions code, state
       res_data.redirect = location;
+
       // // ! need to comment before push (for local only)  -------
       // res_data.redirect = location.replace("13.232.77.36", "localhost");
       // // ! need to comment before push (for local only)  -------
+
       // (authCode == true) means its cosent skip case
       // need to redirect URL to developer App
       if (authCode) {

@@ -1,12 +1,10 @@
 /* jshint esversion:9 */
 const {
   APIGEE_CREDS: { apigeeBaseURL },
-  APIGEE_ENDPOINTS: { generateOTP },
-  APIGEE_CREDS: { clientID },
-  APIGEE_CREDS: { clientSecret }
+  APIGEE_ENDPOINTS: { generateOTP }
 } = require("../config/environment");
-var encodedData = Buffer.from(clientID + ":" + clientSecret).toString("base64");
-var authorizationHeaderString = "Basic " + encodedData;
+const getEncodedString = require("../utility/get-encoded-data");
+// console.log({ testencode: getEncodedString() });
 const request = require("request");
 module.exports = function(req, res, next) {
   const options = {
@@ -14,7 +12,7 @@ module.exports = function(req, res, next) {
     url: `${apigeeBaseURL}/${generateOTP}`,
     headers: {
       "cache-control": "no-cache",
-      Authorization: authorizationHeaderString,
+      Authorization: `Basic ${getEncodedString()}`,
       "Content-Type": "application/x-www-form-urlencoded"
     },
     form: { ...req.body }
