@@ -74,6 +74,9 @@ router.post("/api/consent", updateConsentController);
 router.get("/api/skip-consent", (err, res) => {
   res.render("skip-consent");
 });
+router.get("/alert/app-blacklisted", (err, res) => {
+  res.render("app-blacklist-alert");
+});
 // router.post('/verify/hotp', verifyHotpController);
 
 // router.post('/verify/user', verifyUserController);

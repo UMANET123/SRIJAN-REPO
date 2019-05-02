@@ -14,10 +14,10 @@ app.use(express.static("public"));
 
 global.viewspath = __dirname + "/views/";
 
-router.use(function(req, res, next) {
-  console.log("/" + req.method);
-  next();
-});
+// router.use(function(req, res, next) {
+//   console.log("/" + req.method);
+//   next();
+// });
 
 app.use(cookieParser());
 app.use(
