@@ -1,1 +1,1 @@
-# Microservices Repository for Globe Wakanda,
+# Microservices Repository for Globe Wakanda.
